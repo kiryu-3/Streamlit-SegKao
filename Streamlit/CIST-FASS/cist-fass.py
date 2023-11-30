@@ -30,7 +30,9 @@ hide_menu_style = """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
 
-st.write('# Image Hub')
+st.write('# CIST-FASS')
+st.caption("CIST Human Flow Analytics System with Streamlit-Folium")
+
 st.write('## Explanation')
 
 with st.expander("Human-Flow-Analytics"):
