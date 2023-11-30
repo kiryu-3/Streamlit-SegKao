@@ -44,8 +44,11 @@ comprehend = session.client('comprehend')
 translate = session.client('translate')
 polly = session.client('polly')
 
+# 現在のスクリプトのディレクトリを取得
+script_directory = os.path.dirname(os.path.abspath(__file__))  
+
 # JSONファイルからデータを読み込む
-with open("languages_data.json", "r", encoding="utf-8") as json_file:
+with open(os.path.join(script_directory, 'languages_data.json'), "r", encoding="utf-8") as json_file:
     loaded_languages_data = json.load(json_file)
 
 if 'mapping' not in st.session_state:  # 初期化
