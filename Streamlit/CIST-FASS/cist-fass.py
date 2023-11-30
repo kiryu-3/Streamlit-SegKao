@@ -82,7 +82,10 @@ with st.expander("Sample-Data"):
     - Can be used for "Human-Flow-Analytics" and "CSV-Filter.
   """)
 
-  example_data = pd.read_csv('example_data.csv')
+  # 現在のスクリプトのディレクトリを取得
+  script_directory = os.path.dirname(os.path.abspath(__file__))
+  # CSVファイルを読み込み
+  example_data = pd.read_csv(os.path.join(script_directory, 'example_data.csv'))   
   csv_file = example_data.to_csv(index=False)
   st.download_button(
     label="Download CSV",
