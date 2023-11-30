@@ -59,6 +59,23 @@ with st.expander("CSV-Filter"):
   image_example2 = Image.open(BytesIO(response2.content))
   st.image(image_example2)
 
+def list_files_in_directory(directory):
+    # 指定したディレクトリ内のファイルを取得
+    files = os.listdir(directory)
+
+    # ファイル名を表示
+    st.write("同じ階層のファイル一覧:")
+    for file in files:
+        st.write(file)
+
+st.title("ファイル一覧表示の例")
+
+# 現在のスクリプトのディレクトリを取得
+script_directory = os.path.dirname(os.path.abspath(__file__))
+
+# 同じ階層のファイル一覧を表示
+list_files_in_directory(script_directory)
+
 with st.expander("Sample-Data"):
   st.markdown("""
     - Sample data with ID, time, latitude and longitude information to identify individuals.
@@ -73,3 +90,5 @@ with st.expander("Sample-Data"):
     file_name='sample_data.csv'
   )
   st.dataframe(example_data)
+
+
