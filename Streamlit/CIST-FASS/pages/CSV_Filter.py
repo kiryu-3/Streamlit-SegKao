@@ -142,7 +142,7 @@ tab1.file_uploader("CSVファイルをアップロード",
                    )
 
 if st.session_state["upload_csvfile"] is not None:
-    tab1.multiselect(label="表示したいカラムを選択してください",
+    tab2.multiselect(label="表示したいカラムを選択してください",
                      options=st.session_state["uploaded_df"].columns,
                      key="selected_columns",
                      on_change=select_column)
@@ -170,7 +170,7 @@ if st.session_state["upload_csvfile"] is not None:
         if create_data[column] == "datetime":
             st.session_state["all_df"][column] = pd.to_datetime(st.session_state["all_df"][column], errors="coerce")
 
-    tab2.write(show_df[st.session_state["filtered_columns"]])
+    tab2.dataframe(show_df[st.session_state["filtered_columns"]])
 
     # ダウンロードボタンを追加
     download_df = show_df[st.session_state["filtered_columns"]].copy()
