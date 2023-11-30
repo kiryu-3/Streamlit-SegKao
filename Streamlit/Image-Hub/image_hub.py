@@ -16,7 +16,7 @@ image = Image.open(BytesIO(response.content))
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="CSV Filters",
+    page_title="Image-Hub",
     page_icon=image,
     layout="wide",
     initial_sidebar_state="expanded"
