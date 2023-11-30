@@ -1,0 +1,4 @@
+gTTS
+langdetect
+boto3
+requests
