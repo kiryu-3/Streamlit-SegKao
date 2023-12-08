@@ -121,11 +121,11 @@ if st.session_state["uploaded_image"] is not None:
   selected_option = radio_area.radio("Select input type:", ["Number Input", "Slider"], horizontal=True)
   if selected_option == "Number Input":
     # Number Inputの場合
-    width_area.number_input("Select the width to resize (px)", min_value=1, max_value=edit_width*2, value=edit_width, step=1, key="resize_width")
-    height_area.number_input("Select the height to resize (px)", min_value=1, max_value=edit_height*2, value=edit_height, step=1, key="resize_height")
+    width_area.number_input("Select the width to resize (px)", min_value=1, max_value=edit_width*10, value=edit_width, step=1, key="resize_width")
+    height_area.number_input("Select the height to resize (px)", min_value=1, max_value=edit_height*10, value=edit_height, step=1, key="resize_height")
   else:
-    width_area.slider("Select the width to resize (px)", 1, edit_width*2, edit_width, step=1, key="resize_width",)
-    height_area.slider("Select the height to resize (px)", 1, edit_height*2, edit_height, step=1, key="resize_height")
+    width_area.slider("Select the width to resize (px)", 1, edit_width*10, edit_width, step=1, key="resize_width",)
+    height_area.slider("Select the height to resize (px)", 1, edit_height*10, edit_height, step=1, key="resize_height")
   st.session_state["edit_image"] = st.session_state["edit_image"].resize((st.session_state["resize_width"], st.session_state["resize_height"]))
 
   image_area_title = col2[1].empty()
