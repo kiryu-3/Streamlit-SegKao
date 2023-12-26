@@ -88,7 +88,9 @@ if st.session_state['upload_csvfile'] is not None:
     final_dfs, code = spreadsheet(st.session_state['df'])
 
     with st.expander("data"):
-      st.dataframe(final_dfs)
+      for key, value in final_dfs.items():
+          with st.expander(key):
+              st.write(pd.DataFrame(value))
   
     with st.expander("code"):
       st.code(code)
