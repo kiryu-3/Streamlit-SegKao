@@ -221,18 +221,15 @@ def datetime_widget(df, column, ss_name):
 def text_widget(df, column, ss_name):
     temp_df = df.dropna(subset=[column])
     temp_df = temp_df.astype(str)
-    options = temp_df[column].unique().tolist()
+    options = df[column].unique().tolist()
+    # options = temp_df[column].unique().tolist()
 
     
         
     # st.write(options[:10])
-    if temp_df[column].apply(is_integer).sum() == len(temp_df[column]):
-        options = [int(float(value)) for value in options]
-        options = [str(value) for value in options]
-
-    # 欠損値がある場合、"none" を選択肢に追加
-    if df[column].isna().any():
-        options.append("none")
+    # if temp_df[column].apply(is_integer).sum() == len(temp_df[column]):
+    #     options = [int(float(value)) for value in options]
+    #     options = [str(value) for value in options]
     
     options.sort()
     temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
