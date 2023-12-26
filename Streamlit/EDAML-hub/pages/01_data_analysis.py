@@ -21,7 +21,7 @@ image = Image.open(BytesIO(response.content))
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="EDAML-hub",
+    page_title="データ解析",
     page_icon=image,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -185,8 +185,8 @@ def pair_plot(data, target, cols):
 
 
 # Streamlitアプリケーションの実行
-st.set_page_config(page_title='データ解析', layout='wide')
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# st.set_page_config(page_title='データ解析', layout='wide')
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 st.title('データ解析')
 load_and_explore_data()
 
