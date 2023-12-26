@@ -99,24 +99,27 @@ def load_and_explore_data():
     #     else:
     #         data = pd.read_csv(uploaded_file)
     #         st.session_state.data_cache = data
-
-        data = st.session_state['df'].copy()
-
-        st.write('データの確認')
-        st.write(data)
-
-        st.subheader('散布図')
-        x_col = st.selectbox("X軸の列を選択", data.columns)
-        y_col = st.selectbox("Y軸の列を選択", data.columns)
-        z_col = st.selectbox("Z軸の列を選択", data.columns)
-        color_col = st.selectbox("色の列を選択", data.columns)
-
-        plot_scatter(data, x_col, y_col, z_col, color_col)
-
-        target = select_target(data)
-
-        if st.button('EDAの実行'):
-            explore_data(data, target)
+    
+        try:
+            data = st.session_state['df'].copy()
+    
+            st.write('データの確認')
+            st.write(data)
+    
+            st.subheader('散布図')
+            x_col = st.selectbox("X軸の列を選択", data.columns)
+            y_col = st.selectbox("Y軸の列を選択", data.columns)
+            z_col = st.selectbox("Z軸の列を選択", data.columns)
+            color_col = st.selectbox("色の列を選択", data.columns)
+    
+            plot_scatter(data, x_col, y_col, z_col, color_col)
+    
+            target = select_target(data)
+    
+            if st.button('EDAの実行'):
+                explore_data(data, target)
+        except:
+            pass
 
 def plot_scatter(data, x_col, y_col, z_col, color_col):
     fig = px.scatter_3d(data, x=x_col, y=y_col, z=z_col, color=color_col)
