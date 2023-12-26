@@ -96,16 +96,18 @@ def load_and_explore_data():
     #     else:
     #         data = pd.read_csv(uploaded_file)
     #         st.session_state.data_cache = data
-
-        data = st.session_state['df'].copy()
-
-        st.write('データの確認')
-        st.write(data)
-
-        target = select_target(data)
-        
-        # if st.button('回帰モデルの構築'):
-        train_and_tune_regression_model(data, target)
+        try:
+            data = st.session_state['df'].copy()
+    
+            st.write('データの確認')
+            st.write(data)
+    
+            target = select_target(data)
+            
+            # if st.button('回帰モデルの構築'):
+            train_and_tune_regression_model(data, target)
+        except:
+            pass
 
 def select_target(data):
     st.write("初めにターゲットを選択してください")
