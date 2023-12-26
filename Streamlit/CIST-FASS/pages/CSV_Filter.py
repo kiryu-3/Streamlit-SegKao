@@ -146,11 +146,7 @@ if st.session_state["upload_csvfile"] is not None:
                      options=st.session_state["uploaded_df"].columns,
                      key="selected_columns",
                      on_change=select_column)
-    # カラムとデータ型の一覧を表示
-    column_info = st.session_state["all_df"].dtypes.reset_index()
-    column_info.columns = ['Column', 'Data Type']
-    tab2.write(column_info)
-    tab2.write(st.session_state["all_df"].isnull().sum())
+
     # tab2.header("")
 
     upload_name = st.session_state['upload_csvfile'].name
