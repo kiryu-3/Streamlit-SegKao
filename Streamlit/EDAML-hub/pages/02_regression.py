@@ -22,7 +22,7 @@ image = Image.open(BytesIO(response.content))
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="EDAML-hub",
+    page_title="回帰モデル",
     page_icon=image,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -251,8 +251,8 @@ def estimate_model(model, test_data):
     return estimate_target
 
 # Streamlitアプリケーションの実行
-st.set_page_config(page_title='回帰モデル', layout='wide')
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# st.set_page_config(page_title='回帰モデル', layout='wide')
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 st.title('回帰モデル')
 load_and_explore_data()
 
