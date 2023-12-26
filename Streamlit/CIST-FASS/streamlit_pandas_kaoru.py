@@ -227,7 +227,7 @@ def text_widget(df, column, ss_name):
 
     # None（欠損値）をリストの最初に追加
     if df[column].isna().any():
-        options.insert(0, None)
+        options.insert(0, null)
 
        
     temp_input = st.sidebar.multiselect(f"{column.title()}", options=options, default=list(),  key=ss_name)
@@ -301,7 +301,9 @@ def filter_df(df, all_widgets):
         elif ctype == "text":
             st.sidebar.write(column) 
             st.sidebar.write(data) 
-            
+            # リスト内にあるnullをNoneに変換
+            your_list = [value if value is not None and not pd.isnull(value) else None for value in data]
+            st.write(your_list)
             st.sidebar.write(res[column].unique().tolist()[:5]) 
             res = filter_string(res, column, data)
     return res
