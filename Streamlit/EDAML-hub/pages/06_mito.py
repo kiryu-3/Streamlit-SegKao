@@ -61,6 +61,7 @@ def reduce_mem_usage(df, verbose=True):
 
 def upload_csv():
     # csvがアップロードされたとき
+    st.session_state['df'] = list()
     if st.session_state['upload_csvfile'] is not None:
         for idx, uploaddata in enumerate(st.session_state['upload_csvfile']):
             # アップロードされたファイルデータを読み込む
@@ -76,6 +77,7 @@ def upload_csv():
 
             # カラムの型を自動で適切に変換
             st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
+            st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
 
 st.title('Mito')
 st.file_uploader(label="CSVファイルをアップロード（複数可）",
@@ -87,7 +89,7 @@ st.file_uploader(label="CSVファイルをアップロード（複数可）",
 
 # Graphic Walker 操作（メインパネル）
 if st.session_state['upload_csvfile'] is not None:
-    final_dfs, code = spreadsheet(st.session_state['df'])
+    final_dfs, code = spreadsheet(*st.session_state['df'])
 
     with st.expander("data"):
       for idx, (key, value) in enumerate(final_dfs.items()):
