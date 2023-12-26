@@ -78,10 +78,10 @@ def upload_csv():
             st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
 
 st.title('Mito')
-st.file_uploader("CSVファイルをアップロード",
+st.file_uploader(label="CSVファイルをアップロード（複数可）",
                        type=["csv"],
                        key="upload_csvfile",
-                       accept_multiple_files=True
+                       accept_multiple_files=True,
                        on_change=upload_csv
                        )
 
