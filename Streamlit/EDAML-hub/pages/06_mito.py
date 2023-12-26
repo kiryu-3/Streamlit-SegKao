@@ -76,7 +76,7 @@ def upload_csv():
         # カラムの型を自動で適切に変換
         st.session_state['df'] = reduce_mem_usage(df)
 
-st.title('Pygwalker')
+st.title('Mito')
 st.file_uploader("CSVファイルをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
