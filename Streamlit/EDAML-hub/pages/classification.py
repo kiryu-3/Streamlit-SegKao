@@ -88,7 +88,7 @@ def upload_csv():
             pass
 
 def load_and_explore_data():
-    st.file_uploader("CSVファイルをアップロード",
+        st.file_uploader("CSVファイルをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
                        on_change=upload_csv
