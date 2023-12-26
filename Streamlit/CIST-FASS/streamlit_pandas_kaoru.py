@@ -299,6 +299,7 @@ def filter_df(df, all_widgets):
                 res = res.loc[(res[column] >= min_value) & (res[column] <= max_value)]
             # res[column] = res[column].astype('object')
         elif ctype == "text":
+            st.sidebar.write(column) 
             st.sidebar.write(res[column].unique().tolist()[:5]) 
             res = filter_string(res, column, data)
     return res
