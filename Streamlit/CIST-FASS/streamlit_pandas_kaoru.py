@@ -221,19 +221,30 @@ def datetime_widget(df, column, ss_name):
 def text_widget(df, column, ss_name):
     temp_df = df.dropna(subset=[column])
     temp_df = temp_df.astype(str)
-    options = df[column].unique().tolist()
-    # options = temp_df[column].unique().tolist()
+    
+    # 欠損値を除外してソート
+    options = sorted(temp_df[column].unique().tolist())
+
+    # "None" をリストの最初に追加
+    options.insert(0, "None")
+
+    temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
+    all_widgets.append((ss_name, "text", column))
+    # temp_df = df.dropna(subset=[column])
+    # temp_df = temp_df.astype(str)
+    # options = df[column].unique().tolist()
+    # # options = temp_df[column].unique().tolist()
 
     
         
-    # st.write(options[:10])
-    # if temp_df[column].apply(is_integer).sum() == len(temp_df[column]):
-    #     options = [int(float(value)) for value in options]
-    #     options = [str(value) for value in options]
+    # # st.write(options[:10])
+    # # if temp_df[column].apply(is_integer).sum() == len(temp_df[column]):
+    # #     options = [int(float(value)) for value in options]
+    # #     options = [str(value) for value in options]
     
-    options.sort()
-    temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
-    all_widgets.append((ss_name, "text", column))
+    # options.sort()
+    # temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
+    # all_widgets.append((ss_name, "text", column))
 
 
 def create_widgets(df, create_data={}):
