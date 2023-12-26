@@ -12,16 +12,42 @@ from pycaret.classification import *
 def load_data(uploaded_file):
     return pd.read_csv(uploaded_file)
 
-def load_and_explore_data():
-    uploaded_file = st.file_uploader('データを読み込んで下さい。', type=['csv'])
-
-    if uploaded_file:
-        # キャッシュからデータを取得し、存在しない場合は新たにデータをロードしてキャッシュに保存
-        if "data_cache" in st.session_state:
-            data = st.session_state.data_cache
+def upload_csv():
+    # csvがアップロードされたとき
+    if st.session_state['upload_csvfile'] is not None:
+        if 'df' not in st.session_state:
+            # アップロードされたファイルデータを読み込む
+            file_data = st.session_state['upload_csvfile'].read()
+            # バイナリデータからPandas DataFrameを作成
+            try:
+                df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
+                st.session_state["ja_honyaku"] = False
+            except UnicodeDecodeError:
+                # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
+                df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+                st.session_state["ja_honyaku"] = True
+    
+            # カラムの型を自動で適切に変換
+            st.session_state['df'] = reduce_mem_usage(df)
         else:
-            data = pd.read_csv(uploaded_file)
-            st.session_state.data_cache = data
+            pass
+
+def load_and_explore_data():
+    st.file_uploader("CSVファイルをアップロード",
+                       type=["csv"],
+                       key="upload_csvfile",
+                       on_change=upload_csv
+                       )
+
+    # if uploaded_file:
+    #     # キャッシュからデータを取得し、存在しない場合は新たにデータをロードしてキャッシュに保存
+    #     if "data_cache" in st.session_state:
+    #         data = st.session_state.data_cache
+    #     else:
+    #         data = pd.read_csv(uploaded_file)
+    #         st.session_state.data_cache = data
+
+        data = st.session_state['df'].copy()
 
         st.write('データの確認')
         st.write(data)
