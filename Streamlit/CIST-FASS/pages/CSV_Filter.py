@@ -150,6 +150,7 @@ if st.session_state["upload_csvfile"] is not None:
     column_info = st.session_state["all_df"].dtypes.reset_index()
     column_info.columns = ['Column', 'Data Type']
     tab2.write(column_info)
+    tab2.write(st.session_state["all_df"].isnull().sum())
     # tab2.header("")
 
     upload_name = st.session_state['upload_csvfile'].name
