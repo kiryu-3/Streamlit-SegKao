@@ -80,7 +80,7 @@ def upload_csv():
             # カラムの型を自動で適切に変換
             st.session_state['df'] = reduce_mem_usage(df)
         else:
-            pass
+            st.session_state['df'] = pd.DataFrame()
 
 def load_and_explore_data():
         st.file_uploader("CSVファイルをアップロード",
