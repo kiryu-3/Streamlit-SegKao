@@ -36,26 +36,63 @@ st.markdown(hide_menu_style, unsafe_allow_html=True)
 
 init_streamlit_comm()
 
-# 今回のデータ生成に使う関数
-def distance(x, y):
-  # 東京タワーの座標を基準に値を生成する
-  _x = 139.745433
-  _y = 35.658581
-  return ((x - _x)**2 + (y - _y)**2)**0.5
+def reduce_mem_usage(df, verbose=True):
+    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    start_mem = df.memory_usage().sum() / 1024**2
+    for col in df.columns:
+        col_type = df[col].dtypes
+        if col_type in numerics:
+            c_min = df[col].min()
+            c_max = df[col].max()
+            if str(col_type)[:3] == 'int':
+                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
+                    df[col] = df[col].astype(np.int8)
+                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
+                    df[col] = df[col].astype(np.int16)
+                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
+                    df[col] = df[col].astype(np.int32)
+                elif c_min > np.iinfo(np.int64).min and c_max < np.iinfo(np.int64).max:
+                    df[col] = df[col].astype(np.int64)
+            else:
+                if c_min > np.finfo(np.float16).min and c_max < np.finfo(np.float16).max:
+                    df[col] = df[col].astype(np.float16)
+                elif c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
+                    df[col] = df[col].astype(np.float32)
+                else:
+                    df[col] = df[col].astype(np.float64)
+    end_mem = df.memory_usage().sum() / 1024**2
+    return df
 
-# ランダムなデータをnum_rows行を生成する
-num_rows = 3000
-df = pd.DataFrame(index=range(num_rows), columns=['名称', '緯度', '経度'])
-df['名称'] = [''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', k=7)) for i in range(num_rows)]
-df['緯度'] = [random.uniform(34, 38) for i in range(num_rows)]
-df['経度'] = [random.uniform(135, 141) for i in range(num_rows)]
-df['距離'] = [distance(df['経度'][i], df['緯度'][i]) for i in range(num_rows)]
-df['カテゴリ'] = [random.randint(1, 10) for i in range(num_rows)]
-df['バリュー'] = [random.random() * 100 for i in range(num_rows)]
+def upload_csv():
+    # csvがアップロードされたとき
+    if st.session_state['upload_csvfile'] is not None:
+        if 'df' not in st.session_state:
+            # アップロードされたファイルデータを読み込む
+            file_data = st.session_state['upload_csvfile'].read()
+            # バイナリデータからPandas DataFrameを作成
+            try:
+                df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
+                st.session_state["ja_honyaku"] = False
+            except UnicodeDecodeError:
+                # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
+                df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+                st.session_state["ja_honyaku"] = True
+    
+            # カラムの型を自動で適切に変換
+            st.session_state['df'] = reduce_mem_usage(df)
+        else:
+            pass
+            
+st.title('Pygwalker')
+st.file_uploader("CSVファイルをアップロード",
+                       type=["csv"],
+                       key="upload_csvfile",
+                       on_change=upload_csv
+                       )
 
 # Graphic Walker 操作（メインパネル）
-if df is not None:
-    pyg_html = get_streamlit_html(df, spec="./gw0.json", use_kernel_calc=True, debug=False)
+if st.session_state['upload_csvfile'] is not None:
+    pyg_html = get_streamlit_html(st.session_state['df'], spec="./gw0.json", use_kernel_calc=True, debug=False)
 
 
     # HTMLをStreamlitアプリケーションに埋め込む
