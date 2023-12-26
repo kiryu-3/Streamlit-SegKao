@@ -229,7 +229,7 @@ def text_widget(df, column, ss_name):
     if df[column].isna().any():
         options.insert(0, None)
 
-    st.sidebar.write(options[:5])    
+       
     temp_input = st.sidebar.multiselect(f"{column.title()}", options=options, default=list(),  key=ss_name)
     all_widgets.append((ss_name, "text", column))
     # temp_df = df.dropna(subset=[column])
@@ -280,7 +280,6 @@ def filter_df(df, all_widgets):
     for widget in all_widgets:
         ss_name, ctype, column = widget
         data = st.session_state[ss_name]
-        st.sidebar.write(data)
         if ctype == "number":
             min_value, max_value = data
             temp_df = df.dropna(subset=[column])
@@ -300,5 +299,6 @@ def filter_df(df, all_widgets):
                 res = res.loc[(res[column] >= min_value) & (res[column] <= max_value)]
             # res[column] = res[column].astype('object')
         elif ctype == "text":
+            st.sidebar.write(res[column].unique().tolist()[:5]) 
             res = filter_string(res, column, data)
     return res
