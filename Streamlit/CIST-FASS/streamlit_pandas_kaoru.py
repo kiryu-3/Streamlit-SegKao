@@ -226,7 +226,7 @@ def text_widget(df, column, ss_name):
     options = sorted(temp_df[column].unique().tolist())
 
     # "None" をリストの最初に追加
-    options.insert(0, "None")
+    options.insert(0, None)
 
     temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
     all_widgets.append((ss_name, "text", column))
