@@ -48,20 +48,25 @@ def number_widget(df, column, ss_name):
             max_value = int(max(temp_df[f'{column}_numeric'].unique()))
             min_value = int(min(temp_df[f'{column}_numeric'].unique()))
         except:
-            st.write("error")
-            st.write(list(temp_df[f'{column}_numeric'].unique()))
+            pass
     else:
         df[f'{column}_numeric'] = pd.to_numeric(df[column], errors="coerce")
         # temp_df[f'{column}_numeric'] = temp_df[column].copy()
         # temp_df = temp_df.astype({f'{column}_numeric': float})
         temp_df[f'{column}_numeric'] = pd.to_numeric(temp_df[column], errors="coerce")
-        max_value = float(max(temp_df[f'{column}_numeric'].unique()))
-        min_value = float(min(temp_df[f'{column}_numeric'].unique()))
+        try:
+            max_value = float(max(temp_df[f'{column}_numeric'].unique()))
+            min_value = float(min(temp_df[f'{column}_numeric'].unique()))
+        except:
+            pass
 
-    if max_value!=min_value:
-        temp_input = st.sidebar.slider(f"{column.title()}", min_value, max_value, (min_value, max_value),
-                                       key=f"{ss_name}_numeric")
-        all_widgets.append((f"{ss_name}_numeric", "number", f"{column}_numeric"))
+    try:
+        if max_value!=min_value:
+            temp_input = st.sidebar.slider(f"{column.title()}", min_value, max_value, (min_value, max_value),
+                                           key=f"{ss_name}_numeric")
+            all_widgets.append((f"{ss_name}_numeric", "number", f"{column}_numeric"))
+    except:
+        pass
 
     return df
 
