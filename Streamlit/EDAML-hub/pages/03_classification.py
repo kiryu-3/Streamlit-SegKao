@@ -23,7 +23,7 @@ image = Image.open(BytesIO(response.content))
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="EDAML-hub",
+    page_title="分類モデル",
     page_icon=image,
     layout="wide",
     initial_sidebar_state="expanded"
@@ -245,8 +245,8 @@ def display_prediction(prediction, target):
     return plt
 
 # Streamlitアプリケーションの実行
-st.set_page_config(page_title='分類モデル', layout='wide')
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# st.set_page_config(page_title='分類モデル', layout='wide')
+# st.set_option('deprecation.showPyplotGlobalUse', False)
 st.title('分類モデル')
 load_and_explore_data()
 
