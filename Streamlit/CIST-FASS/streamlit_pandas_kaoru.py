@@ -48,7 +48,7 @@ def number_widget(df, column, ss_name):
             max_value = int(max(temp_df[f'{column}_numeric'].unique()))
             min_value = int(min(temp_df[f'{column}_numeric'].unique()))
         except:
-            st.write(int(max(temp_df[f'{column}_numeric'].unique())))
+            st.write(temp_df[f'{column}_numeric'].unique())
     else:
         df[f'{column}_numeric'] = pd.to_numeric(df[column], errors="coerce")
         # temp_df[f'{column}_numeric'] = temp_df[column].copy()
