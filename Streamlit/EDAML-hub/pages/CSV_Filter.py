@@ -19,7 +19,7 @@ image = Image.open(BytesIO(response.content))
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="CIST-FASS",
+    page_title="EDAML-hub",
     page_icon=image,
     layout="wide",
     initial_sidebar_state="expanded"
