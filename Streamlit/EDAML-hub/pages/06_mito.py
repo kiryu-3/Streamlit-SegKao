@@ -62,24 +62,26 @@ def reduce_mem_usage(df, verbose=True):
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
-        # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile'].read()
-        # バイナリデータからPandas DataFrameを作成
-        try:
-            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
-            st.session_state["ja_honyaku"] = False
-        except UnicodeDecodeError:
-            # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
-            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
-            st.session_state["ja_honyaku"] = True
+        for idx, uploaddata in enumerate(st.session_state['upload_csvfile']):
+            # アップロードされたファイルデータを読み込む
+            file_data = uploaddata.read()
+            # バイナリデータからPandas DataFrameを作成
+            try:
+                df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
+                st.session_state["ja_honyaku"] = False
+            except UnicodeDecodeError:
+                # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
+                df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+                st.session_state["ja_honyaku"] = True
 
-        # カラムの型を自動で適切に変換
-        st.session_state['df'] = reduce_mem_usage(df)
+            # カラムの型を自動で適切に変換
+            st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
 
 st.title('Mito')
 st.file_uploader("CSVファイルをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
+                       accept_multiple_files=True
                        on_change=upload_csv
                        )
 
@@ -88,28 +90,38 @@ if st.session_state['upload_csvfile'] is not None:
     final_dfs, code = spreadsheet(st.session_state['df'])
 
     with st.expander("data"):
-      for key, value in final_dfs.items():
+      for idx, (key, value) in enumerate(final_dfs.items()):
+          st.caption(f"df_{idx+1}")
           st.write(pd.DataFrame(value))
+      # for idx, (key, value) in enumerate(final_dfs.items()):
+      #     upload_name = st.session_state['upload_csvfile'].name
+      #     download_name = upload_name.split(".")[0]
+      #     st.write("ファイル名を入力してください")
+      #     st.text_input(
+      #         label="Press Enter to Apply",
+      #         value=f"{download_name}_filtered",
+      #         key="download_name"
+      #     )
+          
+      #     if st.session_state["ja_honyaku"]:
+      #         csv_file = download_df.to_csv(index=False, encoding="shift-jis")
+      #     else:
+      #         csv_file = download_df.to_csv(index=False, encoding="utf-8")
+      #     st.download_button(
+      #         label="Download CSV",
+      #         data=csv_file,
+      #         file_name=f'{st.session_state["download_name"]}.csv'
+      #     )
               
   
     with st.expander("code"):
       st.code(code)
 
-    upload_name = st.session_state['upload_csvfile'].name
-    download_name = upload_name.split(".")[0]
-    st.write("ファイル名を入力してください")
-    st.text_input(
-        label="Press Enter to Apply",
-        value=f"{download_name}_filtered",
-        key="download_name"
-    )
+
+#     with st.expander("data"):
+#       for key, value in final_dfs.items():
+#           st.write(pd.DataFrame(value))
+              
   
-    if st.session_state["ja_honyaku"]:
-        csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-    else:
-        csv_file = download_df.to_csv(index=False, encoding="utf-8")
-    st.download_button(
-        label="Download CSV",
-        data=csv_file,
-        file_name=f'{st.session_state["download_name"]}.csv'
-    )
+#     with st.expander("code"):
+#       st.code(code)
