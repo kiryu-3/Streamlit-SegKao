@@ -230,7 +230,7 @@ def text_widget(df, column, ss_name):
         options.insert(0, None)
 
     st.sidebar.write(options[:5])    
-    temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
+    temp_input = st.sidebar.multiselect(f"{column.title()}", options=options, default=None,  key=ss_name)
     all_widgets.append((ss_name, "text", column))
     # temp_df = df.dropna(subset=[column])
     # temp_df = temp_df.astype(str)
