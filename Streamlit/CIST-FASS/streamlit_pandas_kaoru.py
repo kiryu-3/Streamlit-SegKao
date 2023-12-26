@@ -280,6 +280,7 @@ def filter_df(df, all_widgets):
     for widget in all_widgets:
         ss_name, ctype, column = widget
         data = st.session_state[ss_name]
+        st.sidebar.write(data)
         if ctype == "number":
             min_value, max_value = data
             temp_df = df.dropna(subset=[column])
