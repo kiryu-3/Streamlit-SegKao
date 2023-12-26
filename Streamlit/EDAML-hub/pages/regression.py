@@ -7,6 +7,34 @@ import matplotlib.figure as figure
 # ML
 from pycaret.regression import *
 
+import re
+import requests
+from PIL import Image
+import io
+from io import BytesIO
+
+# 画像URLを指定
+image_url = "https://imgur.com/C32lMvR.jpg"
+
+# 画像をダウンロードしPILのImageオブジェクトとして読み込む
+response = requests.get(image_url)
+image = Image.open(BytesIO(response.content))
+
+# Streamlit ページの設定
+st.set_page_config(
+    page_title="EDAML-hub",
+    page_icon=image,
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 def reduce_mem_usage(df, verbose=True):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     start_mem = df.memory_usage().sum() / 1024**2
