@@ -6,4 +6,4 @@ requests
 pycaret
 fasteda
 pygwalker
-mitosheet
+mitosheet 
