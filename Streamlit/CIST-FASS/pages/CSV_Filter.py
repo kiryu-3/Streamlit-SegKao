@@ -105,7 +105,7 @@ def upload_csv():
         except:
             pass
 
-        df = df.applymap(lambda x: str(x) if not pd.isnull(x) else x)
+        # df = df.applymap(lambda x: str(x) if not pd.isnull(x) else x)
         st.session_state["uploaded_df"] = df.copy()
         st.session_state["all_df"] = df.copy()
         create_data = decide_dtypes(df)
