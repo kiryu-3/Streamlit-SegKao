@@ -66,22 +66,20 @@ def reduce_mem_usage(df, verbose=True):
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
-        if 'df' not in st.session_state:
-            # アップロードされたファイルデータを読み込む
-            file_data = st.session_state['upload_csvfile'].read()
-            # バイナリデータからPandas DataFrameを作成
-            try:
-                df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
-                st.session_state["ja_honyaku"] = False
-            except UnicodeDecodeError:
-                # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
-                df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
-                st.session_state["ja_honyaku"] = True
-    
-            # カラムの型を自動で適切に変換
-            st.session_state['df'] = reduce_mem_usage(df)
-        else:
-            pass
+        # アップロードされたファイルデータを読み込む
+        file_data = st.session_state['upload_csvfile'].read()
+        # バイナリデータからPandas DataFrameを作成
+        try:
+            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
+            st.session_state["ja_honyaku"] = False
+        except UnicodeDecodeError:
+            # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
+            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+            st.session_state["ja_honyaku"] = True
+
+        # カラムの型を自動で適切に変換
+        st.session_state['df'] = reduce_mem_usage(df)
+
             
 st.title('Pygwalker')
 st.file_uploader("CSVファイルをアップロード",
