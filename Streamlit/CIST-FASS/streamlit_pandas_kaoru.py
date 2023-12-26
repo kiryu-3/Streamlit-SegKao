@@ -225,8 +225,9 @@ def text_widget(df, column, ss_name):
     # 欠損値を除外してソート
     options = sorted(temp_df[column].unique().tolist())
 
-    # "None" をリストの最初に追加
-    options.insert(0, None)
+    # None（欠損値）をリストの最初に追加
+    if df[column].isna().any():
+        options.insert(0, None)
 
     st.sidebar.write(options[:5])    
     temp_input = st.sidebar.multiselect(f"{column.title()}", options, key=ss_name)
