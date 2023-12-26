@@ -227,7 +227,7 @@ def text_widget(df, column, ss_name):
 
     # None（欠損値）をリストの最初に追加
     if df[column].isna().any():
-        options.insert(0, None)
+        options.insert(0, np.nan)
 
        
     temp_input = st.sidebar.multiselect(f"{column.title()}", options=options, default=list(),  key=ss_name)
