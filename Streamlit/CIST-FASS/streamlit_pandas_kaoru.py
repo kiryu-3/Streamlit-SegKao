@@ -231,7 +231,7 @@ def text_widget(df, column, ss_name):
         options = [str(value) for value in options]
 
     # 欠損値がある場合、"none" を選択肢に追加
-    if temp_df[column].isna().any():
+    if df[column].isna().any():
         options.append("none")
     
     options.sort()
