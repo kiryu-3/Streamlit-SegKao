@@ -66,8 +66,7 @@ def reduce_mem_usage(df, verbose=True):
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
-        if 'df' not in st.session_state:
-            # アップロードされたファイルデータを読み込む
+         # アップロードされたファイルデータを読み込む
             file_data = st.session_state['upload_csvfile'].read()
             # バイナリデータからPandas DataFrameを作成
             try:
@@ -80,8 +79,6 @@ def upload_csv():
     
             # カラムの型を自動で適切に変換
             st.session_state['df'] = reduce_mem_usage(df)
-        else:
-            st.session_state['df'] = pd.DataFrame()
 
 def load_and_explore_data():
         st.file_uploader("CSVファイルをアップロード",
