@@ -88,42 +88,45 @@ st.file_uploader(label="CSVファイルをアップロード（複数可）",
                        )
 
 # Graphic Walker 操作（メインパネル）
-if st.session_state['upload_csvfile'] is not None:
-    final_dfs, code = spreadsheet(*st.session_state['df'])
-
-    with st.expander("data"):
-      for idx, (key, value) in enumerate(final_dfs.items()):
-          st.caption(f"df_{idx+1}")
-          st.write(pd.DataFrame(value))
-      # for idx, (key, value) in enumerate(final_dfs.items()):
-      #     upload_name = st.session_state['upload_csvfile'].name
-      #     download_name = upload_name.split(".")[0]
-      #     st.write("ファイル名を入力してください")
-      #     st.text_input(
-      #         label="Press Enter to Apply",
-      #         value=f"{download_name}_filtered",
-      #         key="download_name"
-      #     )
-          
-      #     if st.session_state["ja_honyaku"]:
-      #         csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-      #     else:
-      #         csv_file = download_df.to_csv(index=False, encoding="utf-8")
-      #     st.download_button(
-      #         label="Download CSV",
-      #         data=csv_file,
-      #         file_name=f'{st.session_state["download_name"]}.csv'
-      #     )
+try:
+    if st.session_state['upload_csvfile'] is not None:
+        final_dfs, code = spreadsheet(*st.session_state['df'])
+    
+        with st.expander("data"):
+          for idx, (key, value) in enumerate(final_dfs.items()):
+              st.caption(f"df_{idx+1}")
+              st.write(pd.DataFrame(value))
+          # for idx, (key, value) in enumerate(final_dfs.items()):
+          #     upload_name = st.session_state['upload_csvfile'].name
+          #     download_name = upload_name.split(".")[0]
+          #     st.write("ファイル名を入力してください")
+          #     st.text_input(
+          #         label="Press Enter to Apply",
+          #         value=f"{download_name}_filtered",
+          #         key="download_name"
+          #     )
               
-  
-    with st.expander("code"):
-      st.code(code)
-
-
-#     with st.expander("data"):
-#       for key, value in final_dfs.items():
-#           st.write(pd.DataFrame(value))
-              
-  
-#     with st.expander("code"):
-#       st.code(code)
+          #     if st.session_state["ja_honyaku"]:
+          #         csv_file = download_df.to_csv(index=False, encoding="shift-jis")
+          #     else:
+          #         csv_file = download_df.to_csv(index=False, encoding="utf-8")
+          #     st.download_button(
+          #         label="Download CSV",
+          #         data=csv_file,
+          #         file_name=f'{st.session_state["download_name"]}.csv'
+          #     )
+                  
+      
+        with st.expander("code"):
+          st.code(code)
+    
+    
+    #     with st.expander("data"):
+    #       for key, value in final_dfs.items():
+    #           st.write(pd.DataFrame(value))
+                  
+      
+    #     with st.expander("code"):
+    #       st.code(code)
+except:
+    pass
