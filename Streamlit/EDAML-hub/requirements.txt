@@ -8,3 +8,4 @@ fasteda
 pygwalker
 mitosheet 
 duckdb
+polars
