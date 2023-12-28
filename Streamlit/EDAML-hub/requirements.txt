@@ -7,3 +7,4 @@ pycaret
 fasteda
 pygwalker
 mitosheet 
+duckdb
