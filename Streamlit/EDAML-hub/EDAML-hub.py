@@ -6,6 +6,7 @@ import io
 from io import BytesIO
 import time
 import pandas as pd
+import numpy as np
 
 # 画像URLを指定
 image_url = "https://imgur.com/C32lMvR.jpg"
