@@ -6,7 +6,7 @@ import streamlit.components.v1 as components
 import pygwalker as pyg
 from pygwalker.api.streamlit import init_streamlit_comm, get_streamlit_html
 import duckdb
-# import polars as pl
+import polars as pl
 
 import re
 import requests
