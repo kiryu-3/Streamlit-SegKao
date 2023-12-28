@@ -6,6 +6,7 @@ import streamlit.components.v1 as components
 import pygwalker as pyg
 from pygwalker.api.streamlit import init_streamlit_comm, get_streamlit_html
 import duckdb
+import polars as pl
 
 import re
 import requests
@@ -72,11 +73,11 @@ def upload_csv():
         file_data = st.session_state['upload_csvfile'].read()
         # バイナリデータからPandas DataFrameを作成
         try:
-            df = duckdb.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
+            df = pl.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
             st.session_state["ja_honyaku"] = False
         except UnicodeDecodeError:
             # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
-            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+            df = pl.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
             st.session_state["ja_honyaku"] = True
 
         # カラムの型を自動で適切に変換
