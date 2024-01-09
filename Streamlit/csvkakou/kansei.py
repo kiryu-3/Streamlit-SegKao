@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-import streamlit_pandas_kaoru as spk
 from datetime import datetime, timedelta
-from mitosheet.streamlit.v1 import spreadsheet
 
 import re
 import requests
