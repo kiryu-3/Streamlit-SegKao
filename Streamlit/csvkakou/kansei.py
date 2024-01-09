@@ -77,7 +77,7 @@ if st.session_state["upload_csvfile"] is not None:
   for column in st.session_state["uploaded_df"].columns[2:]:
       st.session_state["edited_df"][column] = st.session_state["uploaded_df"][column].replace(replacement_dict)
 
-  pload_name = st.session_state['upload_csvfile'].name
+  upload_name = st.session_state['upload_csvfile'].name
   download_name = upload_name.split(".")[0]
   st.write("ファイル名を入力してください")
   st.text_input(
