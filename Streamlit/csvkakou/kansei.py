@@ -85,7 +85,7 @@ if st.session_state["upload_csvfile"] is not None:
   st.write("ファイル名を入力してください")
   st.text_input(
       label="Press Enter to Apply",
-      value=f"{download_name}_filtered",
+      value=f"{download_name}_edited",
       key="download_name"
   )
   
