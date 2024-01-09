@@ -59,7 +59,7 @@ st.file_uploader("CSVファイルをアップロード",
                    )
 
 if st.session_state["upload_csvfile"] is not None:
-  
+  st.write("加工前")
   st.dataframe(st.session_state["uploaded_df"])
 
   # 評価を置き換える辞書
@@ -77,6 +77,7 @@ if st.session_state["upload_csvfile"] is not None:
   for column in st.session_state["uploaded_df"].columns[2:]:
       st.session_state["edited_df"][column] = st.session_state["uploaded_df"][column].replace(replacement_dict)
 
+  st.write("加工後")
   st.dataframe(st.session_state["edited_df"])
     
   upload_name = st.session_state['upload_csvfile'].name
