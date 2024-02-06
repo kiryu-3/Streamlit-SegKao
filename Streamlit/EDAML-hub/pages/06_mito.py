@@ -82,13 +82,52 @@ def upload_csv():
             st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
             st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
 
-st.title('Mito')
-st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
-                       type=["csv"],
-                       key="upload_csvfile",
-                       accept_multiple_files=True,
-                       on_change=upload_csv
-                       )
+def upload_csv():
+    # xlsxがアップロードされたとき
+    st.session_state['df'] = list()
+    st.session_state["ja_honyaku"] = list()
+
+    if st.session_state['upload_xlsxfile'] is not None:
+        # Excelファイルを読み込む
+        xls = pd.ExcelFile(st.session_state['upload_xlsxfile'])
+    
+        # Excelファイル内の各シートを処理する
+        for idx, sheet_name in enumerate(xls.sheet_names):
+            # バイナリデータからPandas DataFrameを作成
+            try:
+                df = pd.read_excel(xls, sheet_name=sheet_name, encoding="utf-8", engine="python")
+                st.session_state["ja_honyaku"][idx] = False
+            except UnicodeDecodeError:
+                # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
+                df = pd.read_excel(xls, sheet_name=sheet_name, encoding="shift-jis", engine="python")
+                st.session_state["ja_honyaku"][idx] = True
+
+            # カラムの型を自動で適切に変換
+            st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
+            st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
+
+
+
+genre = st.sidebar.radio(
+    "アップロードするファイル形式を選択してください",
+    ["***CSVファイル***", "***エクセルファイル***"])
+
+if genre == "***CSVファイル***":
+    st.title('Mito-CSV')
+    st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
+                           type=["csv"],
+                           key="upload_csvfile",
+                           accept_multiple_files=True,
+                           on_change=upload_csv
+                           )
+else:
+    st.title('Mito-XLSX')
+    st.sidebar.file_uploader(label="XLSXファイルをアップロード（複数不可）",
+                           type=["xlsx"],
+                           key="upload_xlsx",
+                           accept_multiple_files=False,
+                           on_change=upload_xlsx
+                           )
 
 # Graphic Walker 操作（メインパネル）
 try:
