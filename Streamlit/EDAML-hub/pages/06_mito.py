@@ -124,84 +124,46 @@ else:
                            )
 
 # Graphic Walker 操作（メインパネル）
-if len(st.session_state['df']) != 0:
-    final_dfs, code = spreadsheet(*st.session_state['df'])
-    st.write(code)
-
-    tabs_list = list()
-    for idx, (key, value) in enumerate(final_dfs.items()):
-        tabs_list.append(f"df_{idx+1}")
-    # タブ
-    tabs = st.tabs(tabs_list)
-
-    for idx, (key, value) in enumerate(final_dfs.items()):
-        with tabs[idx]:
-            st.caption(f"df_{idx+1}")
-            st.write(pd.DataFrame(value))
-
-            download_name = f"df_{idx+1}"
-            st.write("ファイル名を入力してください")
-            st.text_input(
-              label="Press Enter to Apply",
-              value=f"{download_name}_filtered",
-              key=f"download_name_{idx}"
-            )
-
-            download_df = pd.DataFrame(value)
-            if st.session_state['select_mode'] == "***CSVファイル***":
-                if st.session_state["ja_honyaku"][idx]:
-                  csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-                else:
-                  csv_file = download_df.to_csv(index=False, encoding="utf-8")    
-            else:
-                csv_file = download_df.to_csv(index=False)
-            st.download_button(
-                  label="Download CSV",
-                  data=csv_file,
-                  file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
+try: 
+    if len(st.session_state['df']) != 0:
+        final_dfs, code = spreadsheet(*st.session_state['df'])
+    
+        tabs_list = list()
+        for idx, (key, value) in enumerate(final_dfs.items()):
+            tabs_list.append(f"df_{idx+1}")
+        # タブ
+        tabs = st.tabs(tabs_list)
+    
+        for idx, (key, value) in enumerate(final_dfs.items()):
+            with tabs[idx]:
+                st.caption(f"df_{idx+1}")
+                st.write(pd.DataFrame(value))
+    
+                download_name = f"df_{idx+1}"
+                st.write("ファイル名を入力してください")
+                st.text_input(
+                  label="Press Enter to Apply",
+                  value=f"{download_name}_filtered",
+                  key=f"download_name_{idx}"
                 )
-
-    with st.expander("Code"):
-        st.code(code)
-# try:
-#     # Graphic Walker 操作（メインパネル）
-#     if len(st.session_state['df']) != 0:
-#         final_dfs, code = spreadsheet(*st.session_state['df'])
-#         st.write(code)
     
-#         tabs_list = list()
-#         for idx, (key, value) in enumerate(final_dfs.items()):
-#             tabs_list.append(f"df_{idx+1}")
-#         # タブ
-#         tabs = st.tabs(tabs_list)
-    
-#         for idx, (key, value) in enumerate(final_dfs.items()):
-#             with tabs[idx]:
-#                 st.caption(f"df_{idx+1}")
-#                 st.write(pd.DataFrame(value))
-
-#                 upload_name = f"df_{idx+1}"
-    
-#                 download_name = upload_name.split(".")[0]
-#                 st.write("ファイル名を入力してください")
-#                 st.text_input(
-#                   label="Press Enter to Apply",
-#                   value=f"{download_name}_filtered",
-#                   key=f"download_name_{idx}"
-#                 )
-    
-#                 download_df = pd.DataFrame(value)
-#                 if st.session_state["ja_honyaku"][idx]:
-#                   csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-#                 else:
-#                   csv_file = download_df.to_csv(index=False, encoding="utf-8")
-#                 st.download_button(
-#                   label="Download CSV",
-#                   data=csv_file,
-#                   file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
-#                 )
-    
-#         with st.expander("Code"):
-#             st.code(code)
-# except:
-#     pass
+                download_df = pd.DataFrame(value)
+                if st.session_state['select_mode'] == "***CSVファイル***":
+                    if st.session_state["ja_honyaku"][idx]:
+                      csv_file = download_df.to_csv(index=False, encoding="shift-jis")
+                    else:
+                      csv_file = download_df.to_csv(index=False, encoding="utf-8")    
+                else:
+                    csv_file = download_df.to_csv(index=False)
+                st.download_button(
+                      label="Download CSV",
+                      data=csv_file,
+                      file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
+                    )
+                
+        st.divider()
+        
+        with st.expander("Code"):
+            st.code(code)
+except:
+    pass
