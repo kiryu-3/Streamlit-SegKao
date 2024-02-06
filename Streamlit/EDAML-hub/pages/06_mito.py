@@ -119,11 +119,12 @@ if st.session_state['upload_csvfile'] is not None:
               value=f"{download_name}_filtered",
               key="download_name"
             )
-          
+
+            download_df = pd.DataFrame(value)
             if st.session_state["ja_honyaku"][idx]:
-              csv_file = pd.DataFrame(value).to_csv(index=False, encoding="shift-jis")
+              csv_file = download_df.to_csv(index=False, encoding="shift-jis")
             else:
-              csv_file = pd.DataFrame(value).to_csv(index=False, encoding="utf-8")
+              csv_file = download_df.to_csv(index=False, encoding="utf-8")
             st.download_button(
               label="Download CSV",
               data=csv_file,
