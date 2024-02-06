@@ -125,8 +125,7 @@ else:
 
 # Graphic Walker 操作（メインパネル）
 try:
-    if st.session_state['upload_csvfile'] is not None:
-    # if len(st.session_state['upload_csvfile']) != 0:
+    if len(st.session_state['upload_csvfile']) != 0 or len(st.session_state['upload_xlsxfile']) != 0:
         final_dfs, code = spreadsheet(*st.session_state['df'])
     
         tabs_list = list()
