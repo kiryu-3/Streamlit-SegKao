@@ -103,6 +103,7 @@ try:
 
         st.write(final_dfs)
         for idx, (key, value) in enumerate(final_dfs.items()):
+            st.write(key)
             with tabs[idx]:
                 st.caption(f"df_{idx+1}")
                 st.write(pd.DataFrame(value))
