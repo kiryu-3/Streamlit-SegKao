@@ -94,7 +94,7 @@ def upload_xlsx():
         # Excelファイル内の各シートを処理する
         for idx, sheet_name in enumerate(xls.sheet_names):
             # Pandas DataFrameを作成
-            df = pd.read_excel(xls, sheet_name=sheet_name, encoding="utf-8", engine="python")
+            df = pd.read_excel(xls, sheet_name=sheet_name)
 
             # カラムの型を自動で適切に変換
             st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
