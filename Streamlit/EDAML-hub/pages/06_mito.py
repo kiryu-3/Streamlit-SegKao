@@ -103,28 +103,29 @@ try:
 
         st.write(final_dfs)
         for idx, (key, value) in enumerate(final_dfs.items()):
-            tabs[idx].caption(f"df_{idx+1}")
-            tabs[idx].write(pd.DataFrame(value))
-
-            upload_name = st.session_state['upload_csvfile'][idx].name
-
-            download_name = upload_name.split(".")[0]
-            tabs[idx].write("ファイル名を入力してください")
-            tabs[idx].text_input(
-              label="Press Enter to Apply",
-              value=f"{download_name}_filtered",
-              key="download_name"
-            )
-          
-            if st.session_state["ja_honyaku"][idx]:
-              csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-            else:
-              csv_file = download_df.to_csv(index=False, encoding="utf-8")
-            tabs[idx].download_button(
-              label="Download CSV",
-              data=csv_file,
-              file_name=f'{st.session_state["download_name"]}.csv'
-            )
+            with tabs[idx]:
+                st.caption(f"df_{idx+1}")
+                st.write(pd.DataFrame(value))
+    
+                upload_name = st.session_state['upload_csvfile'][idx].name
+    
+                download_name = upload_name.split(".")[0]
+                st.write("ファイル名を入力してください")
+                st.text_input(
+                  label="Press Enter to Apply",
+                  value=f"{download_name}_filtered",
+                  key="download_name"
+                )
+              
+                if st.session_state["ja_honyaku"][idx]:
+                  csv_file = download_df.to_csv(index=False, encoding="shift-jis")
+                else:
+                  csv_file = download_df.to_csv(index=False, encoding="utf-8")
+                st.download_button(
+                  label="Download CSV",
+                  data=csv_file,
+                  file_name=f'{st.session_state["download_name"]}.csv'
+                )
     
         # with st.expander("data"):
           # for idx, (key, value) in enumerate(final_dfs.items()):
