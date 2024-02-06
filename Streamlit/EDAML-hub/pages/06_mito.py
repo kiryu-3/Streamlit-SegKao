@@ -32,6 +32,10 @@ hide_menu_style = """
 """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
+# 初期モード設定
+if 'select_mode' not in st.session_state:  # 初期化
+    st.session_state.select_mode = "***CSVファイル***"
+
 def reduce_mem_usage(df, verbose=True):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     start_mem = df.memory_usage().sum() / 1024**2
@@ -102,11 +106,11 @@ def upload_xlsx():
 
 
 
-st.session_state['select_mode'] = st.sidebar.radio(
+select_mode = st.sidebar.radio(
     "アップロードするファイル形式を選択してください",
     ["***CSVファイル***", "***エクセルファイル***"])
 
-if st.session_state['select_mode'] == "***CSVファイル***":
+if select_mode == "***CSVファイル***":
     st.title('Mito-CSV')
     st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
                            type=["csv"],
@@ -122,6 +126,11 @@ else:
                            accept_multiple_files=False,
                            on_change=upload_xlsx
                            )
+
+# ファイル形式が変更された場合にdfを空にする
+if st.session_state.select_mode != select_mode:
+    st.session_state['df'] = None
+    st.session_state.select_mode = select_mode
 
 try: 
     if len(st.session_state['df']) != 0:
