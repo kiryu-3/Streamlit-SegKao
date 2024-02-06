@@ -125,3 +125,6 @@ if st.session_state['upload_csvfile'] is not None:
               data=csv_file,
               file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
             )
+
+    with st.expander("Code"):
+        st.code(code)
