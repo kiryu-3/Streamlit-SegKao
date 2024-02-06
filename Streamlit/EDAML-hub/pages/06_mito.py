@@ -84,7 +84,7 @@ def upload_csv():
 
 st.title('Mito')
 st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
-                       type=["csv"],
+                       type=["csv", "xlsx"],
                        key="upload_csvfile",
                        accept_multiple_files=True,
                        on_change=upload_csv
