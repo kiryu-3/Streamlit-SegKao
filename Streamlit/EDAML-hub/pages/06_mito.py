@@ -96,12 +96,16 @@ try:
         for idx, (key, value) in enumerate(final_dfs.items()):
             tabs_list.append(f"df_{idx+1}")
         # タブ
-        st.tabs(tabs_list)
+        tabs = st.tabs(tabs_list)
+
+        for idx, _ in enumerate(final_dfs.keys()):
+            st.caption(f"df_{idx+1}")
+            st.write(pd.DataFrame(value))
     
-        with st.expander("data"):
-          for idx, (key, value) in enumerate(final_dfs.items()):
-              st.caption(f"df_{idx+1}")
-              st.write(pd.DataFrame(value))
+        # with st.expander("data"):
+          # for idx, (key, value) in enumerate(final_dfs.items()):
+              # st.caption(f"df_{idx+1}")
+              # st.write(pd.DataFrame(value))
           # for idx, (key, value) in enumerate(final_dfs.items()):
           #     upload_name = st.session_state['upload_csvfile'].name
           #     download_name = upload_name.split(".")[0]
