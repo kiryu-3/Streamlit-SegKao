@@ -49,15 +49,17 @@ with st.expander("Human-Flow-Analytics"):
   image_example1 = Image.open(BytesIO(response1.content))
   st.image(image_example1)
 
-with st.expander("CSV-Filter"):
+with st.expander("CSV&Excel-Processer"):
   st.markdown("""
-    - CSVs can be filtered and then downloaded.
-    - Basic CSV files of all types are supported.
+    - CSV/Excelファイルをインポートできる
+    - 現在地での列の名前変更、並び替え、削除を行うことができる
+    - 多くのフィルタ条件を持つフィルタリングを行うことができる
+    - データの加工をExcelファイルを操作している感覚で行うことができる
   """)
   # st.write("Can translate input text into a specified language")
   # st.write("The translated text can be downloaded in mp3 format after being converted to audio")
 
-  response2 = requests.get("https://imgur.com/kOBBXOb.png")
+  response2 = requests.get("https://imgur.com/PtZpW9C.png")
   image_example2 = Image.open(BytesIO(response2.content))
   st.image(image_example2)
 
