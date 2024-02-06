@@ -138,6 +138,10 @@ try:
             with tabs[idx]:
                 st.caption(f"df_{idx+1}")
                 st.dataframe(pd.DataFrame(value))
+                dfdf = pd.DataFrame(value)
+                container = st.beta_container()
+                for i in range(0, len(dfdf), 50):
+                    container.dataframe(dfdf[i:i+50])
     
                 download_name = f"df_{idx+1}"
                 st.write("ファイル名を入力してください")
