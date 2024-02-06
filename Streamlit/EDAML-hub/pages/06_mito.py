@@ -82,7 +82,7 @@ def upload_csv():
             st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
             st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
 
-def upload_csv():
+def upload_xlsx():
     # xlsxがアップロードされたとき
     st.session_state['df'] = list()
     st.session_state["ja_honyaku"] = list()
