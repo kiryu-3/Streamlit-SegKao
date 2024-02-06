@@ -101,9 +101,10 @@ try:
         # タブ
         tabs = st.tabs(tabs_list)
 
-        st.write(final_dfs)
         for idx, (key, value) in enumerate(final_dfs.items()):
-            st.write(key)
+            st.write(idx, key)
+        for idx, (key, value) in enumerate(final_dfs.items()):
+            # st.write(idx, key)
             with tabs[idx]:
                 st.caption(f"df_{idx+1}")
                 st.write(pd.DataFrame(value))
