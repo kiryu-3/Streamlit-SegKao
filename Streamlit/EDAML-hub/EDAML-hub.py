@@ -67,23 +67,25 @@ with st.expander("分類モデル"):
     - 自動で分割された検証用データで予測が行える
   """)
 
-with st.expander("CSV-Filter"):
-  st.markdown("""
-    - CSVs can be filtered and then downloaded.
-    - Basic CSV files of all types are supported.
-  """)
-  # st.write("Can translate input text into a specified language")
-  # st.write("The translated text can be downloaded in mp3 format after being converted to audio")
-
-  response2 = requests.get("https://imgur.com/kOBBXOb.png")
-  image_example2 = Image.open(BytesIO(response2.content))
-  st.image(image_example2)
-
 with st.expander("Pygwalker"):
   st.markdown("""
     - データをTableau風のGUIで探索・可視化できる
     - 手元操作で試行錯誤しながらデータが探索できる
     - 2変数の単純なグラフ化だけではなく、多角的なデータの見方を支援してくれるツールになっている
   """)
+
+with st.expander("CSV&Excel-Processer"):
+  st.markdown("""
+    - CSV/Excelファイルをインポートできる
+    - 現在地での列の名前変更、並び替え、削除を行うことができる
+    - 多くのフィルタ条件を持つフィルタリングを行うことができる
+    - データの加工をExcelファイルを操作している感覚で行うことができる
+  """)
+  # st.write("Can translate input text into a specified language")
+  # st.write("The translated text can be downloaded in mp3 format after being converted to audio")
+
+  response2 = requests.get("https://imgur.com/PtZpW9C.png")
+  image_example2 = Image.open(BytesIO(response2.content))
+  st.image(image_example2)
 
 
