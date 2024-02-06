@@ -128,6 +128,7 @@ try:
     # Graphic Walker 操作（メインパネル）
     if len(st.session_state['df']) != 0:
         final_dfs, code = spreadsheet(*st.session_state['df'])
+        st.write(code)
     
         tabs_list = list()
         for idx, (key, value) in enumerate(final_dfs.items()):
