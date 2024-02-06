@@ -102,10 +102,6 @@ if st.session_state['upload_csvfile'] is not None:
 
     for idx, (key, value) in enumerate(final_dfs.items()):
         st.write(idx, key)
-    with tabs[1]:
-        st.write("ok")
-    for idx, (key, value) in enumerate(final_dfs.items()):
-        st.write(idx, key)
         with tabs[idx]:
             st.caption(f"df_{idx+1}")
             st.write(pd.DataFrame(value))
