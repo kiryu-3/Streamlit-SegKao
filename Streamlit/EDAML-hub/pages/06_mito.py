@@ -103,7 +103,7 @@ try:
 
         for idx, (key, value) in enumerate(final_dfs.items()):
             st.write(idx, key)
-        with tabs[idx]:
+        with tabs[1]:
             st.write("ok")
         for idx, (key, value) in enumerate(final_dfs.items()):
             # st.write(idx, key)
