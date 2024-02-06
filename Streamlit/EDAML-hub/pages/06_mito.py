@@ -117,7 +117,7 @@ if st.session_state['upload_csvfile'] is not None:
             st.text_input(
               label="Press Enter to Apply",
               value=f"{download_name}_filtered",
-              key="download_name"
+              key=f"download_name_{idx}"
             )
 
             download_df = pd.DataFrame(value)
@@ -128,5 +128,5 @@ if st.session_state['upload_csvfile'] is not None:
             st.download_button(
               label="Download CSV",
               data=csv_file,
-              file_name=f'{st.session_state["download_name"]}.csv'
+              file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
             )
