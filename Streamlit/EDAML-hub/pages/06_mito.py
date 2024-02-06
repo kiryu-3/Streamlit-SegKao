@@ -124,7 +124,7 @@ else:
     st.title('Mito-XLSX')
     st.sidebar.file_uploader(label="XLSXファイルをアップロード（複数不可）",
                            type=["xlsx"],
-                           key="upload_xlsx",
+                           key="upload_xlsxfile",
                            accept_multiple_files=False,
                            on_change=upload_xlsx
                            )
