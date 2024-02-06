@@ -102,7 +102,7 @@ try:
             tabs[idx].caption(f"df_{idx+1}")
             tabs[idx].write(pd.DataFrame(value))
 
-            tabs[idx].write(st.session_state['upload_csvfile'][idx])
+            tabs[idx].write(st.session_state['upload_csvfile'][idx].name)
 
             # download_name = upload_name.split(".")[0]
             # st.write("ファイル名を入力してください")
