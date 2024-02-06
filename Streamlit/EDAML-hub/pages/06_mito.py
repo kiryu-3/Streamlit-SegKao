@@ -137,7 +137,7 @@ try:
         for idx, (key, value) in enumerate(final_dfs.items()):
             with tabs[idx]:
                 st.caption(f"df_{idx+1}")
-                st.table(pd.DataFrame(value))
+                st.dataframe()(pd.DataFrame(value))
     
                 download_name = f"df_{idx+1}"
                 st.write("ファイル名を入力してください")
