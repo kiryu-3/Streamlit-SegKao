@@ -91,6 +91,12 @@ st.file_uploader(label="CSVファイルをアップロード（複数可）",
 try:
     if st.session_state['upload_csvfile'] is not None:
         final_dfs, code = spreadsheet(*st.session_state['df'])
+
+        tabs_list = list()
+        for idx, (key, value) in enumerate(final_dfs.items()):
+            tabs_list.append(f"df_{idx+1}")
+        # タブ
+        st.tabs(tabs_list)
     
         with st.expander("data"):
           for idx, (key, value) in enumerate(final_dfs.items()):
