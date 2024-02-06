@@ -83,7 +83,7 @@ def upload_csv():
             st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
 
 st.title('Mito')
-st.file_uploader(label="CSVファイルをアップロード（複数可）",
+st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
                        type=["csv"],
                        key="upload_csvfile",
                        accept_multiple_files=True,
@@ -101,7 +101,6 @@ if st.session_state['upload_csvfile'] is not None:
     tabs = st.tabs(tabs_list)
 
     for idx, (key, value) in enumerate(final_dfs.items()):
-        st.write(idx, key)
         with tabs[idx]:
             st.caption(f"df_{idx+1}")
             st.write(pd.DataFrame(value))
