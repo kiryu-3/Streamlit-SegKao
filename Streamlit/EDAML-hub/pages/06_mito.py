@@ -99,8 +99,8 @@ try:
         tabs = st.tabs(tabs_list)
 
         for idx, _ in enumerate(final_dfs.keys()):
-            st.caption(f"df_{idx+1}")
-            st.write(pd.DataFrame(value))
+            tabs[idx].caption(f"df_{idx+1}")
+            tabs[idx].write(pd.DataFrame(value))
     
         # with st.expander("data"):
           # for idx, (key, value) in enumerate(final_dfs.items()):
