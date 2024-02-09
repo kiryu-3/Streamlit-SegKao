@@ -9,4 +9,4 @@ plotly
 streamlit-pandas
 streamlit-aggrid
 requests
-mito
+mitosheet
