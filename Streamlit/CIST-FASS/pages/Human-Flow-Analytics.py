@@ -999,19 +999,20 @@ with st.sidebar:
 
     # csvから読み込んだIDの表示とプロットするマーカー・軌跡の選択
     with tab2:
-        st.write(st.session_state['df_new'])
-        # st.write(st.session_state['sorted_df'])
         if len(st.session_state['df']) != 0:
-            st.multiselect("選択してください", st.session_state['df'].iloc[:, 0].unique(), key="select_data_id",
-                           on_change=select_data)
-            # データフレームをCSVファイルに保存
-            st.session_state['sorted_df'] = st.session_state['sorted_df'].sort_values(by=st.session_state['sorted_df'].columns[1])
-            # st.session_state['sorted_df'].sort_values(by=st.session_state['sorted_df'].columns[1])
-            csv_file = st.session_state['sorted_df'].to_csv(index=False)
-
-            if len(st.session_state["select_data_id"]) != 0:
-                # ダウンロードボタンを追加
-                st.download_button(label="Download CSV", data=csv_file, file_name='sorted.csv')
+            st.write(st.session_state['df_new'])
+            # st.write(st.session_state['sorted_df'])
+            if len(st.session_state['df']) != 0:
+                st.multiselect("選択してください", st.session_state['df'].iloc[:, 0].unique(), key="select_data_id",
+                               on_change=select_data)
+                # データフレームをCSVファイルに保存
+                st.session_state['sorted_df'] = st.session_state['sorted_df'].sort_values(by=st.session_state['sorted_df'].columns[1])
+                # st.session_state['sorted_df'].sort_values(by=st.session_state['sorted_df'].columns[1])
+                csv_file = st.session_state['sorted_df'].to_csv(index=False)
+    
+                if len(st.session_state["select_data_id"]) != 0:
+                    # ダウンロードボタンを追加
+                    st.download_button(label="Download CSV", data=csv_file, file_name='sorted.csv')
             
     # 図形の情報の選択と削除
     with tab3:
