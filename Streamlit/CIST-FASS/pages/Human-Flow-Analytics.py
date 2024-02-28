@@ -590,15 +590,6 @@ def select_graph():
 
 def kiseki_draw():
     if st.session_state['kiseki_flag']:
-        # 線のジオJSONを追加
-        # folium.GeoJson(st.session_state["line_geojson"], name='線の表示/非表示',
-        #                style_function=lambda x: {"weight": 2, "opacity": 1}).add_to(st.session_state['map'])
-        # folium.GeoJson(
-        #     st.session_state["line_geojson"],
-        #     name='線の表示/非表示',
-        #     style_function=lambda x: {"weight": 2, "opacity": 1},
-        #     popup=folium.GeoJsonPopup(fields=['popup'], labels=False)
-        # ).add_to(st.session_state['map'])
         polylines_maker()
 
     else:
@@ -610,44 +601,6 @@ def kiseki_draw():
         for key in line_layers_to_remove:
             del st.session_state['map']._children[key]
             
-        # # 図形のジオJSONを削除する
-        # line_layers_to_remove = []
-        # for key, value in st.session_state['map']._children.items():
-        #     if isinstance(value, folium.features.GeoJson):
-        #         line_layers_to_remove.append(key)
-        # for key in line_layers_to_remove:
-        #     del st.session_state['map']._children[key]
-
-        # # 地図に図形情報を追加
-        # for idx, sdata in enumerate(st.session_state['draw_data']):
-        #     # 通過人数カウントの準備
-        #     append_list = [dict() for _ in range(len(st.session_state['draw_data']))]
-        #     st.session_state['tuuka_list'] = append_list
-
-        #     # ゲートとIDの組み合わせごとにループ
-        #     for idx1, gates in enumerate(st.session_state['gate_data']):
-        #         for key, values in st.session_state['kiseki_data'].items():
-
-        #             # ポリゴンゲートのときは初期座標をチェック
-        #             if gates[0] == gates[-1]:
-        #                 if ingate(values[0]["座標"][0], gates):
-        #                     st.session_state['tuuka_list'][idx1][key] = values[0]["日時"]
-        #                     continue  # このIDのループを終了
-        #                 else:
-        #                     pass
-
-        #             kekka = cross_judge(gates, values)
-        #             if kekka[0]:
-        #                 st.session_state['tuuka_list'][idx1][key] = values[kekka[1]]["日時"]
-        #                 continue  # このIDのループを終了
-
-        #     # 図形IDを表示するツールチップを設定
-        #     tooltip_html = '<div style="font-size: 16px;">gateid：{}</div>'.format(idx + 1)
-        #     # 通過人数を表示するポップアップを指定
-        #     popup_html = '<div style="font-size: 16px; font-weight: bold; width: 110px; height: 20px;  color: #27b9cc;">通過人数：{}人</div>'.format(
-        #         len(st.session_state['tuuka_list'][idx]))
-        #     folium.GeoJson(sdata, tooltip=tooltip_html, popup=folium.Popup(popup_html)).add_to(st.session_state['map'])
-
     change_mapinfo()
     
 # 図形情報を表示する図形の選択・加工
@@ -919,74 +872,74 @@ try:
 except Exception as e:
     pass
 
-# st.session_state["cols"][0].subheader("地図の全描画データ")
-# st.session_state["cols"][0].write(st.session_state['draw_data'])
-# st.session_state["cols"][0].write(st.session_state['gate_data'])
-if len(st.session_state['df']) != 0 and len(st.session_state['gate_data']):
-    # マルチセレクトに加えるIDリストを生成
-    available_ids = [str(value) for value in range(1, len(st.session_state['gate_data']) + 1) if
-                     len(st.session_state['tuuka_list'][value - 1]) > 0]
-
-    # st.multiselectを呼び出し
-    st.multiselect(
-        "グラフを表示したい図形のIDを選択してください",
-        available_ids,  # 上記で生成したリストを使用
-        key="select_graph_ids",
-        on_change=select_graph
-    )
-
-    if len(st.session_state["select_graph_ids"]) != 0:
-        fig = go.Figure()
-        diff = len(st.session_state['tuuka_list']) - len(st.session_state["select_graph_ids"])
-        y_values = []  # 全折れ線のy値を保持するリストを初期化
-        for idx in st.session_state["select_graph_ids"]:
-            # st.session_stateから選択された図形のIDに対応するグラフのJSONデータを取得
-            graph_json = st.session_state['graph_data'][idx]
-
-            # JSONデータをPythonオブジェクトに変換
-            fig_dict = json.loads(graph_json)
-
-            # 折れ線のy値をリストに追加
-            y_values.extend(trace['y'] for trace in fig_dict['data'])
-
-            # PlotlyのFigureオブジェクトにトレースを追加
-            for trace in fig_dict['data']:
-                # 凡例を変更する場合は、nameプロパティを設定する
-                name = f"図形{idx}"
-                fig.add_trace(go.Scatter(x=trace['x'], y=trace['y'], mode=trace['mode'], name=name))
-
-            # PlotlyのFigureオブジェクトに戻す
-            # fig = go.Figure(fig_dict)
-
-            # fig_list.append(fig)
-
-        # 全折れ線のy値の最大値を取得
-        max_y_value = max(max(y) for y in y_values)
-
-        # 目盛りの間隔を設定
-        if max_y_value > 5:
-            dtick_value = 5
-        else:
-            dtick_value = 1
-
-        # グラフのレイアウトを設定
-        layout = go.Layout(
-            title='通過人数',
-            xaxis=dict(title='日時', dtick=6),
-            yaxis=dict(
-                title='通過人数[人]',
-                tickvals=list(range(0, max_y_value + 1, dtick_value)) + [max_y_value],  # 目盛りの間隔を設定
-                tickformat='d',  # 整数表示に設定
-            )
+try:
+    if len(st.session_state['df']) != 0 and len(st.session_state['gate_data']):
+        # マルチセレクトに加えるIDリストを生成
+        available_ids = [str(value) for value in range(1, len(st.session_state['gate_data']) + 1) if
+                         len(st.session_state['tuuka_list'][value - 1]) > 0]
+    
+        # st.multiselectを呼び出し
+        st.multiselect(
+            "グラフを表示したい図形のIDを選択してください",
+            available_ids,  # 上記で生成したリストを使用
+            key="select_graph_ids",
+            on_change=select_graph
         )
-
-        fig.update_layout(layout)
-
-        # グラフを表示
-        st.plotly_chart(fig)
-        st.write(max_y_value)
-        st.write(len(st.session_state['graph_data']))
-
+    
+        if len(st.session_state["select_graph_ids"]) != 0:
+            fig = go.Figure()
+            diff = len(st.session_state['tuuka_list']) - len(st.session_state["select_graph_ids"])
+            y_values = []  # 全折れ線のy値を保持するリストを初期化
+            for idx in st.session_state["select_graph_ids"]:
+                # st.session_stateから選択された図形のIDに対応するグラフのJSONデータを取得
+                graph_json = st.session_state['graph_data'][idx]
+    
+                # JSONデータをPythonオブジェクトに変換
+                fig_dict = json.loads(graph_json)
+    
+                # 折れ線のy値をリストに追加
+                y_values.extend(trace['y'] for trace in fig_dict['data'])
+    
+                # PlotlyのFigureオブジェクトにトレースを追加
+                for trace in fig_dict['data']:
+                    # 凡例を変更する場合は、nameプロパティを設定する
+                    name = f"図形{idx}"
+                    fig.add_trace(go.Scatter(x=trace['x'], y=trace['y'], mode=trace['mode'], name=name))
+    
+                # PlotlyのFigureオブジェクトに戻す
+                # fig = go.Figure(fig_dict)
+    
+                # fig_list.append(fig)
+    
+            # 全折れ線のy値の最大値を取得
+            max_y_value = max(max(y) for y in y_values)
+    
+            # 目盛りの間隔を設定
+            if max_y_value > 5:
+                dtick_value = 5
+            else:
+                dtick_value = 1
+    
+            # グラフのレイアウトを設定
+            layout = go.Layout(
+                title='通過人数',
+                xaxis=dict(title='日時', dtick=6),
+                yaxis=dict(
+                    title='通過人数[人]',
+                    tickvals=list(range(0, max_y_value + 1, dtick_value)) + [max_y_value],  # 目盛りの間隔を設定
+                    tickformat='d',  # 整数表示に設定
+                )
+            )
+    
+            fig.update_layout(layout)
+    
+            # グラフを表示
+            st.plotly_chart(fig)
+            st.write(max_y_value)
+            st.write(len(st.session_state['graph_data']))
+except:
+    pass
+    
 with st.sidebar:
     # タブ
     tab1, tab2, tab3, tab4 = st.tabs(["Uploader", "Data_info", "Gate_info", "Kiseki_info"])
