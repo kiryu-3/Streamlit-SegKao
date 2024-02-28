@@ -769,7 +769,7 @@ st.session_state["data"] = st_data
 
 st.write(st.session_state['zoom_level'])
 st.write(st.session_state['center'])
-# st.write(data)
+st.write(data)
 
 
 try:
