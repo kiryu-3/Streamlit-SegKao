@@ -36,18 +36,21 @@ st.caption("CIST Human Flow Analytics System with Streamlit-Folium")
 st.write('## Explanation')
 
 with st.expander("Human-Flow-Analytics"):
-  st.markdown("""
-    - CIST's original human flow data visualization tool
-    - Uploading data (csv) with latitude and longitude and their time information will allow visualization of the flow of human flow.
-    - When the user draws a shape on the map, the number of people who have passed through that shape can be counted.
-    - The CSV file to be uploaded must contain data for ID, time, latitude and longitude that identifies the individual.
-  """)
-  # st.write("The input text can be converted to speech")
-  # st.write("Audio can be downloaded in mp3 format")
-
-  response1 = requests.get("https://imgur.com/svBwwAT.png")
-  image_example1 = Image.open(BytesIO(response1.content))
-  st.image(image_example1)
+      st.markdown("""
+        - CIST's original human flow data visualization tool
+        - Uploading data (csv) with latitude and longitude and their time information will allow visualization of the flow of human flow.
+        - When the user draws a shape on the map, the number of people who have passed through that shape can be counted.
+        - The CSV file to be uploaded must contain data for ID, time, latitude and longitude that identifies the individual.
+      """)
+      # st.write("The input text can be converted to speech")
+      # st.write("Audio can be downloaded in mp3 format")
+    
+      # 画像ファイルのパス
+      image_path = os.path.join(os.path.dirname(__file__), 'csv_image.png')
+        
+      # 画像をPILのImageオブジェクトとして読み込む
+      image_example1 = Image.open(image_path)
+      st.image(image_example1)
 
 with st.expander("CSV&Excel-Processer"):
   st.markdown("""
@@ -59,8 +62,11 @@ with st.expander("CSV&Excel-Processer"):
   # st.write("Can translate input text into a specified language")
   # st.write("The translated text can be downloaded in mp3 format after being converted to audio")
 
-  response2 = requests.get("https://imgur.com/PtZpW9C.png")
-  image_example2 = Image.open(BytesIO(response2.content))
+  # 画像ファイルのパス
+  image_path = os.path.join(os.path.dirname(__file__), 'map_image.png')
+    
+  # 画像をPILのImageオブジェクトとして読み込む
+  image_example2 = Image.open(image_path)
   st.image(image_example2)
 
 with st.expander("Sample-Data"):
