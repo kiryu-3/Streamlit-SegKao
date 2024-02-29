@@ -21,6 +21,7 @@ from PIL import Image
 import io
 from io import BytesIO
 import itertools
+import os
 
 # 画像ファイルのパス
 image_path = os.path.join(os.path.dirname(__file__), '..', 'icon_image.png')
