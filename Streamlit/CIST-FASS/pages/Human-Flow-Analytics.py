@@ -23,7 +23,7 @@ from io import BytesIO
 import itertools
 
 # 画像URLを指定
-image_url = "https://imgur.com/C32lMvR.jpg"
+image_url = "https://imgur.com/C32lMvR.png"
 
 # 画像をダウンロードしPILのImageオブジェクトとして読み込む
 response = requests.get(image_url)
