@@ -46,7 +46,7 @@ with st.expander("Human-Flow-Analytics"):
       # st.write("Audio can be downloaded in mp3 format")
     
       # 画像ファイルのパス
-      image_path = os.path.join(os.path.dirname(__file__), 'csv_image.png')
+      image_path = os.path.join(os.path.dirname(__file__), 'map_image.png')
         
       # 画像をPILのImageオブジェクトとして読み込む
       image_example1 = Image.open(image_path)
@@ -63,7 +63,7 @@ with st.expander("CSV&Excel-Processer"):
   # st.write("The translated text can be downloaded in mp3 format after being converted to audio")
 
   # 画像ファイルのパス
-  image_path = os.path.join(os.path.dirname(__file__), 'map_image.png')
+  image_path = os.path.join(os.path.dirname(__file__), 'csv_image.png')
     
   # 画像をPILのImageオブジェクトとして読み込む
   image_example2 = Image.open(image_path)
