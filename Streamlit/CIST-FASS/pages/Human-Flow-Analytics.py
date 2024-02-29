@@ -22,12 +22,18 @@ import io
 from io import BytesIO
 import itertools
 
-# 画像URLを指定
-image_url = "https://imgur.com/C32lMvR.png"
+# # 画像URLを指定
+# image_url = "https://imgur.com/C32lMvR.png"
 
-# 画像をダウンロードしPILのImageオブジェクトとして読み込む
-response = requests.get(image_url)
-image = Image.open(BytesIO(response.content))
+# # 画像をダウンロードしPILのImageオブジェクトとして読み込む
+# response = requests.get(image_url)
+# image = Image.open(BytesIO(response.content))
+
+# 画像ファイルのパス
+image_path = "../icon_image.png"
+
+# 画像をPILのImageオブジェクトとして読み込む
+image = Image.open(image_path)
 
 # Streamlit ページの設定
 st.set_page_config(
