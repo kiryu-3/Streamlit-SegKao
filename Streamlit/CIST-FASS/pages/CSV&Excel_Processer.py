@@ -9,13 +9,13 @@ import requests
 from PIL import Image
 import io
 from io import BytesIO
+import os
 
-# 画像URLを指定
-image_url = "https://imgur.com/C32lMvR.jpg"
+# 画像ファイルのパス
+image_path = os.path.join(os.path.dirname(__file__), '..', 'icon_image.png')
 
-# 画像をダウンロードしPILのImageオブジェクトとして読み込む
-response = requests.get(image_url)
-image = Image.open(BytesIO(response.content))
+# 画像をPILのImageオブジェクトとして読み込む
+image = Image.open(image_path)
 
 # Streamlit ページの設定
 st.set_page_config(
