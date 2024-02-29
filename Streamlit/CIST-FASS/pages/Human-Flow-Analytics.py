@@ -30,7 +30,7 @@ import itertools
 # image = Image.open(BytesIO(response.content))
 
 # 画像ファイルのパス
-image_path = "../../icon_image.png"
+image_path = os.path.join(os.path.dirname(__file__), "../image.png")
 
 # 画像をPILのImageオブジェクトとして読み込む
 image = Image.open(image_path)
