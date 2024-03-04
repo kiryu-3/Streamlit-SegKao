@@ -9,6 +9,7 @@ import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 from datetime import datetime, timedelta
+import os
 
 def setup_database():
     conn = sqlite3.connect('chat.db')
@@ -104,7 +105,9 @@ def process_authentication(authentication_status):
     elif authentication_status == None:
         st.sidebar.warning('Please enter your username and password')
 
-names, usernames, passwords, cookie_name, key, expiry_days = load_credentials('config.yaml')
+# yaml_pathファイルのパス
+yaml_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
+names, usernames, passwords, cookie_name, key, expiry_days = load_credentials(yaml_path)
 authenticator = authenticate(names, usernames, passwords, cookie_name, key, expiry_days)
 name, authentication_status, username = login(authenticator)
 if authentication_status:
