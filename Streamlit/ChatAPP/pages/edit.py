@@ -4,6 +4,7 @@ import yaml
 import sqlite3
 import pandas as pd
 from mitosheet.streamlit.v1 import spreadsheet
+import os
 
 def setup_database():
     conn = sqlite3.connect('chat.db')
@@ -88,7 +89,9 @@ def execute_query_and_display_data(conn):
     except Exception as e:
         pass
 
-names, usernames, passwords, cookie_name, key, expiry_days = load_credentials('config.yaml')
+# yaml_pathファイルのパス
+yaml_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
+names, usernames, passwords, cookie_name, key, expiry_days = load_credentials(yaml_path)
 authenticator = authenticate(names, usernames, passwords, cookie_name, key, expiry_days)
 name, authentication_status, username = login(authenticator)
 if authentication_status:
