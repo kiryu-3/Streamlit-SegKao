@@ -1,0 +1,12 @@
+cookie:
+  expiry_days: 0.0
+  key: some_signature_key
+  name: some_cookie_name
+credentials:
+  usernames:
+    admin:
+      name: admin
+      password: $2b$12$U2HFfv8nZ0ebDgulkwWYJOHd8kzWeHqR8kWfCj3jyhzQhqZaC1vx6
+    student:
+      name: student
+      password: $2b$12$MQQfHsL1vk1M.4XwnyIn0uleMedENpclxvYTQ24oRjNCLldjKM7LK
