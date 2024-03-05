@@ -95,14 +95,6 @@ def create_input_form(conn, c, group, date):
         elif mode == "text":
             comment = st.text_area('コメントを入力してください')
 
-        else:
-            # ファイルをアップロード
-            uploaded_file = st.file_uploader("ファイルをアップロードしてください", type=["pdf", "jpg", "jpeg", "png", "csv", "xlsx", "xls", "docx", "pptx"])
-            if uploaded_file is not None:
-                comment = base64.b64encode(uploaded_file.getvalue()).decode('utf-8')
-            else:
-                comment = "<<<file upload>>>"
-
         target_usernames = get_unique_targetnames(conn, c, group, date)
         target_username = st.selectbox(
                   label="送信するユーザーを選んでください",
@@ -115,9 +107,7 @@ def create_input_form(conn, c, group, date):
         
         # submitボタンの生成
         submit_btn = st.form_submit_button("送信")
-        
-    if uploaded_file is not None:
-        memo = "<<<file upload>>>:" + uploaded_file.name
+
     return comment, target_username, memo, submit_btn
 
 def save_comment_to_database(conn, c, date, group, username, comment, target_username, memo):
@@ -130,23 +120,13 @@ def display_chat_input(c, date, group):
 
     for row in chat_rows:
         if row[2] == "everyone" or row[2] == st.session_state["username"]:
-            split_uploaded_file_name = row[3].split(":")
-            try:
-                file_data = base64.b64decode(row[1])
-            except:
-                pass
+
             
             if row[0] == st.session_state["username"]:
-                if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
-                    st.chat_message("user").write(f"→{row[2]}:  \nファイルがダウンロードできます")
-                    st.chat_message("user").download_button(label=f"Download {split_uploaded_file_name[1]}", data=file_data, file_name=split_uploaded_file_name[1])
-                else:
-                    st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
+                st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
+                    
             else:
-                if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
-                    st.chat_message("assistant").download_button(label=f"Download {split_uploaded_file_name[1]}", data=file_data, file_name=split_uploaded_file_name[1])
-                else:
-                    st.chat_message("assistant").write(f"→{row[2]}:  \n{row[1]}")
+                st.chat_message("assistant").write(f"→{row[2]}:  \n{row[1]}")
 
 def load_credentials(filepath):
     with open(filepath, 'r') as file:
