@@ -82,7 +82,7 @@ def execute_query_and_display_data(conn):
                 st.code(code)
 
             # DataFrame をテーブルに書き込む
-            download_df.to_sql('chat.db', conn, if_exists='replace', index=False)
+            download_df.to_sql('chats', conn, if_exists='replace', index=False)
 
             # 接続を閉じる
             conn.close()
