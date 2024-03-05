@@ -52,6 +52,7 @@ def create_input_form():
             index=0,
             horizontal=True,
         )
+        st.write(mode)
         if mode == "number":
             # 数値入力フィールドを表示し、ユーザーが月を入力する
             comment = st.number_input(
