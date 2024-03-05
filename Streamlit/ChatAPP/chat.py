@@ -63,7 +63,7 @@ def select_group_and_username():
     
     return date, group, username
 
-def create_input_form():
+def create_input_form(conn, c, group, date):
     def get_unique_targetnames(conn, c, group, date):
         
         # c.executeで取得した結果をリストに変換
@@ -73,9 +73,6 @@ def create_input_form():
         target_usernames.insert(0, "everyone")
         
         return target_usernames
-    if authentication_status:
-        conn, c = setup_database()
-        date, group, username = select_group_and_username()
 
         if len(username) != 0:    
             mode = st.radio(
@@ -164,7 +161,7 @@ def process_authentication(authentication_status):
         date, group, username = select_group_and_username()
 
         if len(username) != 0:
-            comment, target_username, memo, submit_btn = create_input_form()
+            comment, target_username, memo, submit_btn = create_input_form(conn, c, group, date)
             if submit_btn:
                 save_comment_to_database(conn, c, date, group, username, comment, target_username, memo)
             display_chat_input(c, date, group)
