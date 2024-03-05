@@ -119,9 +119,9 @@ def display_chat_input(c, date, group):
     for row in chat_rows:
         if row[2] == "everyone" or row[2] == st.session_state["username"]:
             if row[0] == st.session_state["username"]:
-                st.chat_message("user").write(f"→{row[2]}:  \n```{row[1]}```")
+                st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
             else:
-                st.chat_message("assistant").write(f"→{row[2]}:  \n```{row[1]}```")
+                st.chat_message("assistant").write(f"→{row[2]}:  \n{row[1]}")
 
 def load_credentials(filepath):
     with open(filepath, 'r') as file:
