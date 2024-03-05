@@ -131,7 +131,10 @@ def display_chat_input(c, date, group):
     for row in chat_rows:
         if row[2] == "everyone" or row[2] == st.session_state["username"]:
             split_uploaded_file_name = row[3].split(":")
-            file_data = base64.b64decode(row[1])
+            try:
+                file_data = base64.b64decode(row[1])
+            except:
+                pass
             
             if row[0] == st.session_state["username"]:
                 if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
