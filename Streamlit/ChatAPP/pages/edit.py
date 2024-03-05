@@ -9,7 +9,7 @@ import os
 def setup_database():
     conn = sqlite3.connect('chat.db')
     c = conn.cursor()
-    c.execute('''DROP TABLE IF EXISTS chats''')  # テーブルがすでに存在している場合は削除
+    # c.execute('''DROP TABLE IF EXISTS chats''')  # テーブルがすでに存在している場合は削除
     c.execute('''CREATE TABLE IF NOT EXISTS chats
                  (date TEXT, group_name TEXT, username TEXT, comment TEXT, target_username TEXT, memo TEXT)''')
     conn.commit()
