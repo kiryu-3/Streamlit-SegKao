@@ -77,7 +77,7 @@ def create_input_form(conn, c, group, date):
 
     mode = st.radio(
             label='送信したいデータを選択してください',
-            options=["number", "text", "file_upload"],
+            options=["number", "text"],
             index=0,
             horizontal=True,
         )
