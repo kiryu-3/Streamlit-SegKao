@@ -87,7 +87,7 @@ def execute_query_and_display_data(conn):
             # 接続を閉じる
             conn.close()
     except Exception as e:
-        pass
+        st.error(e)
 
 # yaml_pathファイルのパス
 yaml_path = os.path.join(os.path.dirname(__file__), '..', 'config.yaml')
