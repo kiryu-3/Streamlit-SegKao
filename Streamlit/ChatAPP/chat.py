@@ -133,12 +133,12 @@ def display_chat_input(c, date, group):
             if row[0] == st.session_state["username"]:
                 if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
                     st.chat_message("user").write(f"→{row[2]}:  \nファイルがダウンロードできます")
-                    st.chat_message("user").download_button(label=f"Download {split_uploaded_file_name[1]}", data=comment, file_name=split_uploaded_file_name[1])
+                    st.chat_message("user").download_button(label=f"Download {split_uploaded_file_name[1]}", data=row[1], file_name=split_uploaded_file_name[1])
                 else:
                     st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
             else:
                 if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
-                    st.chat_message("assistant").download_button(label=f"Download {split_uploaded_file_name[1]}", data=comment, file_name=split_uploaded_file_name[1])
+                    st.chat_message("assistant").download_button(label=f"Download {split_uploaded_file_name[1]}", data=row[1], file_name=split_uploaded_file_name[1])
                 else:
                     st.chat_message("assistant").write(f"→{row[2]}:  \n{row[1]}")
 
