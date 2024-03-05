@@ -97,7 +97,7 @@ def create_input_form(conn, c, group, date):
         else:
             # ファイルをアップロード
             uploaded_file = st.file_uploader("ファイルをアップロードしてください", type=["pdf", "jpg", "jpeg", "png", "csv", "xlsx", "xls", "docx", "pptx"])
-            comment = "<<<file upload>>>"
+            comment = uploaded_file.getvalue()
 
         target_usernames = get_unique_targetnames(conn, c, group, date)
         target_username = st.selectbox(
@@ -113,7 +113,7 @@ def create_input_form(conn, c, group, date):
         submit_btn = st.form_submit_button("送信")
         
     if uploaded_file is not None:
-        memo = "file upload"
+        memo = "<<<file upload>>>:" + uploaded_file.name
     return comment, target_username, memo, submit_btn, uploaded_file
 
 def save_comment_to_database(conn, c, date, group, username, comment, target_username, memo):
@@ -121,20 +121,21 @@ def save_comment_to_database(conn, c, date, group, username, comment, target_use
         c.execute("INSERT INTO chats (date, group_name, username, comment, target_username, memo) VALUES (?, ?, ?, ?, ?, ?)", (date, group, username, comment, target_username, memo))
         conn.commit()
 
-def display_chat_input(c, date, group, uploaded_file):
-    chat_rows = c.execute("SELECT username, comment, target_username FROM chats WHERE group_name=? AND date=?", (group, date))
+def display_chat_input(c, date, group):
+    chat_rows = c.execute("SELECT username, comment, target_username, memo FROM chats WHERE group_name=? AND date=?", (group, date))
 
     for row in chat_rows:
         if row[2] == "everyone" or row[2] == st.session_state["username"]:
+            split_uploaded_file_name = row[3].split(":")
             if row[0] == st.session_state["username"]:
-                if row[1]=="<<<file upload>>>" and uploaded_file is not None:
+                if split_uploaded_file_name[0]=="<<<file upload>>>":
                     st.chat_message("user").write(f"→{row[2]}:  \nファイルがダウンロードできます")
-                    st.chat_message("user").download_button(label=f"Download {uploaded_file.name}", data=uploaded_file.getvalue(), file_name=uploaded_file.name)
+                    st.chat_message("user").download_button(label=f"Download {split_uploaded_file_name[1]}", data=comment, file_name=split_uploaded_file_name[1])
                 else:
                     st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
             else:
-                if row[1]=="<<<file upload>>>" and uploaded_file is not None:
-                    st.chat_message("assistant").download_button(label=f"Download {uploaded_file.name}", data=uploaded_file.getvalue(), file_name=uploaded_file.name)
+                if split_uploaded_file_name[0]=="<<<file upload>>>":
+                    st.chat_message("assistant").download_button(label=f"Download {split_uploaded_file_name[1]}", data=comment, file_name=split_uploaded_file_name[1])
                 else:
                     st.chat_message("assistant").write(f"→{row[2]}:  \n{row[1]}")
 
@@ -176,10 +177,10 @@ def process_authentication(authentication_status):
         date, group, username = select_group_and_username()
 
         if len(username) != 0:
-            comment, target_username, memo, submit_btn, uploaded_file = create_input_form(conn, c, group, date)
+            comment, target_username, memo, submit_btn = create_input_form(conn, c, group, date)
             if submit_btn:
                 save_comment_to_database(conn, c, date, group, username, comment, target_username, memo)
-            display_chat_input(c, date, group, uploaded_file)
+            display_chat_input(c, date, group)
     elif authentication_status == False:
         st.sidebar.error('Username/password is incorrect')
     elif authentication_status == None:
