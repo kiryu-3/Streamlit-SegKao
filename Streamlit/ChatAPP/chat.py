@@ -44,6 +44,30 @@ def select_group_and_username():
     
     return date, group, username
 
+def create_input_form():
+    with st.form("info_form"):
+        mode = st.radio(
+            label='送信したいデータを選択してください',
+            options=["number", "text"],
+            index=0,
+            horizontal=True,
+        )
+        if mode == "number":
+            # 数値入力フィールドを表示し、ユーザーが月を入力する
+            comment = st.number_input(
+                label="点数を選択してください",
+                min_value=1,
+                max_value=5,
+                value=3,
+            )
+        else:
+            comment = st.text_area('コメントを入力してください')
+        
+        # submitボタンの生成
+        submit_btn = st.form_submit_button("送信")
+
+    return comment, submit_btn
+
 def save_comment_to_database(conn, c, date, group, username, comment):
     if comment:
         c.execute("INSERT INTO chats (date, group_name, username, comment) VALUES (?, ?, ?, ?)", (date, group, username, comment))
@@ -96,8 +120,9 @@ def process_authentication(authentication_status):
         date, group, username = select_group_and_username()
 
         if len(username) != 0:
-            comment = st.text_area('コメントを入力してください')
-            if st.button('送信'):
+            form_info = create_input_form()
+            comment = form_info[0]
+            if form_info[1]:
                 save_comment_to_database(conn, c, date, group, username, comment)
             display_chat_input(c, date, group)
     elif authentication_status == False:
