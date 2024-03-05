@@ -16,7 +16,7 @@ def setup_database():
     conn = sqlite3.connect('chat.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS chats
-                 (date TEXT, group_name TEXT, username TEXT, comment TEXT)''')
+                 (date TEXT, group_name TEXT, username TEXT, comment TEXT, target_username TEXT, memo TEXT)''')
     conn.commit()
     return conn, c
 
@@ -49,7 +49,7 @@ def select_group_and_username():
         max_value=today  # 今日の日付を最大値に設定
     )
 
-    group = st.sidebar.selectbox('グループを選択してください', ['グループA', 'グループB', 'グループC', 'グループD', 'グループE', 'グループF', 'グループG'])
+    group = st.sidebar.selectbox('グループを選択してください', [f"グループ{char}" for char in "ABCDEFGHIJKLMN"])
     username = st.sidebar.text_input('ユーザー名を入力してください')
 
     st.session_state["date"] = date
@@ -64,6 +64,16 @@ def select_group_and_username():
     return date, group, username
 
 def create_input_form():
+    def get_unique_targetnames(conn, c, group, date):
+        
+        # c.executeで取得した結果をリストに変換
+        chat_rows = c.execute("SELECT username FROM chats WHERE group_name=? AND date=?", (group, date)).fetchall()
+        # ユニークなデータを取得し、リストの先頭に"everyone"を追加
+        target_usernames = list(set(row[0] for row in chat_rows))
+        target_usernames.insert(0, "everyone")
+        
+        return target_usernames
+        
     mode = st.radio(
             label='送信したいデータを選択してください',
             options=["number", "text"],
@@ -81,25 +91,36 @@ def create_input_form():
             )
         else:
             comment = st.text_area('コメントを入力してください')
+
+        target_usernames = get_unique_targetnames(conn, c, group, date)
+        target_username = st.selectbox(
+                  label="送信するユーザーを選んでください",
+                  options=target_usernames,
+            )
+        memo = st.text_input(
+            label="メモを入力してください",
+            value="none"
+        )
         
         # submitボタンの生成
         submit_btn = st.form_submit_button("送信")
 
-    return comment, submit_btn
+    return comment, target_username, memo, submit_btn
 
-def save_comment_to_database(conn, c, date, group, username, comment):
+def save_comment_to_database(conn, c, date, group, username, comment, target_username, memo):
     if comment:
-        c.execute("INSERT INTO chats (date, group_name, username, comment) VALUES (?, ?, ?, ?)", (date, group, username, comment))
+        c.execute("INSERT INTO chats (date, group_name, username, comment, target_username, memo) VALUES (?, ?, ?, ?, ?, ?)", (date, group, username, comment, target_username, memo))
         conn.commit()
 
 def display_chat_input(c, date, group):
-    chat_rows = c.execute("SELECT username, comment FROM chats WHERE group_name=? AND date=?", (group, date))
+    chat_rows = c.execute("SELECT username, comment, target_username FROM chats WHERE group_name=? AND date=?", (group, date))
 
     for row in chat_rows:
-        if row[0] == st.session_state["username"]:
-            st.chat_message("user").write(f"{row[0]}:\n {row[1]}")
-        else:
-            st.chat_message("assistant").write(f"{row[0]}:\n {row[1]}")
+        if row[2] == "everyone" or row[2] == st.session_state["username"]:
+            if row[0] == st.session_state["username"]:
+                st.chat_message("user").write(f"→{row[2]}:\n  ```{row[1]}```")
+            else:
+                st.chat_message("assistant").write(f"→{row[2]}:\n  ```{row[1]}```")
 
 def load_credentials(filepath):
     with open(filepath, 'r') as file:
@@ -139,10 +160,9 @@ def process_authentication(authentication_status):
         date, group, username = select_group_and_username()
 
         if len(username) != 0:
-            form_info = create_input_form()
-            comment = form_info[0]
-            if form_info[1]:
-                save_comment_to_database(conn, c, date, group, username, comment)
+            comment, target_username, memo, submit_btn = create_input_form()
+            if submit_btn:
+                save_comment_to_database(conn, c, date, group, username, comment, target_username, memo)
             display_chat_input(c, date, group)
     elif authentication_status == False:
         st.sidebar.error('Username/password is incorrect')
