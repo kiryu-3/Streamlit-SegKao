@@ -97,7 +97,8 @@ def create_input_form(conn, c, group, date):
         else:
             # ファイルをアップロード
             uploaded_file = st.file_uploader("ファイルをアップロードしてください", type=["pdf", "jpg", "jpeg", "png", "csv", "xlsx", "xls", "docx", "pptx"])
-            comment = uploaded_file.getvalue()
+            if uploaded_file is not None:
+                comment = uploaded_file.getvalue()
 
         target_usernames = get_unique_targetnames(conn, c, group, date)
         target_username = st.selectbox(
