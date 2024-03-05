@@ -114,7 +114,7 @@ def create_input_form(conn, c, group, date):
         
     if uploaded_file is not None:
         memo = "<<<file upload>>>:" + uploaded_file.name
-    return comment, target_username, memo, submit_btn, uploaded_file
+    return comment, target_username, memo, submit_btn
 
 def save_comment_to_database(conn, c, date, group, username, comment, target_username, memo):
     if comment:
