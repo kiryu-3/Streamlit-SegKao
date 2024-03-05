@@ -74,37 +74,37 @@ def create_input_form(conn, c, group, date):
         
         return target_usernames
 
-        if len(username) != 0:    
-            mode = st.radio(
-                    label='送信したいデータを選択してください',
-                    options=["number", "text"],
-                    index=0,
-                    horizontal=True,
+    if len(username) != 0:    
+        mode = st.radio(
+                label='送信したいデータを選択してください',
+                options=["number", "text"],
+                index=0,
+                horizontal=True,
+            )
+        with st.form("info_form"):
+            if mode == "number":
+                # 数値入力フィールドを表示し、ユーザーが月を入力する
+                comment = st.number_input(
+                    label="点数を選択してください",
+                    min_value=1,
+                    max_value=5,
+                    value=3,
                 )
-            with st.form("info_form"):
-                if mode == "number":
-                    # 数値入力フィールドを表示し、ユーザーが月を入力する
-                    comment = st.number_input(
-                        label="点数を選択してください",
-                        min_value=1,
-                        max_value=5,
-                        value=3,
-                    )
-                else:
-                    comment = st.text_area('コメントを入力してください')
-        
-                target_usernames = get_unique_targetnames(conn, c, group, date)
-                target_username = st.selectbox(
-                          label="送信するユーザーを選んでください",
-                          options=target_usernames,
-                    )
-                memo = st.text_input(
-                    label="メモを入力してください",
-                    value="none"
+            else:
+                comment = st.text_area('コメントを入力してください')
+    
+            target_usernames = get_unique_targetnames(conn, c, group, date)
+            target_username = st.selectbox(
+                      label="送信するユーザーを選んでください",
+                      options=target_usernames,
                 )
-                
-                # submitボタンの生成
-                submit_btn = st.form_submit_button("送信")
+            memo = st.text_input(
+                label="メモを入力してください",
+                value="none"
+            )
+            
+            # submitボタンの生成
+            submit_btn = st.form_submit_button("送信")
 
     return comment, target_username, memo, submit_btn
 
