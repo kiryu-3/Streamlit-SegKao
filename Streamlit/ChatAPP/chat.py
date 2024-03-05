@@ -11,6 +11,7 @@ from yaml.loader import SafeLoader
 from datetime import datetime, timedelta
 import os
 import pytz
+import base64
 
 def setup_database():
     conn = sqlite3.connect('chat.db')
@@ -98,7 +99,7 @@ def create_input_form(conn, c, group, date):
             # ファイルをアップロード
             uploaded_file = st.file_uploader("ファイルをアップロードしてください", type=["pdf", "jpg", "jpeg", "png", "csv", "xlsx", "xls", "docx", "pptx"])
             if uploaded_file is not None:
-                comment = uploaded_file.getvalue()
+                comment = base64.b64encode(uploaded_file.getvalue()).decode('utf-8')
             else:
                 comment = "<<<file upload>>>"
 
@@ -130,15 +131,17 @@ def display_chat_input(c, date, group):
     for row in chat_rows:
         if row[2] == "everyone" or row[2] == st.session_state["username"]:
             split_uploaded_file_name = row[3].split(":")
+            file_data = base64.b64decode(row[1])
+            
             if row[0] == st.session_state["username"]:
                 if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
                     st.chat_message("user").write(f"→{row[2]}:  \nファイルがダウンロードできます")
-                    st.chat_message("user").download_button(label=f"Download {split_uploaded_file_name[1]}", data=row[1], file_name=split_uploaded_file_name[1])
+                    st.chat_message("user").download_button(label=f"Download {split_uploaded_file_name[1]}", data=file_data, file_name=split_uploaded_file_name[1])
                 else:
                     st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
             else:
                 if split_uploaded_file_name[0]=="<<<file upload>>>" and row[1]!="<<<file upload>>>":
-                    st.chat_message("assistant").download_button(label=f"Download {split_uploaded_file_name[1]}", data=row[1], file_name=split_uploaded_file_name[1])
+                    st.chat_message("assistant").download_button(label=f"Download {split_uploaded_file_name[1]}", data=file_data, file_name=split_uploaded_file_name[1])
                 else:
                     st.chat_message("assistant").write(f"→{row[2]}:  \n{row[1]}")
 
