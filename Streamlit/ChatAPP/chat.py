@@ -112,7 +112,8 @@ def create_input_form(conn, c, group, date):
         # submitボタンの生成
         submit_btn = st.form_submit_button("送信")
         
-
+    if uploaded_file is not None:
+        memo = "file upload"
     return comment, target_username, memo, submit_btn, uploaded_file
 
 def save_comment_to_database(conn, c, date, group, username, comment, target_username, memo):
@@ -127,6 +128,7 @@ def display_chat_input(c, date, group, uploaded_file):
         if row[2] == "everyone" or row[2] == st.session_state["username"]:
             if row[0] == st.session_state["username"]:
                 if row[1]=="<<<file upload>>>" and uploaded_file is not None:
+                    st.chat_message("user").write(f"→{row[2]}:  \nファイルがダウンロードできます")
                     st.chat_message("user").download_button(label=f"Download {uploaded_file.name}", data=uploaded_file.getvalue(), file_name=uploaded_file.name)
                 else:
                     st.chat_message("user").write(f"→{row[2]}:  \n{row[1]}")
