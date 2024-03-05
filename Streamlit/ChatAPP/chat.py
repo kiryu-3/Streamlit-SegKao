@@ -10,6 +10,7 @@ import yaml
 from yaml.loader import SafeLoader
 from datetime import datetime, timedelta
 import os
+import pytz
 
 def setup_database():
     conn = sqlite3.connect('chat.db')
@@ -20,8 +21,26 @@ def setup_database():
     return conn, c
 
 def select_group_and_username():
-    today = datetime.today()  # 今日の日付を取得 
-    lastday = today - timedelta(days=365)  # 一年前の日付を計算
+    def get_japan_time():
+        # 日本時間のタイムゾーンを設定
+        jst = pytz.timezone('Asia/Tokyo')
+        # 現在のUTC時間を取得
+        utc_now = datetime.utcnow()
+        # UTC時間にタイムゾーンを設定し、日本時間に変換
+        japan_now = utc_now.replace(tzinfo=pytz.utc).astimezone(jst)
+        return japan_now
+    
+    def get_last_year_date():
+        # 現在の日本時間を取得
+        japan_now = get_japan_time()
+        # 一年前の日付を計算
+        last_year_date = japan_now - timedelta(days=365)
+        return last_year_date
+        
+    # 関数を使用して今日の日付と一年前の日付を取得
+    today = get_japan_time()
+    lastday = get_last_year_date()
+
     # 日付を選択する入力ウィジェットを表示し、ユーザーが日付を選択する
     date = st.sidebar.date_input(
         label="日付を選択してください",
@@ -45,14 +64,13 @@ def select_group_and_username():
     return date, group, username
 
 def create_input_form():
-    with st.form("info_form"):
-        mode = st.radio(
+    mode = st.radio(
             label='送信したいデータを選択してください',
             options=["number", "text"],
             index=0,
             horizontal=True,
         )
-        st.write(mode)
+    with st.form("info_form"):
         if mode == "number":
             # 数値入力フィールドを表示し、ユーザーが月を入力する
             comment = st.number_input(
