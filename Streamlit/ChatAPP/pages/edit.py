@@ -10,7 +10,7 @@ def setup_database():
     conn = sqlite3.connect('chat.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS chats
-                 (date TEXT, group_name TEXT, username TEXT, comment TEXT)''')
+                 (date TEXT, group_name TEXT, username TEXT, comment TEXT, target_username TEXT, memo TEXT)''')
     conn.commit()
     return conn, c
 
