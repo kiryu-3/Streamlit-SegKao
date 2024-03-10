@@ -141,8 +141,10 @@ with st.expander("Explanation"):
     # st.write("Can translate input text into a specified language")
     # st.write("The translated text can be downloaded in mp3 format after being converted to audio")
 
-    response2 = requests.get("https://imgur.com/YLszTa4.png")
-    image_example2 = Image.open(BytesIO(response2.content))
+    # 画像ファイルのパス
+    image_path = os.path.join(os.path.dirname(__file__), 'setumei_image.png')
+    # 画像をPILのImageオブジェクトとして読み込む
+    image_example2 = Image.open(image_path)
     st.image(image_example2)
 
 st.text_area(label="Please enter the sentence to be translated",
