@@ -7,7 +7,7 @@ from utils.shape_manager import ShapeManager
 from utils.analysis_manager import AnalysisManager
 
 # 画像ファイルのパス
-image_path = os.path.join(os.path.dirname(__file__), '..', 'icon_image.png')
+image_path = os.path.join(os.path.dirname(__file__), 'icon_image.png')
 
 # 画像をPILのImageオブジェクトとして読み込む
 image = Image.open(image_path)
