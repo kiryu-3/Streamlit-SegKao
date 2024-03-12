@@ -10,7 +10,7 @@ class MapManager:
 
         # Leaflet.jsのDrawプラグインを追加
         draw_options = {'polyline': True, 'rectangle': True, 'circle': True, 'marker': False, 'circlemarker': False}
-        self.draw = folium.plugins.Draw(export=False, position='topleft', draw_options=draw_options)
+        self.draw = Draw(export=False, position='topleft', draw_options=draw_options)
 
     def initialize_map(self):
         self.map = folium.Map(location=[self.center["lat"], self.center["lng"]], zoom_start=self.zoom_level)
