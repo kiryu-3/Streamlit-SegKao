@@ -1,10 +1,10 @@
 import streamlit as st
 import os
 from PIL import Image
-from data_manager import DataManager
-from map_manager import MapManager
-from shape_manager import ShapeManager
-from analysis_manager import AnalysisManager
+from utils.data_manager import DataManager
+from utils.map_manager import MapManager
+from utils.shape_manager import ShapeManager
+from utils.analysis_manager import AnalysisManager
 
 # 画像ファイルのパス
 image_path = os.path.join(os.path.dirname(__file__), '..', 'icon_image.png')
