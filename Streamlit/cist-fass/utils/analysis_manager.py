@@ -2,6 +2,7 @@ from datetime import datetime
 from collections import defaultdict
 import plotly.graph_objs as go
 import streamlit as st
+from utils.shape_manager import ShapeManager
 
 
 class AnalysisManager:
