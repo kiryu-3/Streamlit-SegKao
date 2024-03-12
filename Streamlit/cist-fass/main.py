@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_folium import st_folium
 from utils.data_manager import DataManager
 from utils.map_manager import MapManager
 from utils.shape_manager import ShapeManager
