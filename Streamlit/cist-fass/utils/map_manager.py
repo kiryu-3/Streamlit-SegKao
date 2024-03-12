@@ -1,3 +1,4 @@
+from streamlit_folium import st_folium
 import folium
 from folium.plugins import TimestampedGeoJson
 import json
