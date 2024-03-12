@@ -91,10 +91,10 @@ with st.sidebar:
 # 表示する地図
 map_data = st_folium(map_manager.map, width=800, height=800)
 
-st.write(type(map_data))
+st.write(dict(map_data))
 
 # 地図データをコピー
-map_manager.update_map_state(map_data)
+map_manager.update_map_state(dict(map_data))
 
 # 新しい図形が描画されたら処理
 shape_manager.handle_new_shape(map_data, data_manager.sorted_df)
