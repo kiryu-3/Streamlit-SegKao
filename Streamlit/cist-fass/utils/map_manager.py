@@ -20,7 +20,8 @@ class MapManager:
         self.line_geojson = None
 
     def display_map(self, width=800, height=800):
-        st_folium(self.map, width=width, height=height, zoom=self.zoom_level, center=self.center)
+        st_data = st_folium(self.map, width=width, height=height, zoom=self.zoom_level, center=self.center)
+        return dict(st_data)
 
     def features_maker(self, data_manager):
         features = []
