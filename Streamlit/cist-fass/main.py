@@ -147,6 +147,7 @@ st.session_state["data"] = st_data
 try:
     shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
 except Exception as e:
+    st.write(st.session_state["data"]["all_drawings"])
     st.error(e)
 
 try:
