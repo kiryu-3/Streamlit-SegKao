@@ -3,6 +3,7 @@ from streamlit_folium import st_folium
 import folium
 from folium.plugins import TimestampedGeoJson
 import json
+from utils.data_manager import DataManager
 
 class MapManager:
     def __init__(self):
@@ -19,6 +20,7 @@ class MapManager:
         self.selected_shape_type = "ゲート情報"
         self.kiseki_flag = False
         self.line_geojson = None
+        self.data_manager = DataManager()
 
     def display_map(self, width=800, height=800):
         st_data = st_folium(self.map, width=width, height=height, zoom=self.zoom_level, center=self.center)
