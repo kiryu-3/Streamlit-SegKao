@@ -144,6 +144,8 @@ st_data = map_manager.display_map()
 # 地図のデータをコピー
 st.session_state["data"] = st_data
 
+st.write(st.session_state["data"])
+
 try:
     shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
 except Exception as e:
