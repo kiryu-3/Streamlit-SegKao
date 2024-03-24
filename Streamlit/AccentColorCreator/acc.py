@@ -14,9 +14,9 @@ def hex_to_hsl(hex_color):
     hsl_color = list(colorsys.rgb_to_hls(*rgb_color))
 
     hsl_color[0] = hsl_color[0] * 360
-    # hsl_color = [round(value) for value in hsl_color]
-    
-    return [hsl_color[0], round(hsl_color[2] * 100), round(hsl_color[1] * 100)]  # 色相、彩度、明度をそれぞれ0-360、0-100、0-100の範囲に変換
+
+    # 色相、彩度、明度をそれぞれ0-360、0-100、0-100の範囲に変換
+    return [round(hsl_color[0]), round(hsl_color[2] * 100), round(hsl_color[1] * 100)]
 
 def rgb_to_hex(rgb_color):
     return '#' + ''.join([hex(int(color * 255))[2:].zfill(2) for color in rgb_color])
