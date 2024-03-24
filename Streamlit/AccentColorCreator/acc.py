@@ -44,13 +44,11 @@ def describe_color_purity(hsl_color):
 st.title('Accent Color Creator')
 st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
 
-color1 = st.color_picker('color1', value='#a86969')
-st.write('選択されたカラー1:', color1)
+vcolor = st.color_picker('Pick A Color', '#00f900')
+st.write('The current color is', vcolor)
 
-color2 = st.color_picker('color2', value='#a86969', disabled=True)
-st.write('選択されたカラー2:', color2)
-  
-st.color_picker('color3', value='#dbc2c2')  # デフォルトのメインカラーを赤色に設定
+st.markdown(f"<span style='background-color:{vcolor}'>This is the chosen colour</span>", True)
+st.markdown(f"<span style='background-color:{vcolor}; opacity:0.2; '>and this is transparent</span>", True)
 
 col1, col2 = st.columns(2)
 
