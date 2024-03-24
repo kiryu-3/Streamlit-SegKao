@@ -7,7 +7,7 @@ def hex_to_rgb(hex_color):
 def hex_to_hsl(hex_color):
     rgb_color = hex_to_rgb(hex_color)
     hsl_color = colorsys.rgb_to_hls(*rgb_color)
-    return [hsl_color[0], hsl_color[1] * 100, hsl_color[2] * 100]  # 色相、彩度、明度をそれぞれ0-360、0-100、0-100の範囲に変換
+    return [hsl_color[0], hsl_color[2] * 100, hsl_color[1] * 100]  # 色相、彩度、明度をそれぞれ0-360、0-100、0-100の範囲に変換
 
 def rgb_to_hex(rgb_color):
     return '#' + ''.join([hex(int(color * 255))[2:].zfill(2) for color in rgb_color])
@@ -23,10 +23,8 @@ def rotate_hue(hex_color, degrees):
 
 def describe_color_purity(hsl_color):
     h, s, l = hsl_color
-    if l == 50:
+    if l == 50 and s == 100:
         st.error("この色は純色です。")
-    elif 40 <= l <= 60:
-        st.warning("この色は純色に近いです。")
     else:
         pass
 
