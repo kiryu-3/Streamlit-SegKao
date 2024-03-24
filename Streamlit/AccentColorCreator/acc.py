@@ -41,28 +41,28 @@ def describe_color_purity(hsl_color):
     else:
         st.success('この色は純色ではありません')
 
-st.title('Accent Color Creator')
-st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
-
-# HTMLとCSSを定義
-circle_html = """
+def create_circle_with_border_html(color_code, border_color="black"):
+    return f"""
     <div style="
         width: 120px;
         height: 120px;
-        background-color: #00f900;
+        background-color: {color_code};
         border-radius: 50%;
         margin: 10px;
-        border: 2px solid black;  /* 枠線を追加 */
+        border: 2px solid {border_color};  /* 枠線を追加 */
     "></div>
-"""
+    """
 
-# Streamlit上でHTMLをレンダリング
-st.markdown(circle_html, unsafe_allow_html=True)
+st.title('Accent Color Creator')
+st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
+
+main_color = st.color_picker('Select your main color', value='#696aa8')  # デフォルトのメインカラーを赤色に設定
 
 col1, col2 = st.columns(2)
 
 with col1:
-    main_color = st.color_picker('Select your main color', value='#696aa8')  # デフォルトのメインカラーを赤色に設定
+    circle_main_html = create_circle_with_border_html(main_color)
+    st.markdown(circle_main_html, unsafe_allow_html=True)
     st.write('Your main color:', main_color)
 
     main_rgb_color = hex_to_rgb(main_color)
@@ -74,8 +74,8 @@ with col1:
 
 with col2:
     accent_color = rotate_hue(main_color, 120)
-    st.color_picker('your accent color', value=accent_color, disabled=True)   
-    st.write('#a86969' == accent_color)
+    circle_accent_html = create_circle_with_border_html(accent_color)
+    st.markdown(circle_accent_html, unsafe_allow_html=True)
     st.write('Your accent color:', accent_color)
 
     accent_rgb_color = hex_to_rgb(accent_color)
