@@ -45,14 +45,15 @@ st.title('Accent Color Creator')
 st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
 
 # HTMLとCSSを定義
-circle_html = """
-<div style="
-    width: 120px;
-    height: 120px;
-    background-color: #00f900;
-    border-radius: 50%;
-    margin: 10px;
-"></div>
+"""
+    <div style="
+        width: 120px;
+        height: 120px;
+        background-color: #00f900;
+        border-radius: 50%;
+        margin: 10px;
+        border: 2px solid black;  /* 枠線を追加 */
+    "></div>
 """
 
 # Streamlit上でHTMLをレンダリング
