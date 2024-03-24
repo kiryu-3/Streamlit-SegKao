@@ -2,7 +2,8 @@ import streamlit as st
 import colorsys
 
 def hex_to_rgb(hex_color):
-    return [int(hex_color[i:i+2], 16) / 255.0 for i in (1, 3, 5)]  # '#'を除外するためにスライスが(1, 3, 5)
+    return [int(hex_color[i:i+2], 16) for i in (1, 3, 5)]  # '#'を除外するためにスライスが(1, 3, 5)
+    # return [int(hex_color[i:i+2], 16) / 255.0 for i in (1, 3, 5)]  # '#'を除外するためにスライスが(1, 3, 5)
 
 def hex_to_hsl(hex_color):
     rgb_color = hex_to_rgb(hex_color)
