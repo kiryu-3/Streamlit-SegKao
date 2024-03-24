@@ -9,7 +9,7 @@ def hex_to_hsl(hex_color):
     rgb_color = hex_to_rgb(hex_color)
     
     normalize = lambda rgb: [x / 255 for x in rgb]
-    rgb_color = normalize(rgb_values)
+    rgb_color = normalize(rgb_color)
     
     hsl_color = colorsys.rgb_to_hls(*rgb_color)
     return [hsl_color[0], hsl_color[2] * 100, hsl_color[1] * 100]  # 色相、彩度、明度をそれぞれ0-360、0-100、0-100の範囲に変換
