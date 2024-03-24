@@ -45,7 +45,7 @@ st.title('Accent Color Creator')
 st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
 
 # HTMLとCSSを定義
-"""
+circle_html = """
     <div style="
         width: 120px;
         height: 120px;
