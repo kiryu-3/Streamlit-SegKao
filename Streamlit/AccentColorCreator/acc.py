@@ -47,8 +47,8 @@ st.info('メインカラーの120度の位置にある色をアクセントカ�
 # HTMLとCSSを定義
 circle_html = """
 <div style="
-    width: 180px;
-    height: 180px;
+    width: 120px;
+    height: 120px;
     background-color: #00f900;
     border-radius: 50%;
     margin: 10px;
