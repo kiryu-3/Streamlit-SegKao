@@ -47,7 +47,7 @@ st.info('メインカラーの120度の位置にある色をアクセントカ�
 col1, col2 = st.columns(2)
 
 with col1:
-    main_color = st.color_picker('Select your main color', value='##696aa8')  # デフォルトのメインカラーを赤色に設定
+    main_color = st.color_picker('Select your main color', value='#696aa8')  # デフォルトのメインカラーを赤色に設定
     st.write('Your main color:', main_color)
 
     main_rgb_color = hex_to_rgb(main_color)
