@@ -36,7 +36,7 @@ def rotate_hue(hex_color, degrees):
 def describe_color_purity(hsl_color):
     h, s, l = hsl_color
     if l == 50 and s == 100:
-        st.st.warning("この色は純色です。")
+        st.warning("この色は純色です。")
     else:
         pass
 
