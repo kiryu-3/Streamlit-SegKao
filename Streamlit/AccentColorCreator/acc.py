@@ -11,7 +11,7 @@ def hex_to_hsl(hex_color):
     normalize = lambda rgb: [x / 255 for x in rgb]
     rgb_color = normalize(rgb_color)
     
-    hsl_color = colorsys.rgb_to_hls(*rgb_color)
+    hsl_color = list(colorsys.rgb_to_hls(*rgb_color))
 
     hsl_color[0] = int(hsl_color[0] * 360)
     
