@@ -38,9 +38,10 @@ def describe_color_purity(hsl_color):
     if l == 50 and s == 100:
         st.warning("この色は純色です。")
     else:
-        pass
+        st.success('この色は純色ではありません')
 
 st.title('Accent Color Creator')
+st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
 
 col1, col2 = st.columns(2)
 
