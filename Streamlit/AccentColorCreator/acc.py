@@ -59,7 +59,7 @@ with col1:
 
 with col2:
     accent_color = rotate_hue(main_color, 120)
-    st.color_picker('your accent color', accent_color, disabled=True)   
+    st.color_picker('your accent color', value=accent_color, disabled=True)   
     st.write('Your accent color:', accent_color)
 
     accent_rgb_color = hex_to_rgb(accent_color)
