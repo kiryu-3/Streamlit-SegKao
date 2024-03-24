@@ -19,6 +19,10 @@ def rgb_to_hex(rgb_color):
 
 def rotate_hue(hex_color, degrees):
     rgb_color = hex_to_rgb(hex_color)
+
+    normalize = lambda rgb: [x / 255 for x in rgb]
+    rgb_color = normalize(rgb_color)
+    
     hsv_color = colorsys.rgb_to_hsv(*rgb_color)
     
     rotated_hue = (hsv_color[0] + degrees / 360.0) % 1.0
