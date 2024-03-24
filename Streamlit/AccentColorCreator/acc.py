@@ -28,7 +28,7 @@ def describe_color_purity(hsl_color):
     elif 40 <= l <= 60:
         st.warning("この色は純色に近いです。")
     else:
-        st.error(hsl_color)
+        pass
 
 st.title('Accent Color Creator')
 
