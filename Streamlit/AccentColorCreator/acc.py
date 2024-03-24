@@ -57,7 +57,7 @@ st.title('Accent Color Creator')
 st.info('メインカラーの120度の位置にある色をアクセントカラーとしています')
 
 cols = st.columns(3)
-main_color = cols[1].color_picker('Select your main color', value='#696aa8')  # デフォルトのメインカラーを赤色に設定
+main_color = cols[1].color_picker('Select your main color', value='#ff0000')  # デフォルトのメインカラーを赤色に設定
 
 col1, col2 = st.columns(2)
 
