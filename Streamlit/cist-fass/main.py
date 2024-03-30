@@ -164,7 +164,7 @@ try:
             on_change=select_graph
         )
 
-        analysis_manager.display_graph(st.session_state["select_graph_ids"])
+        analysis_manager.display_graph(data_manager, st.session_state["select_graph_ids"])
 except:
     pass
 
