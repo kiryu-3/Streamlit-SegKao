@@ -200,7 +200,7 @@ class MapManager:
 
             self.add_shape_data(data_manager)
 
-    def add_draw_data(self, draw_data):
+    def add_draw_data(self, data_manager,  draw_data):
         if draw_data is not None and isinstance(draw_data, list) and len(draw_data) > 0:
             if "last_circle_polygon" in st.session_state["data"] and st.session_state["data"]["last_circle_polygon"] is not None:
                 draw_data[0]["geometry"]["type"] = "Polygon"
@@ -211,7 +211,7 @@ class MapManager:
 
             if draw_data[0] not in self.draw_data or len(self.draw_data) == 0:
                 self.draw_data.append(draw_data[0])
-                self.add_shape_data(draw_data)
+                self.add_shape_data(data_manager)
 
     def toggle_kiseki(self):
         if self.kiseki_flag:
