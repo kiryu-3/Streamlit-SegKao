@@ -144,7 +144,7 @@ st_data = map_manager.display_map()
 # 地図のデータをコピー
 st.session_state["data"] = st_data
 
-shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
+shape_manager.handle_draw_data(data_manager, st.session_state["data"]["all_drawings"])
 
 # try:
 #     shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
@@ -164,7 +164,7 @@ try:
             on_change=select_graph
         )
 
-        analysis_manager.display_graph(data_manager, st.session_state["select_graph_ids"])
+        analysis_manager.display_graph(st.session_state["select_graph_ids"])
 except:
     pass
 
