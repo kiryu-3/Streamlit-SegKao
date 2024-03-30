@@ -145,6 +145,7 @@ st_data = map_manager.display_map()
 st.session_state["data"] = st_data
 
 shape_manager.handle_draw_data(data_manager, st.session_state["data"]["all_drawings"])
+st.write(map_manager.gate_data)
 
 # try:
 #     shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
