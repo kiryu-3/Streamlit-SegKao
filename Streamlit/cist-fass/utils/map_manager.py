@@ -211,7 +211,7 @@ class MapManager:
 
             if draw_data[0] not in self.draw_data or len(self.draw_data) == 0:
                 self.draw_data.append(draw_data[0])
-                self.add_shape_data(data_manager)
+                self.add_shape_data(draw_data)
 
     def toggle_kiseki(self):
         if self.kiseki_flag:
