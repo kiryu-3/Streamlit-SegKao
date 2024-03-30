@@ -139,13 +139,13 @@ def delete_shape():
     shape_manager.delete_shape(st.session_state["delete_shape_id"])
 
 # 表示する地図
-st_data = map_manager.display_map()
+st_data = st_folium(map_manager.map, width=width, height=height, zoom=self.zoom_level, center=self.center)
 
 # 地図のデータをコピー
 st.session_state["data"] = st_data
 
 shape_manager.handle_draw_data(data_manager, st.session_state["data"]["all_drawings"])
-st_data = map_manager.display_map()
+
 
 # try:
 #     shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
