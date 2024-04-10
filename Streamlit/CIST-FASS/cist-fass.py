@@ -37,10 +37,10 @@ st.write('## Explanation')
 
 with st.expander("Human-Flow-Analytics"):
       st.markdown("""
-        - CIST's original human flow data visualization tool
-        - Uploading data (csv) with latitude and longitude and their time information will allow visualization of the flow of human flow.
-        - When the user draws a shape on the map, the number of people who have passed through that shape can be counted.
-        - The CSV file to be uploaded must contain data for ID, time, latitude and longitude that identifies the individual.
+        - CISTのオリジナル人流データ可視化ツールです。
+        - 緯度と経度およびその時間情報を含むデータ（csv）をアップロードすることで、人の流れの可視化が可能になります。
+        - ユーザーが地図上に形を描くと、その形を通過した人数を数えることができます。
+        - アップロードするCSVファイルには、個人を識別するID、時間、緯度、経度のデータが含まれている必要があります。
       """)
       # st.write("The input text can be converted to speech")
       # st.write("Audio can be downloaded in mp3 format")
@@ -71,8 +71,8 @@ with st.expander("CSV&Excel-Processer"):
 
 with st.expander("Sample-Data"):
   st.markdown("""
-    - Sample data with ID, time, latitude and longitude information to identify individuals.
-    - Can be used for "Human-Flow-Analytics" and "CSV-Filter.
+    - 個人を識別するためのID、時間、緯度、経度情報を含むサンプルデータ。
+    - 「Human-Flow-Analytics」と「CSV-Filter」に利用できます。
   """)
 
   # 現在のスクリプトのディレクトリを取得
