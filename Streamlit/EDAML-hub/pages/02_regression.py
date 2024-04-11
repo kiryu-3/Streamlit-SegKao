@@ -9,6 +9,7 @@ import matplotlib.figure as figure
 from pycaret.regression import *
 
 import re
+import os
 import requests
 from PIL import Image
 import io
