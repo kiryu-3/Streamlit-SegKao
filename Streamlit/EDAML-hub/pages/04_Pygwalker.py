@@ -9,6 +9,7 @@ import duckdb
 import polars as pl
 
 import re
+import os
 import requests
 from PIL import Image
 import io
