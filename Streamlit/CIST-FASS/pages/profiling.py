@@ -121,6 +121,7 @@ if st.session_state.select_mode != select_mode:
 
 try: 
     if len(st.session_state['df']) != 0:
+        st.dataframe(st.session_state['df'])
         pr = ProfileReport(st.session_state['df']), title="Report")
 
         st_profile_report(pr)
