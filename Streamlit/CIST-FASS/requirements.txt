@@ -11,6 +11,7 @@ streamlit-pandas
 streamlit-aggrid
 requests
 mitosheet
+visions[type_image_path]==0.7.5
 streamlit_pandas_profiling
 ydata-profiling
-visions[type_image_path]==0.7.5
+
