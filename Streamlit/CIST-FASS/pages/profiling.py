@@ -14,7 +14,7 @@ import streamlit as st
 from PIL import Image
 from ydata_profiling import ProfileReport
 
-# streamlit関連のライブラリ
+# streamlit関連のライブラリ 
 from mitosheet.streamlit.v1 import spreadsheet
 from streamlit_pandas_profiling import st_profile_report
 
