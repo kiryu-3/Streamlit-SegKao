@@ -1,15 +1,23 @@
-import streamlit as st
-import seaborn as sns
+# 標準ライブラリ
+import io
+import os
+import re
+from io import BytesIO
+
+# サードパーティのライブラリ
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from mitosheet.streamlit.v1 import spreadsheet
-import re
 import requests
+import seaborn as sns
+import streamlit as st
 from PIL import Image
-import io
-from io import BytesIO
-import os
+from ydata_profiling import ProfileReport
+
+# streamlit関連のライブラリ
+from mitosheet.streamlit.v1 import spreadsheet
+from streamlit_pandas_profiling import st_profile_report
+
 
 # 画像ファイルのパス
 image_path = os.path.join(os.path.dirname(__file__), '..', 'icon_image.png')
