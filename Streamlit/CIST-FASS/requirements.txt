@@ -12,3 +12,4 @@ streamlit-aggrid
 requests
 mitosheet
 streamlit_pandas_profiling
+ydata-profiling
