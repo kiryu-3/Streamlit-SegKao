@@ -12,7 +12,7 @@ import requests
 import seaborn as sns
 import streamlit as st
 from PIL import Image
-from pandas_profiling import ProfileReport
+from ydata-profiling import ProfileReport
 
 # streamlit関連のライブラリ 
 from mitosheet.streamlit.v1 import spreadsheet
