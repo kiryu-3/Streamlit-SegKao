@@ -108,7 +108,7 @@ def upload_xlsx():
 
 select_mode = st.sidebar.radio(
     "アップロードするファイル形式を選択してください",
-    ["CSVファイル", "エクセルファイル"])
+    ["***CSVファイル***", "***エクセルファイル***"])
 
 if select_mode == "***CSVファイル***":
     st.title('Mito-CSV')
