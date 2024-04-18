@@ -126,10 +126,6 @@ try:
         st_profile_report(pr)
                 
         st.divider()
-
-        # ダウンロードボタンを追加
-        csv_file = st.session_state['df'].to_csv(index=False)
-        st.download_button(label="Download CSV", data=csv_file, file_name='profiling.csv')
         
         with st.expander("Code"):
             st.code(code)
