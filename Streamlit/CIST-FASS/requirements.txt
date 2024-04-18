@@ -13,3 +13,4 @@ requests
 mitosheet
 streamlit_pandas_profiling
 ydata-profiling
+visions[type_image_path]==0.7.5
