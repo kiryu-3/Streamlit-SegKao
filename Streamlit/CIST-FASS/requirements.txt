@@ -12,5 +12,5 @@ streamlit-aggrid
 requests
 mitosheet
 streamlit_ydata_profiling
-ydata-profiling==4.5.1
+ydata-profiling==4.6.0
 
