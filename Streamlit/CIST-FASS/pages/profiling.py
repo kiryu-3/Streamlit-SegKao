@@ -16,7 +16,7 @@ from ydata-profiling import ProfileReport
 
 # streamlit関連のライブラリ 
 from mitosheet.streamlit.v1 import spreadsheet
-from streamlit_pandas_profiling import st_profile_report
+from streamlit_ydata_profiling import st_profile_report
 
 
 # 画像ファイルのパス
