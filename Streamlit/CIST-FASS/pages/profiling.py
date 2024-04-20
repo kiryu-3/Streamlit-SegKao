@@ -94,38 +94,13 @@ def upload_csv():
             st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
             st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
 
-def upload_xlsx():
-    # xlsxがアップロードされたとき
-    st.session_state['df'] = list()
-    st.session_state["ja_honyaku"] = list()
-
-    if st.session_state['upload_xlsxfile'] is not None:
-        # Excelファイルを読み込む
-        xls = pd.ExcelFile(st.session_state['upload_xlsxfile'])
-    
-        # Excelファイル内の各シートを処理する
-        for idx, sheet_name in enumerate(xls.sheet_names):
-            # Pandas DataFrameを作成
-            df = pd.read_excel(xls, sheet_name=sheet_name)
-
-            # カラムの型を自動で適切に変換
-            st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
-            st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
-
-
-
-st.title('Mito-CSV')
+st.title('Profiling')
 st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
                        type=["csv"],
                        key="upload_csvfile",
                        accept_multiple_files=True,
                        on_change=upload_csv
                        )
-
-# ファイル形式が変更された場合にdfを空にする
-if st.session_state.select_mode != select_mode:
-    st.session_state['df'] = None
-    st.session_state.select_mode = select_mode
 
 try: 
     if len(st.session_state['df']) != 0:
