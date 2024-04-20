@@ -79,7 +79,7 @@ def upload_csv():
     if st.session_state['upload_csvfile'] is not None:
         st.session_state["ja_honyaku"] += [False] * len(st.session_state['upload_csvfile'])
         # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile'].read()
+        file_data = st.session_state['upload_csvfile'][0].read()
         # バイナリデータからPandas DataFrameを作成
         try:
             df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
