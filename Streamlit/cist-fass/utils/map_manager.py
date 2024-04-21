@@ -201,10 +201,10 @@ class MapManager:
             self.add_shape_data(data_manager)
 
     def add_draw_data(self, data_manager):
-        if draw_data is not None and isinstance(self.draw_data, list) and len(self.draw_data) > 0:
+        if self.draw_data is not None and isinstance(self.draw_data, list) and len(self.draw_data) > 0:
             if "last_circle_polygon" in st.session_state["data"] and st.session_state["data"]["last_circle_polygon"] is not None:
-                draw_data[0]["geometry"]["type"] = "Polygon"
-                draw_data[0]["geometry"]["coordinates"] = st.session_state["data"]["last_circle_polygon"]["coordinates"]
+                self.draw_data[0]["geometry"]["type"] = "Polygon"
+                self.draw_data[0]["geometry"]["coordinates"] = st.session_state["data"]["last_circle_polygon"]["coordinates"]
                 center_list = st.session_state["data"]["last_active_drawing"]["geometry"]["coordinates"]
                 center_dict = {"lat": center_list[0], "lng": center_list[1]}
                 self.draw_data[0]["properties"]["center"] = center_dict
