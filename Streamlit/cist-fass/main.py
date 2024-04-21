@@ -6,6 +6,7 @@ from utils.data_manager import DataManager
 from utils.map_manager import MapManager
 from utils.shape_manager import ShapeManager
 from utils.analysis_manager import AnalysisManager
+import pandas as pd
 
 # 画像ファイルのパス
 image_path = os.path.join(os.path.dirname(__file__), 'icon_image.png')
