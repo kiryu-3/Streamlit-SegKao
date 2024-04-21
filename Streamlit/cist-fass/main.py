@@ -152,6 +152,7 @@ st.session_state["data"] = st_data
 
 try:
     shape_manager.handle_draw_data(st.session_state["data"]["all_drawings"])
+    st_folium(map_manager.map, width=800, height=800, zoom=map_manager.zoom_level, center=map_manager.center)
 except Exception as e:
     st.write(st.session_state["data"]["all_drawings"])
     st.error(e)
