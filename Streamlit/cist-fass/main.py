@@ -168,8 +168,8 @@ try:
         )
 
         analysis_manager.display_graph(st.session_state["select_graph_ids"])
-except:
-    pass
+except Exception as e:
+    st.error(e)
 
 with st.sidebar:
     tab1, tab2, tab3, tab4 = st.tabs(["Uploader", "Data_info", "Gate_info", "Kiseki_info"])
