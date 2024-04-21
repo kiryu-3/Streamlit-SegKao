@@ -1,7 +1,7 @@
 import pandas as pd
 import io
 
-import datetime
+from datetime import datetime
 
 class DataManager:
     def __init__(self):
