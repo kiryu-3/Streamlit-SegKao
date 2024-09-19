@@ -1,0 +1,212 @@
+import io
+from io import BytesIO
+import itertools
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+import statsmodels.api as sm
+from scipy import stats
+from scipy.stats import kruskal, shapiro
+import scikit_posthocs as sp
+
+
+# Streamlit ページの設定
+st.set_page_config(
+    page_title="データ解析",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+def display_summary(df, categories, grades):
+    
+    # 各学年の人数を辞書に格納
+    grade_counts = {grade: len(df[df['grade'] == grade]) for grade in grades}
+    
+    # 各分野の質問数を辞書に格納
+    question_counts = {
+        'online_collab': len(df.columns[6:21]),
+        'data_utilization': len(df.columns[21:36]),
+        'info_sys_dev': len(df.columns[36:50]),
+        'info_ethics': len(df.columns[50:72])
+    }
+    
+    # データフレームを作成
+    summary_df = pd.DataFrame({
+        'Grade': grade_counts.keys(),
+        'Count': grade_counts.values()
+    })
+    
+    question_df = pd.DataFrame({
+        'Category': question_counts.keys(),
+        'Question Count': question_counts.values()
+    })
+
+    return summary_df, question_df
+
+def upload_csv():
+    # csvがアップロードされたとき
+    if st.session_state['upload_csvfile'] is not None:
+        # アップロードされたファイルデータを読み込む
+        file_data = st.session_state['upload_csvfile'].read()
+        df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
+
+        # 各カテゴリごとに平均を算出
+        df['online_collab'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
+        df['data_utilization'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
+        df['info_sys_dev'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
+        df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
+
+        st.session_state['df'] = df
+
+# 正規性の検定
+def normality_test(df, categories):
+
+    # 正規性の検証
+    results = {}
+    for column in categories:
+        stat, p = stats.shapiro(df[column])
+        results[column] = {
+            'W統計量': stat,
+            'p値': p,
+            '正規性検定結果': '正規分布に従っている可能性がある' if p > 0.05 else '正規分布に従っていない'
+        }
+
+    # 結果の表示
+    st.write("### 正規性検定の結果")
+    result_df = pd.DataFrame(results).T  # 結果をデータフレームに変換
+    # st.dataframe(result_df)
+
+    # for column, result in results.items():
+    #     if result['p値'] > 0.05:
+    #         st.write(f"{column}列は正規分布に従っている可能性があります。")
+    #     else:
+    #         st.write(f"{column}列は正規分布に従っているとはいえません。")
+
+    # ヒストグラムとQ-Qプロットを描画
+    fig_hist, axes_hist = plt.subplots(2, 2, figsize=(12, 10))
+    for ax, column in zip(axes_hist.flatten(), categories):
+        sns.histplot(df[column], kde=True, ax=ax, stat="density", linewidth=0)
+        ax.set_title(f'{column}_distribution')
+        ax.set_xlabel(column)
+        ax.set_ylabel('密度')
+
+    plt.tight_layout()
+
+    fig_qq, axes_qq = plt.subplots(2, 2, figsize=(12, 10))
+    for ax, column in zip(axes_qq.flatten(), categories):
+        stats.probplot(df[column], dist="norm", plot=ax)
+        ax.set_title(f"Q-QPlot: {column}列")
+
+    plt.tight_layout()
+
+    return result_df, fig_hist, fig_qq
+
+# 分野間の差の検定をする関数
+def categories_test(df, categories):
+    # データフレームの整形
+    melted_df = df.melt(id_vars='grade', value_vars=categories,
+                        var_name='category', value_name='value')
+
+    # 全学年の平均と標準偏差を追加
+    summary_stats = melted_df.groupby('category').agg(
+        mean=('value', 'mean'),
+        std=('value', 'std')
+    ).reset_index()
+    summary_stats['grade'] = 'ALL'
+
+    # categoriesの順序を設定
+    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
+    # categoriesの順にソート
+    summary_stats = summary_stats.sort_values("category", ascending=True)
+
+
+    # ボックスプロットの描画
+    fig = px.box(melted_df, x='category', y='value', title='各分野のスコア分布') 
+
+    # カテゴリごとのデータを取得
+    values = [melted_df[melted_df['category'] == category]['value'].values for category in categories]
+
+    # クラスカル・ウォリス検定を実行
+    stat, p = kruskal(*values) 
+
+    # 有意差が見られる場合、ポストホックテストを実行
+    if p < 0.05:
+        # ポストホックテストの実行
+        posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+        # 結果のDataFrameのカラム名とインデックスを設定
+        posthoc.columns = categories
+        posthoc.index = categories
+        
+        # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
+        significant_pairs = [
+            (idx, col, posthoc.loc[idx, col])
+            for col in posthoc.columns
+            for idx in posthoc.index
+            if posthoc.loc[idx, col] < 0.05
+        ]
+
+        # 結果を表示
+        if significant_pairs:
+            print("有意差が見られるカテゴリ間の組み合わせ:")
+            for pair in significant_pairs:
+                print(f"{pair[0]} と {pair[1]} の比較: p値 = {pair[2]:.4f}")
+        else:
+            print("有意差は見られませんでした。")
+
+    return summary_stats, fig, significant_indices
+
+# ファイルアップロード
+st.file_uploader("CSVファイルをアップロード",
+                       type=["csv"],
+                       key="upload_csvfile",
+                       on_change=upload_csv
+                       )
+
+try:
+    categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
+    grades = ['B2', 'B3', 'B4']
+
+    selected_columns = st.session_state['df'].iloc[:, :5]
+    categories_columns = st.session_state['df'][categories]
+    final_df = pd.concat([selected_columns, categories_columns], axis=1)
+    st.dataframe(final_df, width=None, height=500)
+
+    summary_df, question_df = display_summary(st.session_state['df'], categories, grades)
+
+
+    cols = st.columns(2)
+    cols[0].write("### 各学年の人数")
+    cols[0].dataframe(summary_df)
+    cols[1].write("### 各分野の質問数")
+    cols[1].dataframe(question_df)
+
+    # タブを作成
+    tabs = st.tabs(["正規性の検定", "分野間の差の検定", "分野別の学年間の差の検定"])
+
+    with tabs[0]:  # "正規性の検定"タブ
+        normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
+        st.dataframe(normality_df)
+        with st.expander("分野ごとのスコア分布"):
+            st.pyplot(fig_hist)
+        with st.expander("Q-Qプロット"):
+            st.pyplot(fig_qq)
+
+    with tabs[1]:  # "分野間の差の検定"タブ
+        categories_df, fig, significant_indices = categories_test(st.session_state['df'], categories)
+        st.dataframe(categories_df)
+        with st.expander("分野間のスコア分布"):
+            st.plotly_chart(fig)
+            if significant_indices:
+                # 座標を取り出してどこのカテゴリ間に有意差があったのかを出力する
+                st.write(significant_indices)        
+
+      with tabs[2]:  # "分野別の学年間の差の検定"タブ
+          st.write("まだ実装されていません。")
+
+except Exception as e:
+    pass
