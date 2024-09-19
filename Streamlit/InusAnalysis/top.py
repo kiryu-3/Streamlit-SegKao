@@ -12,7 +12,7 @@ import statsmodels.api as sm
 from scipy import stats
 from scipy.stats import kruskal, shapiro
 import scikit_posthocs as sp
-
+import streamlit as st
 
 
 # Streamlit ページの設定
