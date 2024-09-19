@@ -14,6 +14,7 @@ from scipy.stats import kruskal, shapiro
 import scikit_posthocs as sp
 
 
+
 # Streamlit ページの設定
 st.set_page_config(
     page_title="データ解析",
@@ -123,7 +124,6 @@ def categories_test(df, categories):
     # categoriesの順にソート
     summary_stats = summary_stats.sort_values("category", ascending=True)
 
-
     # ボックスプロットの描画
     fig = px.box(melted_df, x='category', y='value', title='各分野のスコア分布') 
 
@@ -144,21 +144,86 @@ def categories_test(df, categories):
         
         # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
         significant_pairs = [
-            (idx, col, posthoc.loc[idx, col])
+            (idx, col)
             for col in posthoc.columns
             for idx in posthoc.index
             if posthoc.loc[idx, col] < 0.05
         ]
 
-        # 結果を表示
-        if significant_pairs:
-            print("有意差が見られるカテゴリ間の組み合わせ:")
-            for pair in significant_pairs:
-                print(f"{pair[0]} と {pair[1]} の比較: p値 = {pair[2]:.4f}")
-        else:
-            print("有意差は見られませんでした。")
+        # 重複を取り除くために、タプルをソートして集合に変換
+        filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
 
-    return summary_stats, fig, significant_indices
+    else :
+        filtered_pairs = set()
+
+    return summary_stats, fig, filtered_pairs
+
+# 分野-学年間の差の検定をする関数
+def grade_test(df, categories, grades):
+
+    # "B"から始まるものだけを残す
+    grades = [grade for grade in grades if grade.startswith("B")]
+
+    # データフレームの整形
+    melted_df = df.melt(id_vars='grade', value_vars=categories,
+                        var_name='category', value_name='value')
+    melted_df = melted_df[melted_df['grade'].isin(grades)]
+    
+    # 学年ごとの平均と標準偏差を取得
+    summary_stats = melted_df.groupby(['category', 'grade']).agg(
+        mean=('value', 'mean'),
+        std=('value', 'std')
+    ).reset_index()
+
+    # categoriesの順序を設定
+    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
+    # categoriesの順にソート
+    summary_stats = summary_stats.sort_values("category", ascending=True)
+
+    # 'grade'列をgradesの順番に並べ替え
+    melted_df['grade'] = pd.Categorical(melted_df['grade'], categories=grades, ordered=True)
+    # 'category'列をcategoriesの順番に並べ替え
+    melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
+
+    melted_df = melted_df.sort_values(['grade', 'category'])
+
+    # ボックスプロットの描画
+    fig = px.box(melted_df, x='category', y='value', color='grade', title='各分野の学年ごとのスコア分布') 
+
+    # 結果を格納するためのリスト
+    result_pairs = []
+    flag = 0
+
+    for category in categories:
+        # 学年ごとのデータを取得
+        values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
+
+        # クラスカル・ウォリス検定を実行
+        stat, p = kruskal(*values) 
+
+        # 有意差が見られる場合、ポストホックテストを実行
+        if p < 0.05:
+            # ポストホックテストの実行
+            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+            # 結果のDataFrameのカラム名とインデックスを設定
+            posthoc.columns = grades
+            posthoc.index = grades
+            
+            # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
+            significant_pairs = [
+                (category, idx, col)
+                for col in posthoc.columns
+                for idx in posthoc.index
+                if posthoc.loc[idx, col] < 0.05
+            ]
+
+            # 重複を取り除くために、タプルをソートして集合に変換
+            filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
+
+            result_pairs.append(filtered_pairs)
+
+    return summary_stats, fig, result_pairs
 
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
@@ -169,7 +234,7 @@ st.file_uploader("CSVファイルをアップロード",
 
 try:
     categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
-    grades = ['B2', 'B3', 'B4']
+    grades = sorted(list(st.session_state['df']['grade'].unique()))
 
     selected_columns = st.session_state['df'].iloc[:, :5]
     categories_columns = st.session_state['df'][categories]
@@ -178,7 +243,7 @@ try:
 
     summary_df, question_df = display_summary(st.session_state['df'], categories, grades)
 
-
+    # 表形式で表示
     cols = st.columns(2)
     cols[0].write("### 各学年の人数")
     cols[0].dataframe(summary_df)
@@ -197,16 +262,23 @@ try:
             st.pyplot(fig_qq)
 
     with tabs[1]:  # "分野間の差の検定"タブ
-        categories_df, fig, significant_indices = categories_test(st.session_state['df'], categories)
+        categories_df, fig, filtered_pairs = categories_test(st.session_state['df'], categories)
         st.dataframe(categories_df)
         with st.expander("分野間のスコア分布"):
             st.plotly_chart(fig)
-            if significant_indices:
-                # 座標を取り出してどこのカテゴリ間に有意差があったのかを出力する
-                st.write(significant_indices)        
+            st.write("有意差が見られる分野間の組み合わせ：")
+            for category1, category2 in filtered_pairs:
+                st.write(f"【{category1}】-【{category2}】")
 
-      with tabs[2]:  # "分野別の学年間の差の検定"タブ
-          st.write("まだ実装されていません。")
+    with tabs[2]:  # "分野別の学年間の差の検定"タブ
+        grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
+        st.dataframe(grade_df)
+        with st.expander("分野別-学年間のスコア分布"):
+            st.plotly_chart(fig)
+            st.write("有意差が見られる各分野の学年間の組み合わせ：")
+            for result_set in result_pairs:
+                for category, grade1, grade2 in result_set:
+                    st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
 except Exception as e:
     pass
