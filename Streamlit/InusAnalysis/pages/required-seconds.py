@@ -102,12 +102,24 @@ def normality_test(df, categories):
     ax_hist[0, 0].set_xlabel('required-seconds')
     ax_hist[0, 0].set_ylabel('密度')
 
+    # 他のサブプロットを非表示にする
+    for i in range(2):
+        for j in range(2):
+            if (i, j) != (0, 0):
+                ax_hist[i, j].set_visible(False)
+
     plt.tight_layout()
     
     # Q-Qプロットを描画
     fig_qq, ax_qq = plt.subplots(2, 2, figsize=(12, 10))
     stats.probplot(df["required_time_seconds"], dist="norm", plot=ax_qq[0, 0])
     ax_qq[0, 0].set_title("Q-QPlot: required-seconds列")
+
+    # 他のサブプロットを非表示にする
+    for i in range(2):
+        for j in range(2):
+            if (i, j) != (0, 0):
+                ax_qq[i, j].set_visible(False)
     
     plt.tight_layout()
     
