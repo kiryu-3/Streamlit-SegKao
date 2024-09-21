@@ -228,7 +228,7 @@ try:
     cols[1].dataframe(question_df)
 
     # タブを作成
-    tabs = st.tabs(["正規性の検定", "所要時間の分布", "学年間の所要時間の分布"])
+    tabs = st.tabs(["正規性の検定", "所要時間分布", "学年間の所要時間分布"])
 
     with tabs[0]:  # "正規性の検定"タブ
         normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
