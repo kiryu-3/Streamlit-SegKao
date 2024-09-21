@@ -69,7 +69,7 @@ def normality_test(df, categories):
     # 正規性の検証
     results = {}
     stat, p = stats.shapiro(df["required_time_seconds"])
-    results[column] = {
+    results["required-seconds"] = {
         'W統計量': stat,
         'p値': p,
         '正規性検定結果': '正規分布に従っている可能性がある' if p > 0.05 else '正規分布に従っていない'
@@ -89,8 +89,8 @@ def normality_test(df, categories):
     # ヒストグラムとQ-Qプロットを描画
     fig_hist, axes_hist = plt.subplots(2, 2, figsize=(12, 10))
     for ax, column in zip(axes_hist.flatten(), categories):
-        sns.histplot(df[column], kde=True, ax=ax, stat="density", linewidth=0)
-        ax.set_title(f'{column}_distribution')
+        sns.histplot(df["required-seconds"], kde=True, ax=ax, stat="density", linewidth=0)
+        ax.set_title('required-seconds_distribution')
         ax.set_xlabel(column)
         ax.set_ylabel('密度')
 
@@ -98,8 +98,8 @@ def normality_test(df, categories):
 
     fig_qq, axes_qq = plt.subplots(2, 2, figsize=(12, 10))
     for ax, column in zip(axes_qq.flatten(), categories):
-        stats.probplot(df[column], dist="norm", plot=ax)
-        ax.set_title(f"Q-QPlot: {column}列")
+        stats.probplot(df["required-seconds"], dist="norm", plot=ax)
+        ax.set_title("Q-QPlot: required-seconds列")
 
     plt.tight_layout()
 
@@ -280,4 +280,4 @@ try:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
 except Exception as e:
-    st.write(e)
+    pass
