@@ -176,6 +176,7 @@ def grade_test(df, categories, grades):
     
     # クラスカル・ウォリス検定を実行
     stat, p = kruskal(*values)
+    st.write(p)
     
     # 有意差が見られる場合、ポストホックテストを実行
     if p < 0.05:
@@ -227,7 +228,7 @@ try:
     cols[1].dataframe(question_df)
 
     # タブを作成
-    tabs = st.tabs(["正規性の検定", "分野間の差の検定", "分野別の学年間の差の検定"])
+    tabs = st.tabs(["正規性の検定", "所要時間の分布", "学年間の所要時間の分布"])
 
     with tabs[0]:  # "正規性の検定"タブ
         normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
@@ -240,15 +241,15 @@ try:
     with tabs[1]:  # "分野間の差の検定"タブ
         categories_df, fig = categories_test(st.session_state['df'], categories)
         st.dataframe(categories_df)
-        with st.expander("分野間のスコア分布"):
+        with st.expander("所要時間の分布"):
             st.plotly_chart(fig)
 
-    with tabs[2]:  # "分野別の学年間の差の検定"タブ
+    with tabs[2]:  # "学年間の差の検定"タブ
         grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
         st.dataframe(grade_df)
-        with st.expander("分野別-学年間のスコア分布"):
+        with st.expander("学年間の所要時間の分布"):
             st.plotly_chart(fig)
-            st.write("有意差が見られる各分野の学年間の組み合わせ：")
+            st.write("有意差が見られる学年間の組み合わせ：")
             for result_set in result_pairs:
                 for category, grade1, grade2 in result_set:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
