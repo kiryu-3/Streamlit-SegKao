@@ -252,6 +252,8 @@ try:
     # タブを作成
     tabs = st.tabs(["正規性の検定", "分野間の差の検定", "分野別の学年間の差の検定"])
 
+    st.write(st.session_state['df'])
+
     with tabs[0]:  # "正規性の検定"タブ
         normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
         st.dataframe(normality_df)
