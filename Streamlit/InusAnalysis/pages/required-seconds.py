@@ -66,7 +66,6 @@ def upload_csv():
         
         # 外れ値を除去する
         df = df[(df["required_time_seconds"] >= quantile1) & (df["required_time_seconds"] <= quantile99)]
-        st.write(quantile1, quantile99)
 
         st.session_state['df'] = df
 
@@ -94,20 +93,20 @@ def normality_test(df, categories):
     #         st.write(f"{column}列は正規分布に従っているとはいえません。")
 
     # ヒストグラムとQ-Qプロットを描画
-    fig_hist, ax_hist = plt.subplots(figsize=(6, 5))
+    fig_hist, ax_hist = plt.subplots(2, 2, figsize=(12, 10))
     
     # ヒストグラムを描画
-    sns.histplot(df["required_time_seconds"], kde=True, ax=ax_hist, stat="density", linewidth=0)
-    ax_hist.set_title('required-seconds_distribution')
-    ax_hist.set_xlabel('required-seconds')
-    ax_hist.set_ylabel('密度')
+    sns.histplot(df["required_time_seconds"], kde=True, ax=ax_hist[0, 0], stat="density", linewidth=0)
+    ax_hist[0, 0].set_title('required-seconds_distribution')
+    ax_hist[0, 0].set_xlabel('required-seconds')
+    ax_hist[0, 0].set_ylabel('密度')
 
     plt.tight_layout()
     
     # Q-Qプロットを描画
-    fig_qq, ax_qq = plt.subplots(figsize=(6, 5))
-    stats.probplot(df["required_time_seconds"], dist="norm", plot=ax_qq)
-    ax_qq.set_title("Q-QPlot: required-seconds列")
+    fig_qq, ax_qq = plt.subplots(2, 2, figsize=(12, 10))
+    stats.probplot(df["required_time_seconds"], dist="norm", plot=ax_qq[0, 0])
+    ax_qq[0, 0].set_title("Q-QPlot: required-seconds列")
     
     plt.tight_layout()
     
