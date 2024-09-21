@@ -78,7 +78,7 @@ def normality_test(df, categories):
     # 結果の表示
     st.write("### 正規性検定の結果")
     result_df = pd.DataFrame(results).T  # 結果をデータフレームに変換
-    st.dataframe(df)
+    # st.dataframe(df)
 
     # for column, result in results.items():
     #     if result['p値'] > 0.05:
@@ -91,7 +91,7 @@ def normality_test(df, categories):
     for ax, column in zip(axes_hist.flatten(), categories):
         sns.histplot(df["required_time_seconds"], kde=True, ax=ax, stat="density", linewidth=0)
         ax.set_title('required-seconds_distribution')
-        ax.set_xlabel(required-seconds)
+        ax.set_xlabel('required-seconds')
         ax.set_ylabel('密度')
 
     plt.tight_layout()
@@ -251,8 +251,6 @@ try:
 
     # タブを作成
     tabs = st.tabs(["正規性の検定", "分野間の差の検定", "分野別の学年間の差の検定"])
-
-    st.write(st.session_state['df'])
 
     with tabs[0]:  # "正規性の検定"タブ
         normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
