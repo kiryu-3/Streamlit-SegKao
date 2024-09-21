@@ -236,6 +236,12 @@ st.file_uploader("CSVファイルをアップロード",
                        on_change=upload_csv
                        )
 
+# データフレームを空にするボタン
+if st.button("アップロードしたCSVファイルを消去"):
+    st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
+    st.session_state['upload_csvfile'] = None  # アップロードされたファイルもリセット
+    st.success("CSVファイルが消去されました。")
+
 try:
     categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
     grades = sorted(list(st.session_state['df']['grade'].unique()))
