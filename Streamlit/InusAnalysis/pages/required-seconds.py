@@ -61,6 +61,13 @@ def upload_csv():
         df['info_sys_dev'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
         df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
 
+        quantile1 = df["required_time_seconds"].quantile(0.01)
+        quantile99 = df["required_time_seconds"].quantile(0.99)
+        
+        # 外れ値を除去する
+        df = df[(df["required_time_seconds"] >= quantile1) & (df["required_time_seconds"] <= quantile99)]
+
+
         st.session_state['df'] = df
 
 # 正規性の検定
@@ -87,13 +94,15 @@ def normality_test(df, categories):
     #         st.write(f"{column}列は正規分布に従っているとはいえません。")
 
     # ヒストグラムとQ-Qプロットを描画
-    fig, ax = plt.subplots(figsize=(12, 10))
+    fig_hist, ax_hist = plt.subplots(figsize=(12, 10))
     
     # ヒストグラムを描画
     sns.histplot(df["required_time_seconds"], kde=True, ax=ax, stat="density", linewidth=0)
-    ax.set_title('required-seconds_distribution')
-    ax.set_xlabel('required-seconds')
-    ax.set_ylabel('密度')
+    ax_hist.set_title('required-seconds_distribution')
+    ax_hist.set_xlabel('required-seconds')
+    ax_hist.set_ylabel('密度')
+
+    plt.tight_layout()
     
     # Q-Qプロットを描画
     fig_qq, ax_qq = plt.subplots(figsize=(12, 10))
@@ -101,9 +110,7 @@ def normality_test(df, categories):
     ax_qq.set_title("Q-QPlot: required-seconds列")
     
     plt.tight_layout()
-    plt.show()
-
-
+    
     return result_df, fig_hist, fig_qq
 
 # 分野間の差の検定をする関数
