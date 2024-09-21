@@ -68,13 +68,12 @@ def normality_test(df, categories):
 
     # 正規性の検証
     results = {}
-    for column in categories:
-        stat, p = stats.shapiro(df[column])
-        results[column] = {
-            'W統計量': stat,
-            'p値': p,
-            '正規性検定結果': '正規分布に従っている可能性がある' if p > 0.05 else '正規分布に従っていない'
-        }
+    stat, p = stats.shapiro(df["required_time_seconds"])
+    results[column] = {
+        'W統計量': stat,
+        'p値': p,
+        '正規性検定結果': '正規分布に従っている可能性がある' if p > 0.05 else '正規分布に従っていない'
+    }
 
     # 結果の表示
     st.write("### 正規性検定の結果")
