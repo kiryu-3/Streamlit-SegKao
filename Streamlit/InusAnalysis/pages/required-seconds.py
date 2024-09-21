@@ -128,54 +128,18 @@ def normality_test(df, categories):
 # 分野間の差の検定をする関数
 def categories_test(df, categories):
     # データフレームの整形
-    melted_df = df.melt(id_vars='grade', value_vars=categories,
-                        var_name='category', value_name='value')
-
-    # 全学年の平均と標準偏差を追加
-    summary_stats = melted_df.groupby('category').agg(
-        mean=('value', 'mean'),
-        std=('value', 'std')
+    summary_stats = df.agg(
+        mean=('required_time_seconds', 'mean'),
+        std=('required_time_seconds', 'std')
     ).reset_index()
+    
+    # 学年を追加
     summary_stats['grade'] = 'ALL'
 
-    # categoriesの順序を設定
-    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
-    # categoriesの順にソート
-    summary_stats = summary_stats.sort_values("category", ascending=True)
-
     # ボックスプロットの描画
-    fig = px.box(melted_df, x='category', y='value', title='各分野のスコア分布') 
+    fig = px.box(df, x='category', y='value', title='所要時間分布') 
 
-    # カテゴリごとのデータを取得
-    values = [melted_df[melted_df['category'] == category]['value'].values for category in categories]
-
-    # クラスカル・ウォリス検定を実行
-    stat, p = kruskal(*values) 
-
-    # 有意差が見られる場合、ポストホックテストを実行
-    if p < 0.05:
-        # ポストホックテストの実行
-        posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-        # 結果のDataFrameのカラム名とインデックスを設定
-        posthoc.columns = categories
-        posthoc.index = categories
-        
-        # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
-        significant_pairs = [
-            (idx, col)
-            for col in posthoc.columns
-            for idx in posthoc.index
-            if posthoc.loc[idx, col] < 0.05
-        ]
-
-        # 重複を取り除くために、タプルをソートして集合に変換
-        filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
-
-    else :
-        filtered_pairs = set()
-
-    return summary_stats, fig, filtered_pairs
+    return summary_stats, fig
 
 # 分野-学年間の差の検定をする関数
 def grade_test(df, categories, grades):
@@ -281,13 +245,10 @@ try:
             st.pyplot(fig_qq)
 
     with tabs[1]:  # "分野間の差の検定"タブ
-        categories_df, fig, filtered_pairs = categories_test(st.session_state['df'], categories)
+        categories_df, fig = categories_test(st.session_state['df'], categories)
         st.dataframe(categories_df)
         with st.expander("分野間のスコア分布"):
             st.plotly_chart(fig)
-            st.write("有意差が見られる分野間の組み合わせ：")
-            for category1, category2 in filtered_pairs:
-                st.write(f"【{category1}】-【{category2}】")
 
     with tabs[2]:  # "分野別の学年間の差の検定"タブ
         grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
