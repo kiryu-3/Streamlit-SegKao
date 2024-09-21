@@ -97,7 +97,7 @@ def normality_test(df, categories):
     fig_hist, ax_hist = plt.subplots(figsize=(12, 10))
     
     # ヒストグラムを描画
-    sns.histplot(df["required_time_seconds"], kde=True, ax=ax, stat="density", linewidth=0)
+    sns.histplot(df["required_time_seconds"], kde=True, ax=ax_hist, stat="density", linewidth=0)
     ax_hist.set_title('required-seconds_distribution')
     ax_hist.set_xlabel('required-seconds')
     ax_hist.set_ylabel('密度')
