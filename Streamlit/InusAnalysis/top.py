@@ -18,13 +18,13 @@ import streamlit as st
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="データ解析",
+    page_title="情報活用力チェック-結果分析",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 # サイドバーにメッセージを表示
-st.header("情報開発力チェック結果分析ツール")
-st.write("情報開発力チェックの結果を分析するためのツールです。")
+st.header("情報活用力チェック結果分析ツール")
+st.write("情報活用力チェックの結果を分析するためのツールです。")
 st.write("https://inuscheck2.pythonanywhere.com/")
 st.write("左に表示されているサイドバーから行いたい分析項目を選択してください。")
