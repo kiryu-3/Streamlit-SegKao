@@ -137,7 +137,7 @@ def categories_test(df, categories):
     summary_stats['grade'] = 'ALL'
 
     # ボックスプロットの描画
-    fig = px.box(df, x='category', y='value', title='所要時間分布') 
+    fig = px.box(df, y='required_time_seconds', title='所要時間分布') 
 
     return summary_stats, fig
 
