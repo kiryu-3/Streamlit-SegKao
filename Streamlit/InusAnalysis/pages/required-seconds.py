@@ -89,16 +89,16 @@ def normality_test(df, categories):
     # ヒストグラムとQ-Qプロットを描画
     fig_hist, axes_hist = plt.subplots(2, 2, figsize=(12, 10))
     for ax, column in zip(axes_hist.flatten(), categories):
-        sns.histplot(df["required-seconds"], kde=True, ax=ax, stat="density", linewidth=0)
+        sns.histplot(df["required_time_seconds"], kde=True, ax=ax, stat="density", linewidth=0)
         ax.set_title('required-seconds_distribution')
-        ax.set_xlabel(column)
+        ax.set_xlabel(required-seconds)
         ax.set_ylabel('密度')
 
     plt.tight_layout()
 
     fig_qq, axes_qq = plt.subplots(2, 2, figsize=(12, 10))
     for ax, column in zip(axes_qq.flatten(), categories):
-        stats.probplot(df["required-seconds"], dist="norm", plot=ax)
+        stats.probplot(df["required_time_seconds"], dist="norm", plot=ax)
         ax.set_title("Q-QPlot: required-seconds列")
 
     plt.tight_layout()
