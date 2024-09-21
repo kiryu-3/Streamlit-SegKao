@@ -66,7 +66,7 @@ def upload_csv():
         
         # 外れ値を除去する
         df = df[(df["required_time_seconds"] >= quantile1) & (df["required_time_seconds"] <= quantile99)]
-
+        st.write(quantile1, quantile99)
 
         st.session_state['df'] = df
 
