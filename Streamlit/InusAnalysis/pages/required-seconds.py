@@ -151,64 +151,54 @@ def grade_test(df, categories, grades):
     grades = [grade for grade in grades if grade.startswith("B")]
 
     # データフレームの整形
-    melted_df = df.melt(id_vars='grade', value_vars=categories,
-                        var_name='category', value_name='value')
-    melted_df = melted_df[melted_df['grade'].isin(grades)]
+    df = df[df['grade'].isin(grades)]
     
     # 学年ごとの平均と標準偏差を取得
-    summary_stats = melted_df.groupby(['category', 'grade']).agg(
-        mean=('value', 'mean'),
-        std=('value', 'std')
+    summary_stats = df.groupby(['grade']).agg(
+        mean=('required_time_seconds', 'mean'),
+        std=('required_time_seconds', 'std')
     ).reset_index()
 
-    # categoriesの順序を設定
-    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
-    # categoriesの順にソート
-    summary_stats = summary_stats.sort_values("category", ascending=True)
-
     # 'grade'列をgradesの順番に並べ替え
-    melted_df['grade'] = pd.Categorical(melted_df['grade'], categories=grades, ordered=True)
-    # 'category'列をcategoriesの順番に並べ替え
-    melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
+    df['grade'] = pd.Categorical(df['grade'], categories=grades, ordered=True)
 
-    melted_df = melted_df.sort_values(['grade', 'category'])
+    df = df.sort_values('grade')
 
     # ボックスプロットの描画
-    fig = px.box(melted_df, x='category', y='value', color='grade', title='各分野の学年ごとのスコア分布') 
+    fig = px.box(df, y='required_time_seconds', color='grade', title='学年ごとの所要時間分布') 
 
     # 結果を格納するためのリスト
     result_pairs = []
     flag = 0
 
-    for category in categories:
-        # 学年ごとのデータを取得
-        values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
-
-        # クラスカル・ウォリス検定を実行
-        stat, p = kruskal(*values) 
-
-        # 有意差が見られる場合、ポストホックテストを実行
-        if p < 0.05:
-            # ポストホックテストの実行
-            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-            # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = grades
-            posthoc.index = grades
-            
-            # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
-            significant_pairs = [
-                (category, idx, col)
-                for col in posthoc.columns
-                for idx in posthoc.index
-                if posthoc.loc[idx, col] < 0.05
-            ]
-
-            # 重複を取り除くために、タプルをソートして集合に変換
-            filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
-
-            result_pairs.append(filtered_pairs)
-
+    # 学年ごとのデータを取得
+    values = [df[df['grade'] == grade]['required_time_seconds'].values for grade in grades]
+    
+    # クラスカル・ウォリス検定を実行
+    stat, p = kruskal(*values)
+    
+    # 有意差が見られる場合、ポストホックテストを実行
+    if p < 0.05:
+        # ポストホックテストの実行
+        posthoc = sp.posthoc_dunn(values, p_adjust='bonferroni')
+    
+        # 結果のDataFrameのカラム名とインデックスを設定
+        posthoc.columns = grades
+        posthoc.index = grades
+        
+        # 有意差が見られる学年間の組み合わせをリスト内包表記で取得
+        significant_pairs = [
+            (idx, col)
+            for col in posthoc.columns
+            for idx in posthoc.index
+            if posthoc.loc[idx, col] < 0.05
+        ]
+    
+        # 重複を取り除くために、タプルをソートして集合に変換
+        filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
+    
+        result_pairs.append(filtered_pairs)
+        
     return summary_stats, fig, result_pairs
 
 # ファイルアップロード
