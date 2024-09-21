@@ -18,7 +18,7 @@ import streamlit as st
 
 # Streamlit ページの設定
 st.set_page_config(
-    page_title="データ解析",
+    page_title="情報活用力チェック-結果分析",
     layout="wide",
     initial_sidebar_state="expanded"
 )
