@@ -238,7 +238,7 @@ st.file_uploader("CSVファイルをアップロード",
 
 # データフレームを空にするボタン
 # csvがアップロードされたとき
-if st.session_state['upload_csvfile'] is not None:
+if len(st.session_state['df']) != 0:
     if st.button("アップロードしたCSVファイルを消去"):
         st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
         st.switch_page("top.py")
