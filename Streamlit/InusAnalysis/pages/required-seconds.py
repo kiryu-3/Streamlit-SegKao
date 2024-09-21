@@ -238,16 +238,16 @@ try:
         with st.expander("Q-Qプロット"):
             st.pyplot(fig_qq)
 
-    with tabs[1]:  # "分野間の差の検定"タブ
+    with tabs[1]:  # "所要時間分布"タブ
         categories_df, fig = categories_test(st.session_state['df'], categories)
         st.dataframe(categories_df)
-        with st.expander("所要時間の分布"):
+        with st.expander("所要時間分布"):
             st.plotly_chart(fig)
 
-    with tabs[2]:  # "学年間の差の検定"タブ
+    with tabs[2]:  # "学年間の所要時間分布"タブ
         grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
         st.dataframe(grade_df)
-        with st.expander("学年間の所要時間の分布"):
+        with st.expander("学年間の所要時間分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる学年間の組み合わせ：")
             for result_set in result_pairs:
