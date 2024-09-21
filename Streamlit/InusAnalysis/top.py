@@ -63,6 +63,9 @@ def upload_csv():
         df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
 
         st.session_state['df'] = df
+    else:
+        # upload_csvfileがNoneの場合、空のデータフレームを作成
+        st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
 
 # 正規性の検定
 def normality_test(df, categories):
