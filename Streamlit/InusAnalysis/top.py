@@ -255,29 +255,29 @@ try:
     cols[1].dataframe(question_df)
 
     # タブを作成
-    tabs = st.tabs(["正規性の検定", "分野間の差の検定", "分野別の学年間の差の検定"])
+    tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布"])
 
     with tabs[0]:  # "正規性の検定"タブ
         normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
         st.dataframe(normality_df)
-        with st.expander("分野ごとのスコア分布"):
+        with st.expander("各分野のスコア分布"):
             st.pyplot(fig_hist)
         with st.expander("Q-Qプロット"):
             st.pyplot(fig_qq)
 
-    with tabs[1]:  # "分野間の差の検定"タブ
+    with tabs[1]:  # "各分野のスコア分布"タブ
         categories_df, fig, filtered_pairs = categories_test(st.session_state['df'], categories)
         st.dataframe(categories_df)
-        with st.expander("分野間のスコア分布"):
+        with st.expander("各分野のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる分野間の組み合わせ：")
             for category1, category2 in filtered_pairs:
                 st.write(f"【{category1}】-【{category2}】")
 
-    with tabs[2]:  # "分野別の学年間の差の検定"タブ
+    with tabs[2]:  # "各分野の学年別のスコア分布"タブ
         grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
         st.dataframe(grade_df)
-        with st.expander("分野別-学年間のスコア分布"):
+        with st.expander("各分野の学年別のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる各分野の学年間の組み合わせ：")
             for result_set in result_pairs:
