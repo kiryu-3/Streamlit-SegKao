@@ -106,7 +106,7 @@ def normality_test(df, categories):
     for i in range(2):
         for j in range(2):
             if (i, j) != (0, 0):
-                ax_hist[i, j].set_visible(False)
+                ax_hist[i, j].set_axis_off()
 
     plt.tight_layout()
     
@@ -119,7 +119,7 @@ def normality_test(df, categories):
     for i in range(2):
         for j in range(2):
             if (i, j) != (0, 0):
-                ax_qq[i, j].set_visible(False)
+                ax_qq[i, j].set_axis_off()
     
     plt.tight_layout()
     
