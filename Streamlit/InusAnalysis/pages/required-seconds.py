@@ -94,7 +94,7 @@ def normality_test(df, categories):
     #         st.write(f"{column}列は正規分布に従っているとはいえません。")
 
     # ヒストグラムとQ-Qプロットを描画
-    fig_hist, ax_hist = plt.subplots(figsize=(12, 10))
+    fig_hist, ax_hist = plt.subplots(figsize=(6, 5))
     
     # ヒストグラムを描画
     sns.histplot(df["required_time_seconds"], kde=True, ax=ax_hist, stat="density", linewidth=0)
@@ -105,7 +105,7 @@ def normality_test(df, categories):
     plt.tight_layout()
     
     # Q-Qプロットを描画
-    fig_qq, ax_qq = plt.subplots(figsize=(12, 10))
+    fig_qq, ax_qq = plt.subplots(figsize=(6, 5))
     stats.probplot(df["required_time_seconds"], dist="norm", plot=ax_qq)
     ax_qq.set_title("Q-QPlot: required-seconds列")
     
