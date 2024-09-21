@@ -280,4 +280,4 @@ try:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
 except Exception as e:
-    pass
+    st.write(e)
