@@ -87,21 +87,22 @@ def normality_test(df, categories):
     #         st.write(f"{column}列は正規分布に従っているとはいえません。")
 
     # ヒストグラムとQ-Qプロットを描画
-    fig_hist, axes_hist = plt.subplots(2, 2, figsize=(12, 10))
-    for ax, column in zip(axes_hist.flatten(), categories):
-        sns.histplot(df["required_time_seconds"], kde=True, ax=ax, stat="density", linewidth=0)
-        ax.set_title('required-seconds_distribution')
-        ax.set_xlabel('required-seconds')
-        ax.set_ylabel('密度')
-
+    fig, ax = plt.subplots(figsize=(12, 10))
+    
+    # ヒストグラムを描画
+    sns.histplot(df["required_time_seconds"], kde=True, ax=ax, stat="density", linewidth=0)
+    ax.set_title('required-seconds_distribution')
+    ax.set_xlabel('required-seconds')
+    ax.set_ylabel('密度')
+    
+    # Q-Qプロットを描画
+    fig_qq, ax_qq = plt.subplots(figsize=(12, 10))
+    stats.probplot(df["required_time_seconds"], dist="norm", plot=ax_qq)
+    ax_qq.set_title("Q-QPlot: required-seconds列")
+    
     plt.tight_layout()
+    plt.show()
 
-    fig_qq, axes_qq = plt.subplots(2, 2, figsize=(12, 10))
-    for ax, column in zip(axes_qq.flatten(), categories):
-        stats.probplot(df["required_time_seconds"], dist="norm", plot=ax)
-        ax.set_title("Q-QPlot: required-seconds列")
-
-    plt.tight_layout()
 
     return result_df, fig_hist, fig_qq
 
