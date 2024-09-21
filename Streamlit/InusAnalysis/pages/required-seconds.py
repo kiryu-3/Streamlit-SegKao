@@ -69,7 +69,10 @@ def upload_csv():
         df = df[(df["required_time_seconds"] > quantile1) & (df["required_time_seconds"] < quantile99)]
 
         st.session_state['df'] = df
-
+    else:
+        # upload_csvfileがNoneの場合、空のデータフレームを作成
+        st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
+    
 # 正規性の検定
 def normality_test(df, categories):
 
