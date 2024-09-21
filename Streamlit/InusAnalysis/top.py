@@ -25,5 +25,6 @@ st.set_page_config(
 
 # サイドバーにメッセージを表示
 st.header("情報開発力チェック結果分析ツール")
-st.write("情報開発力チェック（https://inuscheck2.pythonanywhere.com/　）の結果を分析するためのツールです。")
+st.write("情報開発力チェックの結果を分析するためのツールです。")
+st.write("https://inuscheck2.pythonanywhere.com/")
 st.write("左に表示されているサイドバーから行いたい分析項目を選択してください。")
