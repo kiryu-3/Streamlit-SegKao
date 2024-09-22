@@ -210,8 +210,6 @@ def grade_test(df, categories, grades):
         # クラスカル・ウォリス検定を実行
         stat, p = kruskal(*values) 
 
-        st.write(p)
-
         # 有意差が見られる場合、ポストホックテストを実行
         if p < 0.05:
             # ポストホックテストの実行
@@ -233,6 +231,16 @@ def grade_test(df, categories, grades):
             filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
 
             result_pairs.append(filtered_pairs)
+        else:
+            # ポストホックテストの実行
+            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+            # 結果のDataFrameのカラム名とインデックスを設定
+            posthoc.columns = grades
+            posthoc.index = grades
+
+            st.write(f"【{category}】")
+            st.write(posthoc)
 
     return summary_stats, fig, result_pairs
 
