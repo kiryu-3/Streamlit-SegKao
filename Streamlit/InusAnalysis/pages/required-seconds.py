@@ -170,7 +170,6 @@ def grade_test(df, categories, grades):
     
     # クラスカル・ウォリス検定を実行
     stat, p = kruskal(*values)
-    st.write(p)
     
     # 有意差が見られる場合、ポストホックテストを実行
     if p < 0.05:
