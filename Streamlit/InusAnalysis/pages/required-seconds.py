@@ -62,12 +62,6 @@ def upload_csv():
         df['info_sys_dev'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
         df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
 
-        quantile1 = df["required_time_seconds"].quantile(0.01)
-        quantile99 = df["required_time_seconds"].quantile(0.99)
-        
-        # 外れ値を除去する
-        df = df[(df["required_time_seconds"] > quantile1) & (df["required_time_seconds"] < quantile99)]
-
         st.session_state['df'] = df
     else:
         # upload_csvfileがNoneの場合、空のデータフレームを作成
@@ -235,6 +229,12 @@ try:
     cols[0].dataframe(summary_df)
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
+
+    quantile1 = st.session_state['df']["required_time_seconds"].quantile(0.01)
+    quantile99 = st.session_state['df']["required_time_seconds"].quantile(0.99)
+    
+    # 外れ値を除去する
+    st.session_state['df'] = st.session_state['df'][(st.session_state['df']["required_time_seconds"] > quantile1) & (st.session_state['df']["required_time_seconds"] < quantile99)]
 
     # タブを作成
     tabs = st.tabs(["正規性の検定", "所要時間分布", "学年間の所要時間分布"])
