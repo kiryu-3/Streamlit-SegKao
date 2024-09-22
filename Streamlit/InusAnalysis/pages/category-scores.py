@@ -206,9 +206,11 @@ def grade_test(df, categories, grades):
     for category in categories:
         # 学年ごとのデータを取得
         values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
-        st.write(values)
+        
         # クラスカル・ウォリス検定を実行
         stat, p = kruskal(*values) 
+
+        st.write(p)
 
         # 有意差が見られる場合、ポストホックテストを実行
         if p < 0.05:
@@ -218,9 +220,6 @@ def grade_test(df, categories, grades):
             # 結果のDataFrameのカラム名とインデックスを設定
             posthoc.columns = grades
             posthoc.index = grades
-
-            st.write("test")
-            st.write(posthoc)
             
             # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
             significant_pairs = [
