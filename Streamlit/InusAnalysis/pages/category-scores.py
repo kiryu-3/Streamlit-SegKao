@@ -145,9 +145,6 @@ def categories_test(df, categories):
         # 結果のDataFrameのカラム名とインデックスを設定
         posthoc.columns = categories
         posthoc.index = categories
-
-        st.write("test")
-        st.write(posthoc)
         
         # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
         significant_pairs = [
@@ -201,8 +198,6 @@ def grade_test(df, categories, grades):
     result_pairs = []
     flag = 0
 
-    
-
     for category in categories:
         # 学年ごとのデータを取得
         values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
@@ -239,8 +234,6 @@ def grade_test(df, categories, grades):
             posthoc.columns = grades
             posthoc.index = grades
 
-            st.write(f"【{category}】")
-            st.write(posthoc)
 
     return summary_stats, fig, result_pairs
 
