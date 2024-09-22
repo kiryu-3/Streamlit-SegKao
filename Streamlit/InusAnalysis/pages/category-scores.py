@@ -201,6 +201,8 @@ def grade_test(df, categories, grades):
     result_pairs = []
     flag = 0
 
+    st.write(melted_df)
+
     for category in categories:
         # 学年ごとのデータを取得
         values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
