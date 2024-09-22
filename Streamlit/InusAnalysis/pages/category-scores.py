@@ -145,6 +145,9 @@ def categories_test(df, categories):
         # 結果のDataFrameのカラム名とインデックスを設定
         posthoc.columns = categories
         posthoc.index = categories
+
+        st.write("test")
+        st.write(posthoc)
         
         # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
         significant_pairs = [
@@ -214,6 +217,7 @@ def grade_test(df, categories, grades):
             posthoc.columns = grades
             posthoc.index = grades
 
+            st.write("test")
             st.write(posthoc)
             
             # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
