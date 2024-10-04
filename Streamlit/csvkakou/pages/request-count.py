@@ -51,7 +51,7 @@ def process_csv(df):
 
     return df_sorted
 
-st.title("プロジェクト基礎演習-グルーピングアプリ")
+st.title("「たい」を区切りとした要求数カウント")
 
 # 初期化
 if 'before_df' not in st.session_state:
@@ -89,7 +89,7 @@ try:
         st.download_button(
             label="Download CSV",
             data=csv_file,
-            file_name=f'{download_name}_edited.csv'
+            file_name=f'{download_name}_counted.csv'
         )
 except Exception as e:
     pass
