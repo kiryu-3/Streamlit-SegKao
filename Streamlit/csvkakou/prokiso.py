@@ -1,29 +1,60 @@
 import pandas as pd
+import streamlit as st
 
-# CSVファイルの読み込み
-df = pd.read_csv('your_file.csv')
+def upload_csv():
+    # csvがアップロードされたとき
+    if st.session_state['upload_csvfile'] is not None:
+        # アップロードされたファイルデータを読み込む
+        file_data = st.session_state['upload_csvfile'].read()
+        df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
 
-# "クラス"カラムの値が"2C"ではないものの"出席番号"を90にする
-df.loc[df['クラス'] != '2C', '出席番号'] = 90
+        st.session_state['before_df'] = df
+    else:
+        # upload_csvfileがNoneの場合、空のデータフレームを作成
+        st.session_state['before_df'] = pd.DataFrame()  # 空のデータフレーム
 
-# "回答内容"列の「~したい」で要求数を数え、新しい"要求数"カラムを作成
-df['要求数'] = df['回答内容'].str.count('~したい')
+import pandas as pd
 
-# 要求数を元にグループ分け
-# 要求数でソート
-df_sorted = df.sort_values(by='要求数')
+def process_csv(df):
 
-# グループ分け
-group_size = 4  # 4人組のグループ
-num_groups = len(df_sorted) // group_size + (len(df_sorted) % group_size > 0)
+    # "クラス"カラムの値が"2C"ではないものの"出席番号"を90にする
+    df.loc[df['クラス'] != '2C', '出席番号'] = 90
 
-# グループ番号を追加
-df_sorted['グループ番号'] = (df_sorted.index // group_size) + 1
+    # "回答内容"列の「~したい」で要求数を数え、新しい"要求数"カラムを作成
+    df['要求数'] = df['回答内容'].str.count('~したい')
 
-# 元のデータフレームにグループ番号を戻す
-df['グループ番号'] = df_sorted['グループ番号'].values
+    # 要求数を元にグループ分け
+    # 要求数でソート
+    df_sorted = df.sort_values(by='要求数')
 
-# 結果をCSVに保存
-df.to_csv('output_file.csv', index=False)
+    # グループ分け
+    group_size = 4  # 4人組のグループ
+    num_groups = len(df_sorted) // group_size + (len(df_sorted) % group_size > 0)
 
-print("処理が完了しました。")
+    # グループ番号を追加
+    df_sorted['グループ番号'] = (df_sorted.index // group_size) + 1
+
+    # 元のデータフレームにグループ番号を戻す
+    df['グループ番号'] = df_sorted['グループ番号'].values
+
+
+st.title("プロジェクト基礎演習-グルーピングアプリ")
+# ファイルアップロード
+st.file_uploader("CSVファイルをアップロード",
+                       type=["csv"],
+                       key="upload_csvfile",
+                       on_change=upload_csv
+                       )
+
+# csvがアップロードされたとき
+if len(st.session_state['before_df']) != 0:
+    df = process_csv(st.session_state['before_df'])
+
+    upload_name = st.session_state['upload_csvfile'].name
+    download_name = upload_name.split(".")[0]
+    csv_file = df.to_csv(index=False, encoding="shift-jis")
+    st.download_button(
+        label="Download CSV",
+        data=csv_file,
+        file_name=f'{download_name}_edited.csv'
+    )
