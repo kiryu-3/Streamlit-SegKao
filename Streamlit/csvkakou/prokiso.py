@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+import io
 
 def upload_csv():
     # csvがアップロードされたとき
@@ -13,10 +14,7 @@ def upload_csv():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['before_df'] = pd.DataFrame()  # 空のデータフレーム
 
-import pandas as pd
-
 def process_csv(df):
-
     # "クラス"カラムの値が"2C"ではないものの"出席番号"を90にする
     df.loc[df['クラス'] != '2C', '出席番号'] = 90
 
@@ -37,22 +35,31 @@ def process_csv(df):
     # 元のデータフレームにグループ番号を戻す
     df['グループ番号'] = df_sorted['グループ番号'].values
 
+    return df
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
+
+# 初期化
+if 'before_df' not in st.session_state:
+    st.session_state['before_df'] = pd.DataFrame()  # 空のデータフレーム
+
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
-                       type=["csv"],
-                       key="upload_csvfile",
-                       on_change=upload_csv
-                       )
+                  type=["csv"],
+                  key="upload_csvfile",
+                  on_change=upload_csv
+                  )
 
 # csvがアップロードされたとき
-if len(st.session_state['before_df']) != 0:
+if not st.session_state['before_df'].empty:
     df = process_csv(st.session_state['before_df'])
 
     upload_name = st.session_state['upload_csvfile'].name
     download_name = upload_name.split(".")[0]
-    csv_file = df.to_csv(index=False, encoding="shift-jis")
+    
+    # CSVをバイナリデータに変換
+    csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
+    
     st.download_button(
         label="Download CSV",
         data=csv_file,
