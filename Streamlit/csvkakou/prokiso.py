@@ -47,7 +47,7 @@ def process_csv(df):
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
         # 4人組を作成
-        min_index = my_list.index(min(group_sums))
+        min_index = group_sums.index(min(group_sums))
         if len(groups[min_index]) < group_size:
             groups[min_index].append(row)
             group_sums[min_index] += row['要求数']
