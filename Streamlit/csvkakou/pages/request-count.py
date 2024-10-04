@@ -64,6 +64,14 @@ st.file_uploader("CSVファイルをアップロード",
                   )
 
 # csvがアップロードされたとき
+if len(st.session_state['df']) != 0:
+    if st.button("アップロードしたCSVファイルを消去"):
+        st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
+        st.switch_page("top.py")
+        st.rerun()  # アプリを再実行して状態を更新
+        st.success("CSVファイルが消去されました。")
+
+# csvがアップロードされたとき
 if not st.session_state['before_df'].empty:
     df = process_csv(st.session_state['before_df'])
     
