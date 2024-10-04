@@ -50,9 +50,15 @@ def process_csv(df):
             groups[min_index].append(row)
             group_sums[min_index] += row['要求数']
         else:
-            # 全てのグループが4人の場合、最後のグループに追加
-            groups[-1].append(row)
-            group_sums[-1] += row['要求数']
+            for i in range(num_full_groups):
+                if len(groups[i]) < group_size:
+                    groups[i].append(row)
+                    group_sums[i] += row['要求数']
+                    break
+            else:
+                # 全てのグループが4人の場合、最後のグループに追加
+                groups[-1].append(row)
+                group_sums[-1] += row['要求数']
             
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
