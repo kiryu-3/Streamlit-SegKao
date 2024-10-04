@@ -33,12 +33,13 @@ def process_csv(df):
 
     # バランスを取ったグループ作成
     group_size = 4  # 4人組のグループ
-    num_groups = len(df_sorted) // group_size + (len(df_sorted) % group_size > 0)
+    num_groups = len(df_sorted) // group_size  # 完全な4人組の数
+    remainder = len(df_sorted) % group_size    # 残りの人数
 
     # バランスを取るためにリストを準備
-    groups = [[] for _ in range(num_groups)]
+    groups = [[] for _ in range(num_groups + (1 if remainder > 0 else 0))]
     for i in range(len(df_sorted)):
-        groups[i % num_groups].append(df_sorted.iloc[i])
+        groups[i // group_size].append(df_sorted.iloc[i])
 
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
