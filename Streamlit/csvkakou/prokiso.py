@@ -105,10 +105,14 @@ st.file_uploader("CSVファイルをアップロード",
 # csvがアップロードされたとき
 if not st.session_state['before_df'].empty:
     df, group_totals = process_csv(st.session_state['before_df'])
-    st.subheader("グルーピング後のデータ")
-    st.dataframe(df)
-    st.subheader("グループごとの要求数の合計")
-    st.dataframe(group_totals, height=450)
+
+    # タブを作成
+    tabs = st.tabs(["グルーピング後のデータ", "グループごとの要求数の合計"])
+    
+    tabs[0].subheader("グルーピング後のデータ")
+    tabs[0].dataframe(df)
+    tabs[1].subheader("グループごとの要求数の合計")
+    tabs[1].dataframe(group_totals, height=450)
 
     upload_name = st.session_state['upload_csvfile'].name
     download_name = upload_name.split(".")[0]
