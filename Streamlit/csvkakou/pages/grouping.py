@@ -46,6 +46,10 @@ def process_csv(df):
     # # "回答内容"列の「たい」で要求数を数え、新しい"要求数"カラムを作成
     # df['要求数'] = df['回答内容'].str.count('たい').astype(int)  # 整数型に変換
 
+    # "要件数"カラムが無い場合の条件
+    if "要件数" not in df.columns:
+        return "error", "error"
+    
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
@@ -115,25 +119,28 @@ try:
     # csvがアップロードされたとき
     if not st.session_state['before_df'].empty:
         df, group_totals = process_csv(st.session_state['before_df'])
-    
-        # タブを作成
-        tabs = st.tabs(["グルーピング後のデータ", "グループごとの要求数の合計"])
+
+        if df == "error":
+            st.error('「要求数」カラムがないデータをアップロードしています。')
+        else:
+            # タブを作成
+            tabs = st.tabs(["グルーピング後のデータ", "グループごとの要求数の合計"])
+            
+            tabs[0].subheader("グルーピング後のデータ")
+            tabs[0].dataframe(df)
+            tabs[1].subheader("グループごとの要求数の合計")
+            tabs[1].dataframe(group_totals, height=450)
         
-        tabs[0].subheader("グルーピング後のデータ")
-        tabs[0].dataframe(df)
-        tabs[1].subheader("グループごとの要求数の合計")
-        tabs[1].dataframe(group_totals, height=450)
-    
-        download_name = st.session_state['upload_name'].split(".")[0]
+            download_name = st.session_state['upload_name'].split(".")[0]
+            
+            # CSVをバイナリデータに変換
+            csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
         
-        # CSVをバイナリデータに変換
-        csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
-    
-        st.subheader("グルーピング後のデータダウンロード")
-        st.download_button(
-            label="Download CSV",
-            data=csv_file,
-            file_name=f'{download_name}_edited.csv'
-        )
+            st.subheader("グルーピング後のデータダウンロード")
+            st.download_button(
+                label="Download CSV",
+                data=csv_file,
+                file_name=f'{download_name}_edited.csv'
+            )
 except Exception as e:
     pass
