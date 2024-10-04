@@ -28,38 +28,27 @@ def process_csv(df):
     # "回答内容"列の「~したい」で要求数を数え、新しい"要求数"カラムを作成
     df['要求数'] = df['回答内容'].str.count('したい')
 
-    # 要求数を元にグループ分け
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数')
 
-    # グループ分け
-    group_size = 4  # 4人組のグループ
+    # グループ分けのためのリスト
     groups = []
+    group_size = 4  # 4人組のグループ
 
-    # 要求数のバランスを取るために、交互にグループに追加
-    for i in range(0, len(df_sorted), group_size):
-        group = []
-        # 奇数番目の要素を追加
-        for j in range(group_size):
-            if i + j < len(df_sorted):
-                group.append(df_sorted.iloc[i + j])
-        
-        # 偶数番目の要素を追加
-        for j in range(group_size):
-            if i + group_size + j < len(df_sorted):
-                group.append(df_sorted.iloc[i + group_size + j])
-
-        # グループを追加
+    # 要求数で交互に割り当てるためのインデックスを作成
+    total_count = len(df_sorted)
+    for i in range(0, total_count, group_size):
+        # グループに追加するためのスライス
+        group = df_sorted.iloc[i:i + group_size].copy()
         groups.append(group)
+    
+    # グループを結合して新しいデータフレームを作成
+    balanced_group_df = pd.concat(groups).reset_index(drop=True)
 
-    # グループ番号を付与
-    group_number = 1
-    for group in groups:
-        for member in group:
-            df.loc[member.name, 'グループ番号'] = group_number
-        group_number += 1
+    # グループ番号を追加
+    balanced_group_df['グループ番号'] = (balanced_group_df.index // group_size) + 1
 
-    return df
+    return balanced_group_df
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
