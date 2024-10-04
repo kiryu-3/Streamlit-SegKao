@@ -4,6 +4,21 @@ import pandas as pd
 import streamlit as st
 import io
 
+# Streamlit ページの設定
+st.set_page_config(
+    page_title="prokiso-edit",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
+
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
