@@ -33,8 +33,9 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
-    # グループ数
-    num_groups = 11
+    # バランスを取ったグループ作成
+    group_size = 4  # 基本4人組
+    num_groups = len(df_sorted) // group_size
     groups = [[] for _ in range(num_groups)]
     group_sums = [0] * num_groups  # 各グループの合計要求数を保持
 
