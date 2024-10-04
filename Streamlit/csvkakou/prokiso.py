@@ -28,7 +28,7 @@ def process_csv(df):
     df.loc[df['クラス'] != '2C', '出席番号'] = 90
 
     # "回答内容"列の「~したい」で要求数を数え、新しい"要求数"カラムを作成
-    df['要求数'] = df['回答内容'].str.count('したい').astype(int)  # 整数型に変換
+    df['要求数'] = df['回答内容'].str.count('たい').astype(int)  # 整数型に変換
 
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
@@ -47,11 +47,10 @@ def process_csv(df):
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
         # 4人組を作成
-        for i in range(num_full_groups):
-            if len(groups[i]) < group_size:
-                groups[i].append(row)
-                group_sums[i] += row['要求数']
-                break
+        min_index = my_list.index(min(group_sums))
+        if len(groups[min_index]) < group_size:
+            groups[min_index].append(row)
+            group_sums[min_index] += row['要求数']
         else:
             # 全てのグループが4人の場合、最後のグループに追加
             groups[-1].append(row)
