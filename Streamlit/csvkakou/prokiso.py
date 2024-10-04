@@ -80,6 +80,9 @@ def process_csv(df):
         for member in group:
             df.loc[member.name, 'グループ番号'] = group_number
 
+    # dfをグループ番号でソート
+    df.sort_values(by='グループ番号', ascending=True, inplace=True)
+    
     # グループ番号ごとの要求数の合計を計算
     group_totals = df.groupby('グループ番号')['要求数'].sum().reset_index()
     group_totals.rename(columns={'要求数': '要求数の合計'}, inplace=True)  # カラム名を変更
