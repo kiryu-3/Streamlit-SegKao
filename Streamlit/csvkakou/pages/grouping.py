@@ -46,8 +46,8 @@ def process_csv(df):
     # # "回答内容"列の「たい」で要求数を数え、新しい"要求数"カラムを作成
     # df['要求数'] = df['回答内容'].str.count('たい').astype(int)  # 整数型に変換
 
-    # "要件数"カラムが無い場合の条件
-    if "要件数" not in df.columns:
+    # "要求数"カラムが無い場合の条件
+    if "要求数" not in df.columns:
         return "error", "error"
     
     # 要求数でソート
