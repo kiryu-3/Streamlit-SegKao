@@ -48,7 +48,7 @@ def process_csv(df):
 
     # "要求数"カラムが無い場合の条件
     if "要求数" not in df.columns:
-        return "error", "error"
+        return None, None  # 列がない場合はNoneを返す
     
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
@@ -120,7 +120,7 @@ try:
     if not st.session_state['before_df'].empty:
         df, group_totals = process_csv(st.session_state['before_df'])
 
-        if df == "error":
+        if df is None or group_totals is None:
             st.error('「要求数」カラムがないデータをアップロードしています。')
         else:
             # タブを作成
