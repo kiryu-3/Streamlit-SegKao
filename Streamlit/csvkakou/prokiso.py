@@ -31,34 +31,21 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数')
 
-    # グループ分けの準備
+    # バランスを取ったグループ作成
     group_size = 4  # 4人組のグループ
     num_groups = len(df_sorted) // group_size + (len(df_sorted) % group_size > 0)
-    
-    # バランスを取るためのグループリスト
+
+    # バランスを取るためにリストを準備
     groups = [[] for _ in range(num_groups)]
-
-    # 要求数が少ない順と多い順のインデックスを取得
-    indices = list(range(len(df_sorted)))
-    low_indices = indices[:len(df_sorted)//2]
-    high_indices = indices[len(df_sorted)//2:]
-
-    # バランスを取ってグループに割り当て
-    for i in range(num_groups):
-        if i < len(low_indices):
-            groups[i].append(df_sorted.iloc[low_indices[i]])
-        if i < len(high_indices):
-            groups[i].append(df_sorted.iloc[high_indices[i]])
+    for i in range(len(df_sorted)):
+        groups[i % num_groups].append(df_sorted.iloc[i])
 
     # グループ番号を追加
-    for i, group in enumerate(groups):
+    for group_number, group in enumerate(groups, start=1):
         for member in group:
-            member['グループ番号'] = i + 1
+            df.loc[member.name, 'グループ番号'] = group_number
 
-    # 最終的なデータフレームを作成
-    final_df = pd.concat(groups).reset_index(drop=True)
-
-    return final_df
+    return df
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
