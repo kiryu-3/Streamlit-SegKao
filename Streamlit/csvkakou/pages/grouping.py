@@ -24,6 +24,7 @@ def upload_csv():
     if st.session_state['upload_csvfile'] is not None:
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile'].read()
+        st.session_state['upload_name'] = st.session_state['upload_csvfile'].name
         # バイナリデータからPandas DataFrameを作成
         try:
             df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
@@ -123,8 +124,7 @@ try:
         tabs[1].subheader("グループごとの要求数の合計")
         tabs[1].dataframe(group_totals, height=450)
     
-        upload_name = st.session_state['upload_csvfile'].name
-        download_name = upload_name.split(".")[0]
+        download_name = st.session_state['upload_name'].split(".")[0]
         
         # CSVをバイナリデータに変換
         csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
