@@ -71,22 +71,25 @@ if len(st.session_state['df']) != 0:
         st.rerun()  # アプリを再実行して状態を更新
         st.success("CSVファイルが消去されました。")
 
-# csvがアップロードされたとき
-if not st.session_state['before_df'].empty:
-    df = process_csv(st.session_state['before_df'])
+try:
+    # csvがアップロードされたとき
+    if not st.session_state['before_df'].empty:
+        df = process_csv(st.session_state['before_df'])
+        
+        st.subheader("要求数カウント後のデータ")
+        st.dataframe(df)
     
-    st.subheader("要求数カウント後のデータ")
-    st.dataframe(df)
-
-    upload_name = st.session_state['upload_csvfile'].name
-    download_name = upload_name.split(".")[0]
+        upload_name = st.session_state['upload_csvfile'].name
+        download_name = upload_name.split(".")[0]
+        
+        # CSVをバイナリデータに変換
+        csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
     
-    # CSVをバイナリデータに変換
-    csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
-
-    st.subheader("グルーピング後のデータダウンロード")
-    st.download_button(
-        label="Download CSV",
-        data=csv_file,
-        file_name=f'{download_name}_edited.csv'
-    )
+        st.subheader("グルーピング後のデータダウンロード")
+        st.download_button(
+            label="Download CSV",
+            data=csv_file,
+            file_name=f'{download_name}_edited.csv'
+        )
+except Exception as e:
+    pass
