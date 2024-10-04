@@ -33,6 +33,8 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
+    st.write(df_sorted)
+
     # バランスを取ったグループ作成
     group_size = 4  # 基本4人組
     total_members = len(df_sorted)
