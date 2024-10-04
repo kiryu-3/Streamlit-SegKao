@@ -33,42 +33,33 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
-    # グループサイズ
-    group_size = 4
+    # バランスを取ったグループ作成
+    group_size = 4  # 基本4人組
     total_members = len(df_sorted)
-
-    # 完全な4人組の数を計算
-    num_full_groups = total_members // group_size
-    remainder = total_members % group_size
-
-    # 最後のグループに入るメンバー数を計算
-    if remainder > 0:
-        last_group_size = remainder + group_size  # 余ったメンバーを含む
-        num_groups = num_full_groups + 1  # グループの総数
-    else:
-        last_group_size = group_size
-        num_groups = num_full_groups
+    num_full_groups = total_members // group_size  # 完全な4人組の数
 
     # グループを準備
-    groups = [[] for _ in range(num_groups)]
-    group_sums = [0] * num_groups  # 各グループの合計要求数を保持
+    groups = [[] for _ in range(num_full_groups + 1)]  # 最後のグループ用に1つ追加
+    group_sums = [0] * len(groups)  # 各グループの合計要求数を保持
 
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
-        # 現在のグループの合計が最も少ないグループに追加
-        min_group_index = group_sums.index(min(group_sums))
-        
-        # グループサイズの制限をチェック
-        if min_group_index < num_full_groups:  # 完全な4人組のグループ
-            if len(groups[min_group_index]) < group_size:
-                groups[min_group_index].append(row)
-                group_sums[min_group_index] += row['要求数']
+        # 最初のグループに追加
+        if len(groups[-1]) < group_size:
+            # 4人未満の最後のグループに追加
+            groups[-1].append(row)
+            group_sums[-1] += row['要求数']
+        else:
+            # 4人組を作成
+            for i in range(num_full_groups):
+                if len(groups[i]) < group_size:
+                    groups[i].append(row)
+                    group_sums[i] += row['要求数']
+                    break
             else:
-                # 4人に達している場合は次のグループに追加
-                continue
-        else:  # 最後のグループ
-            groups[min_group_index].append(row)
-            group_sums[min_group_index] += row['要求数']
+                # 全てのグループが4人の場合、最後のグループに追加
+                groups[-1].append(row)
+                group_sums[-1] += row['要求数']
 
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
@@ -76,6 +67,7 @@ def process_csv(df):
             df.loc[member.name, 'グループ番号'] = group_number
 
     return df
+
 
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
