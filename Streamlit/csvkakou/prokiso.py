@@ -60,6 +60,7 @@ st.file_uploader("CSVファイルをアップロード",
 # csvがアップロードされたとき
 if not st.session_state['before_df'].empty:
     df = process_csv(st.session_state['before_df'])
+    st.dataframe(df)
 
     upload_name = st.session_state['upload_csvfile'].name
     download_name = upload_name.split(".")[0]
