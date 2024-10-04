@@ -67,6 +67,7 @@ def process_csv(df):
 
     # グループ番号ごとの要求数の合計を計算
     group_totals = df.groupby('グループ番号')['要求数'].sum().reset_index()
+    group_totals.rename(columns={'要求数': '要求数の合計'}, inplace=True)  # カラム名を変更
     
     return df, group_totals
 
@@ -86,7 +87,9 @@ st.file_uploader("CSVファイルをアップロード",
 # csvがアップロードされたとき
 if not st.session_state['before_df'].empty:
     df, group_totals = process_csv(st.session_state['before_df'])
+    st.subheader("グルーピング後のデータ")
     st.dataframe(df)
+    st.subheader("グループごとの要求数の合計")
     st.dataframe(group_totals)
 
     upload_name = st.session_state['upload_csvfile'].name
@@ -94,7 +97,8 @@ if not st.session_state['before_df'].empty:
     
     # CSVをバイナリデータに変換
     csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
-    
+
+    st.subheader("グルーピング後のデータダウンロード")
     st.download_button(
         label="Download CSV",
         data=csv_file,
