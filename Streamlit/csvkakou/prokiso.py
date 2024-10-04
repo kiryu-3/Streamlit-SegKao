@@ -46,22 +46,17 @@ def process_csv(df):
 
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
-        # 最初のグループに追加
-        if len(groups[-1]) < group_size:
-            # 4人未満の最後のグループに追加
+        # 4人組を作成
+        for i in range(num_full_groups):
+            if len(groups[i]) < group_size:
+                groups[i].append(row)
+                group_sums[i] += row['要求数']
+                break
+        else:
+            # 全てのグループが4人の場合、最後のグループに追加
             groups[-1].append(row)
             group_sums[-1] += row['要求数']
-        else:
-            # 4人組を作成
-            for i in range(num_full_groups):
-                if len(groups[i]) < group_size:
-                    groups[i].append(row)
-                    group_sums[i] += row['要求数']
-                    break
-            else:
-                # 全てのグループが4人の場合、最後のグループに追加
-                groups[-1].append(row)
-                group_sums[-1] += row['要求数']
+            
 
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
