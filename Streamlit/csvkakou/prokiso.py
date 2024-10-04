@@ -39,7 +39,7 @@ def process_csv(df):
     num_full_groups = total_members // group_size  # 完全な4人組の数
 
     # グループを準備
-    groups = [[] for _ in range(num_full_groups + 1)]  # 最後のグループ用に1つ追加
+    groups = [[] for _ in range(num_full_groups)]
     group_sums = [0] * len(groups)  # 各グループの合計要求数を保持
 
     # 貪欲法でグループ分け
