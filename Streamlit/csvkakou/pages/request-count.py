@@ -48,7 +48,7 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
-    return df
+    return df_sorted
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
@@ -92,4 +92,4 @@ try:
             file_name=f'{download_name}_edited.csv'
         )
 except Exception as e:
-    pass
+    st.write(e)
