@@ -29,17 +29,24 @@ def process_csv(df):
     df['要求数'] = df['回答内容'].str.count('したい')
 
     # 要求数でソート
-    df_sorted = df.sort_values(by='要求数')
+    df_sorted = df.sort_values(by='要求数', ascending=False)
 
     # バランスを取ったグループ作成
-    group_size = 4  # 4人組のグループ
-    num_groups = len(df_sorted) // group_size  # 完全な4人組の数
-    remainder = len(df_sorted) % group_size    # 残りの人数
+    group_size = 4  # 基本4人組
+    num_groups = len(df_sorted) // group_size
+    remainder = len(df_sorted) % group_size
 
     # バランスを取るためにリストを準備
     groups = [[] for _ in range(num_groups + (1 if remainder > 0 else 0))]
+    
+    # 4人組を作成
     for i in range(len(df_sorted)):
         groups[i // group_size].append(df_sorted.iloc[i])
+
+    # 残りのメンバーを次のグループに追加
+    if remainder > 0:
+        for i in range(remainder):
+            groups[-1].append(df_sorted.iloc[-(i + 1)])
 
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
