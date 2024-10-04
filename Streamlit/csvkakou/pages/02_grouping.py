@@ -143,4 +143,4 @@ try:
                 file_name=f'{download_name}_grouped.csv'
             )
 except Exception as e:
-    pass
+    st.write(e)
