@@ -28,7 +28,7 @@ def process_csv(df):
     df.loc[df['クラス'] != '2C', '出席番号'] = 90
 
     # "回答内容"列の「~したい」で要求数を数え、新しい"要求数"カラムを作成
-    df['要求数'] = df['回答内容'].str.count('したい')
+    df['要求数'] = df['回答内容'].str.count('したい').astype(int)  # 整数型に変換
 
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
