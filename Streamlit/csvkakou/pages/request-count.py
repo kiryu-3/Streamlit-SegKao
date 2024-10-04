@@ -92,4 +92,4 @@ try:
             file_name=f'{download_name}_edited.csv'
         )
 except Exception as e:
-    st.write(e)
+    pass
