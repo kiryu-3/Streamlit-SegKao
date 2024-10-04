@@ -34,13 +34,30 @@ def process_csv(df):
 
     # グループ分け
     group_size = 4  # 4人組のグループ
-    num_groups = len(df_sorted) // group_size + (len(df_sorted) % group_size > 0)
+    groups = []
 
-    # グループ番号を追加
-    df_sorted['グループ番号'] = (df_sorted.index // group_size) + 1
+    # 要求数のバランスを取るために、交互にグループに追加
+    for i in range(0, len(df_sorted), group_size):
+        group = []
+        # 奇数番目の要素を追加
+        for j in range(group_size):
+            if i + j < len(df_sorted):
+                group.append(df_sorted.iloc[i + j])
+        
+        # 偶数番目の要素を追加
+        for j in range(group_size):
+            if i + group_size + j < len(df_sorted):
+                group.append(df_sorted.iloc[i + group_size + j])
 
-    # 元のデータフレームにグループ番号を戻す
-    df['グループ番号'] = df_sorted['グループ番号'].values
+        # グループを追加
+        groups.append(group)
+
+    # グループ番号を付与
+    group_number = 1
+    for group in groups:
+        for member in group:
+            df.loc[member.name, 'グループ番号'] = group_number
+        group_number += 1
 
     return df
 
