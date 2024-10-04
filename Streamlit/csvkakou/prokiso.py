@@ -33,8 +33,6 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
-    st.write(df_sorted)
-
     # バランスを取ったグループ作成
     group_size = 4  # 基本4人組
     total_members = len(df_sorted)
@@ -56,15 +54,12 @@ def process_csv(df):
             groups[-1].append(row)
             group_sums[-1] += row['要求数']
             
-
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
         for member in group:
             df.loc[member.name, 'グループ番号'] = group_number
 
     return df
-
-
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
