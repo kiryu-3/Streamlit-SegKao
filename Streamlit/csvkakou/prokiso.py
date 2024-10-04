@@ -29,24 +29,19 @@ def process_csv(df):
     df['要求数'] = df['回答内容'].str.count('したい')
 
     # 要求数でソート
-    df_sorted = df.sort_values(by='要求数', ascending=False)
+    df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
 
-    # バランスを取ったグループ作成
-    group_size = 4  # 基本4人組
-    num_groups = len(df_sorted) // group_size
-    remainder = len(df_sorted) % group_size
+    # グループ数
+    num_groups = 11
+    groups = [[] for _ in range(num_groups)]
+    group_sums = [0] * num_groups  # 各グループの合計要求数を保持
 
-    # バランスを取るためにリストを準備
-    groups = [[] for _ in range(num_groups + (1 if remainder > 0 else 0))]
-    
-    # 4人組を作成
-    for i in range(len(df_sorted)):
-        groups[i // group_size].append(df_sorted.iloc[i])
-
-    # 残りのメンバーを次のグループに追加
-    if remainder > 0:
-        for i in range(remainder):
-            groups[-1].append(df_sorted.iloc[-(i + 1)])
+    # 貪欲法でグループ分け
+    for index, row in df_sorted.iterrows():
+        # 現在のグループの合計が最も少ないグループに追加
+        min_group_index = group_sums.index(min(group_sums))
+        groups[min_group_index].append(row)
+        group_sums[min_group_index] += row['要求数']
 
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
@@ -54,6 +49,7 @@ def process_csv(df):
             df.loc[member.name, 'グループ番号'] = group_number
 
     return df
+
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
