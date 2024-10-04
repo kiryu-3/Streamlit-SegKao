@@ -108,7 +108,7 @@ if not st.session_state['before_df'].empty:
     st.subheader("グルーピング後のデータ")
     st.dataframe(df)
     st.subheader("グループごとの要求数の合計")
-    st.dataframe(group_totals)
+    st.dataframe(group_totals, height=500)
 
     upload_name = st.session_state['upload_csvfile'].name
     download_name = upload_name.split(".")[0]
