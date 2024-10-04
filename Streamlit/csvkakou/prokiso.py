@@ -27,7 +27,7 @@ def process_csv(df):
     # "クラス"カラムの値が"2C"ではないものの"出席番号"を90にする
     df.loc[df['クラス'] != '2C', '出席番号'] = 90
 
-    # "回答内容"列の「~したい」で要求数を数え、新しい"要求数"カラムを作成
+    # "回答内容"列の「たい」で要求数を数え、新しい"要求数"カラムを作成
     df['要求数'] = df['回答内容'].str.count('たい').astype(int)  # 整数型に変換
 
     # 要求数でソート
@@ -65,7 +65,10 @@ def process_csv(df):
         for member in group:
             df.loc[member.name, 'グループ番号'] = group_number
 
-    return df
+    # グループ番号ごとの要求数の合計を計算
+    group_totals = df.groupby('グループ番号')['要求数'].sum().reset_index()
+    
+    return df, group_totals
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
@@ -82,8 +85,9 @@ st.file_uploader("CSVファイルをアップロード",
 
 # csvがアップロードされたとき
 if not st.session_state['before_df'].empty:
-    df = process_csv(st.session_state['before_df'])
+    df, group_totals = process_csv(st.session_state['before_df'])
     st.dataframe(df)
+    st.dataframe(group_totals)
 
     upload_name = st.session_state['upload_csvfile'].name
     download_name = upload_name.split(".")[0]
