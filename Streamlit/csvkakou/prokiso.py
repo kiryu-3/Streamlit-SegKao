@@ -31,24 +31,34 @@ def process_csv(df):
     # 要求数でソート
     df_sorted = df.sort_values(by='要求数')
 
-    # グループ分けのためのリスト
-    groups = []
+    # グループ分けの準備
     group_size = 4  # 4人組のグループ
-
-    # 要求数で交互に割り当てるためのインデックスを作成
-    total_count = len(df_sorted)
-    for i in range(0, total_count, group_size):
-        # グループに追加するためのスライス
-        group = df_sorted.iloc[i:i + group_size].copy()
-        groups.append(group)
+    num_groups = len(df_sorted) // group_size + (len(df_sorted) % group_size > 0)
     
-    # グループを結合して新しいデータフレームを作成
-    balanced_group_df = pd.concat(groups).reset_index(drop=True)
+    # バランスを取るためのグループリスト
+    groups = [[] for _ in range(num_groups)]
+
+    # 要求数が少ない順と多い順のインデックスを取得
+    indices = list(range(len(df_sorted)))
+    low_indices = indices[:len(df_sorted)//2]
+    high_indices = indices[len(df_sorted)//2:]
+
+    # バランスを取ってグループに割り当て
+    for i in range(num_groups):
+        if i < len(low_indices):
+            groups[i].append(df_sorted.iloc[low_indices[i]])
+        if i < len(high_indices):
+            groups[i].append(df_sorted.iloc[high_indices[i]])
 
     # グループ番号を追加
-    balanced_group_df['グループ番号'] = (balanced_group_df.index // group_size) + 1
+    for i, group in enumerate(groups):
+        for member in group:
+            member['グループ番号'] = i + 1
 
-    return balanced_group_df
+    # 最終的なデータフレームを作成
+    final_df = pd.concat(groups).reset_index(drop=True)
+
+    return final_df
 
 st.title("プロジェクト基礎演習-グルーピングアプリ")
 
