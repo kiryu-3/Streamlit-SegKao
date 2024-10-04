@@ -102,27 +102,30 @@ st.file_uploader("CSVファイルをアップロード",
                   on_change=upload_csv
                   )
 
-# csvがアップロードされたとき
-if not st.session_state['before_df'].empty:
-    df, group_totals = process_csv(st.session_state['before_df'])
-
-    # タブを作成
-    tabs = st.tabs(["グルーピング後のデータ", "グループごとの要求数の合計"])
+try:
+    # csvがアップロードされたとき
+    if not st.session_state['before_df'].empty:
+        df, group_totals = process_csv(st.session_state['before_df'])
     
-    tabs[0].subheader("グルーピング後のデータ")
-    tabs[0].dataframe(df)
-    tabs[1].subheader("グループごとの要求数の合計")
-    tabs[1].dataframe(group_totals, height=450)
-
-    upload_name = st.session_state['upload_csvfile'].name
-    download_name = upload_name.split(".")[0]
+        # タブを作成
+        tabs = st.tabs(["グルーピング後のデータ", "グループごとの要求数の合計"])
+        
+        tabs[0].subheader("グルーピング後のデータ")
+        tabs[0].dataframe(df)
+        tabs[1].subheader("グループごとの要求数の合計")
+        tabs[1].dataframe(group_totals, height=450)
     
-    # CSVをバイナリデータに変換
-    csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
-
-    st.subheader("グルーピング後のデータダウンロード")
-    st.download_button(
-        label="Download CSV",
-        data=csv_file,
-        file_name=f'{download_name}_edited.csv'
-    )
+        upload_name = st.session_state['upload_csvfile'].name
+        download_name = upload_name.split(".")[0]
+        
+        # CSVをバイナリデータに変換
+        csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
+    
+        st.subheader("グルーピング後のデータダウンロード")
+        st.download_button(
+            label="Download CSV",
+            data=csv_file,
+            file_name=f'{download_name}_edited.csv'
+        )
+except Exception as e:
+    pass
