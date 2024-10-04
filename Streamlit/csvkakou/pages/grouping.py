@@ -94,7 +94,7 @@ def process_csv(df):
     
     return df, group_totals
 
-st.title("プロジェクト基礎演習-グルーピングアプリ")
+st.title("要求数に基づくグルーピング")
 
 # 初期化
 if 'before_df' not in st.session_state:
@@ -140,7 +140,7 @@ try:
             st.download_button(
                 label="Download CSV",
                 data=csv_file,
-                file_name=f'{download_name}_edited.csv'
+                file_name=f'{download_name}_grouped.csv'
             )
 except Exception as e:
     pass
