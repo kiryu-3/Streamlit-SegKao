@@ -57,7 +57,7 @@ def process_csv(df):
     group_size = 4  # 基本4人組
     total_members = len(df_sorted)
     num_full_groups = total_members // group_size  # 完全な4人組の数
-    st.write(num_full_groups)
+    st.write(total_members)
 
     # グループを準備
     groups = [[] for _ in range(num_full_groups)]
