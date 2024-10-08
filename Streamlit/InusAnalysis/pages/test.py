@@ -296,6 +296,7 @@ try:
     plt.ylabel("固有値")
 
     # Streamlitでグラフを表示
+    st.write(df_std)
     st.pyplot(plt)
 
     # タブを作成
