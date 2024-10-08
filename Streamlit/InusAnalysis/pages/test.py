@@ -276,8 +276,12 @@ try:
     # データの標準化
     inga_df = final_df[categories]
     df_std = final_df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
+
+    plt.plot(ev_sorted, 's-') 
+    
     # スクリープロットの描画
     # 固有値をプロット
+    plt.figure(figsize=(10, 6))  # グラフのサイズを指定
     plt.plot(ev_sorted, 's-') 
     
     # 軸名を指定
