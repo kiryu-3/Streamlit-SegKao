@@ -277,6 +277,13 @@ try:
     inga_df = final_df[categories]
     df_std = inga_df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
 
+    #相関行列を求める
+    df_std_corr = df_std.corr()
+    
+    #固有値を求める
+    ev = np.linalg.eigvals(df_std_corr)
+    ev_sorted = sorted(ev,reverse=True)
+
     plt.plot(ev_sorted, 's-') 
     
     # スクリープロットの描画
