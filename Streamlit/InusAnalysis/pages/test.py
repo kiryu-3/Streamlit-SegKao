@@ -277,7 +277,7 @@ try:
     st.write(tete_df)
 
     # データの標準化
-    inga_df = tete_df[categories]
+    inga_df = tete_df
     df_std = inga_df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
 
     #相関行列を求める
