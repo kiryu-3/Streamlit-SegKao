@@ -8,3 +8,4 @@ plotly
 statsmodels
 scipy
 scikit-posthocs
+factor_analyzer
