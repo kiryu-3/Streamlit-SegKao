@@ -273,6 +273,9 @@ try:
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
 
+    tete_df = st.session_state['df'].iloc[:, 5:71]
+    st.write(tete_df)
+
     # データの標準化
     inga_df = final_df[categories]
     df_std = inga_df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
