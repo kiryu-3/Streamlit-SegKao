@@ -275,7 +275,7 @@ try:
 
     # データの標準化
     inga_df = final_df[categories]
-    df_std = final_df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
+    df_std = inga_df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
 
     plt.plot(ev_sorted, 's-') 
     
