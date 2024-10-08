@@ -302,6 +302,16 @@ try:
     st.write(df_std)
     st.pyplot(plt)
 
+    # 因子分析の実行
+    fa = FactorAnalyzer(n_factors=5, rotation="promax")
+    fa.fit(df_std)
+
+    # 因子負荷量，共通性の表示
+    loadings_df = pd.DataFrame(fa.loadings_, columns=["第１因子", "第２因子","第3因子"]) #fa.loadingsで因子負荷量を算出
+    loadings_df.index = df_std.columns
+    loadings_df["共通性"] = fa.get_communalities() #共通性の算出
+    st.write(loadings_df)
+    
     # タブを作成
     tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布"])
 
