@@ -307,7 +307,7 @@ try:
     fa.fit(df_std)
 
     # 因子負荷量，共通性の表示
-    loadings_df = pd.DataFrame(fa.loadings_, columns=["第１因子", "第２因子","第3因子"]) #fa.loadingsで因子負荷量を算出
+    loadings_df = pd.DataFrame(fa.loadings_, columns=["第１因子", "第２因子","第3因子", "第4因子","第5因子"]) #fa.loadingsで因子負荷量を算出
     loadings_df.index = df_std.columns
     loadings_df["共通性"] = fa.get_communalities() #共通性の算出
     st.write(loadings_df)
