@@ -23,6 +23,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# 初期化
+if 'df' not in st.session_state:
+    st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
+
 def display_summary(df, categories, grades):
     
     # 各学年の人数を辞書に格納
