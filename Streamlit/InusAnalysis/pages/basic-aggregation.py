@@ -90,19 +90,17 @@ def find_significant_skills(df):
 
     # 各列の平均値を計算
     means = df[skill_columns].mean()
+    # 全体の平均値
+    overall_mean = means.mean()
     
     # t検定を行い、有意に高いスキルと低いスキルを特定する
     high_columns = []
     low_columns = []
     
-    # 全体の平均値
-    overall_mean = means.mean()
-    
     for column in skill_columns:
         
         t_stat, p_value = stats.ttest_1samp(df[column], overall_mean)
-        st.write(p_value)
-        if p_value < 0.01:
+        if p_value < 0.05:
             if means[column] > overall_mean:
                 high_columns.append(column)
             elif means[column] < overall_mean:
