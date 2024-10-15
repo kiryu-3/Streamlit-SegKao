@@ -85,30 +85,35 @@ def upload_csv2():
 
 
 def find_significant_skills(df):
-    # skill1 から skill66 の列を選択
-    skill_columns = [f'skill{i}' for i in range(1, 67)]
+    # Total number of elements in the data
+    total_elements = df.size
+    
+    # Count the number of '3's in each column
+    column_3_counts = (df == 3).sum(axis=0)
+    
+    # Count the number of '3's in the entire data
+    total_3_count = (df == 3).sum().sum()
+    
+    # Calculate proportions of '3's in each column and overall
+    column_3_proportions = column_3_counts / df.shape[0]
+    overall_3_proportion = total_3_count / total_elements
+    
+    # Perform a binomial test for each column to see if the proportion of '3's is significantly different from the overall proportion
+    p_values = [stats.binom_test(count, df.shape[0], overall_3_proportion, alternative='two-sided') for count in column_3_counts]
+    
+    # Determine significance for each column
+    significance_level = 0.05
+    significance_results = [p < significance_level for p in p_values]
+    
+    # Create a DataFrame for the results
+    result_df = pd.DataFrame({
+        'Column': df.columns,
+        'Proportion_of_3': column_3_proportions,
+        'P_value': p_values,
+        'Significant': significance_results
+    })
 
-    # 各列の平均値を計算
-    means = df[skill_columns].mean()
-    # 全体の平均値
-    overall_mean = means.mean()
-    
-    # t検定を行い、有意に高いスキルと低いスキルを特定する
-    high_columns = {}
-    low_columns = {}
-    
-    for column in skill_columns:
-        
-        t_stat, p_value = stats.ttest_1samp(df[column], overall_mean)
-        if p_value < 0.01:
-            if means[column] > overall_mean:
-                high_columns[column] = means[column]
-                
-            elif means[column] < overall_mean:
-                low_columns[column] = means[column]
-    st.write(overall_mean)
-    # 結果を返す
-    return high_columns, low_columns
+    return result_df
     
 # ファイルアップロード
 st.file_uploader("集計結果（5件法）のcsvをアップロード",
