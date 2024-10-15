@@ -151,7 +151,7 @@ try:
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
 
-    large_skills, small_skills = find_significant_skills(st.session_state['question_df'])
+    large_skills, small_skills = find_significant_skills(st.session_state['df'])
     st.write("有意に大きい列とその平均値:", large_skills)
     st.write("有意に小さい列とその平均値:", small_skills)
 
