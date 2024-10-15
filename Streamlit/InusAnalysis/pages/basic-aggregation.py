@@ -103,7 +103,7 @@ def find_significant_skills(df):
     st.write(p_values)
     
     # 有意水準を設定（例: 0.05）
-    significance_level = 0.05
+    significance_level = 0.01
 
     # 有意に大きいものと有意に小さいものを分類
     significantly_large = {skill: means[skill] for skill, p in p_values.items() if p < significance_level and means[skill] > overall_mean}
