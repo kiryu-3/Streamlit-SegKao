@@ -102,11 +102,18 @@ def find_significant_skills(df):
     overall_3_proportion = total_3_count / total_elements
     
     # Perform a binomial test for each column using binomtest
-    p_values = [stats.binomtest(count, df.shape[0], overall_3_proportion).pvalue for count in column_3_counts]
-    
-    # Determine significance for each column
-    significance_level = 0.05
-    significance_results = [p < significance_level for p in p_values]
+    p_values = []
+    significance_results = []
+    for count, proportion in zip(column_3_counts, column_3_proportions):
+        binom_test = stats.binomtest(count, df.shape[0], overall_3_proportion)
+        p_value = binom_test.pvalue
+        p_values.append(p_value)
+        
+        # Check if the proportion in the column is significantly higher than the overall proportion
+        if proportion > overall_3_proportion and p_value < 0.05:
+            significance_results.append(True)
+        else:
+            significance_results.append(False)
     
     # Create a DataFrame for the results
     result_df = pd.DataFrame({
