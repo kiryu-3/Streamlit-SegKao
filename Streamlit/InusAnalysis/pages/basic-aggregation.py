@@ -99,7 +99,7 @@ def find_significant_skills(df):
     p_values = {}
     for skill in skill_columns:
         meann = df[skill].mean()
-        t_stat, p_value = stats.ttest_1samp(df[skill], meann)
+        t_stat, p_value = stats.ttest_1samp(means, meann)
         p_values[skill] = p_value
 
     st.write(p_values)
