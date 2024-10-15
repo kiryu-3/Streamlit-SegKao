@@ -99,7 +99,9 @@ def find_significant_skills(df):
     overall_mean = means.mean()
     
     for column in skill_columns:
+        
         t_stat, p_value = stats.ttest_1samp(df[column], overall_mean)
+        st.write(p_value)
         if p_value < 0.01:
             if means[column] > overall_mean:
                 high_columns.append(column)
