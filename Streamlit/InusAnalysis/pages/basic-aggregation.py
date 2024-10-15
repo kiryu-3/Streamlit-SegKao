@@ -84,175 +84,31 @@ def upload_csv2():
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
 
-# 正規性の検定
-def normality_test(df, categories):
+def find_significant_skills(df):
+    # skill1 から skill66 の列を選択
+    skill_columns = [f'skill{i}' for i in range(1, 67)]
 
-    # 正規性の検証
-    results = {}
-    for column in categories:
-        stat, p = stats.shapiro(df[column])
-        results[column] = {
-            'W統計量': stat,
-            'p値': p,
-            '正規性検定結果': '正規分布に従っている可能性がある' if p > 0.05 else '正規分布に従っていない'
-        }
+    # 各列の平均値を計算
+    means = df[skill_columns].mean()
 
-    # 結果の表示
-    st.write("### 正規性検定の結果")
-    result_df = pd.DataFrame(results).T  # 結果をデータフレームに変換
-    # st.dataframe(result_df)
+    # 全体平均を計算
+    overall_mean = df[skill_columns].values.flatten().mean()
 
-    # for column, result in results.items():
-    #     if result['p値'] > 0.05:
-    #         st.write(f"{column}列は正規分布に従っている可能性があります。")
-    #     else:
-    #         st.write(f"{column}列は正規分布に従っているとはいえません。")
+    # 各スキル列の平均値と全体平均を比較し、p値を計算
+    p_values = {}
+    for skill in skill_columns:
+        t_stat, p_value = stats.ttest_1samp(df[skill], overall_mean)
+        p_values[skill] = p_value
 
-    # ヒストグラムとQ-Qプロットを描画
-    fig_hist, axes_hist = plt.subplots(2, 2, figsize=(12, 10))
-    for ax, column in zip(axes_hist.flatten(), categories):
-        sns.histplot(df[column], kde=True, ax=ax, stat="density", linewidth=0)
-        ax.set_title(f'{column}_distribution')
-        ax.set_xlabel(column)
-        ax.set_ylabel('密度')
+    # 有意水準を設定（例: 0.05）
+    significance_level = 0.05
 
-    plt.tight_layout()
+    # 有意に大きいものと有意に小さいものを分類
+    significantly_large = {skill: means[skill] for skill, p in p_values.items() if p < significance_level and means[skill] > overall_mean}
+    significantly_small = {skill: means[skill] for skill, p in p_values.items() if p < significance_level and means[skill] < overall_mean}
 
-    fig_qq, axes_qq = plt.subplots(2, 2, figsize=(12, 10))
-    for ax, column in zip(axes_qq.flatten(), categories):
-        stats.probplot(df[column], dist="norm", plot=ax)
-        ax.set_title(f"Q-QPlot: {column}列")
-
-    plt.tight_layout()
-
-    return result_df, fig_hist, fig_qq
-
-# 分野間の差の検定をする関数
-def categories_test(df, categories):
-    # データフレームの整形
-    melted_df = df.melt(id_vars='grade', value_vars=categories,
-                        var_name='category', value_name='value')
-
-    # 全学年の平均と標準偏差を追加
-    summary_stats = melted_df.groupby('category').agg(
-        mean=('value', 'mean'),
-        std=('value', 'std')
-    ).reset_index()
-    summary_stats['grade'] = 'ALL'
-
-    # categoriesの順序を設定
-    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
-    # categoriesの順にソート
-    summary_stats = summary_stats.sort_values("category", ascending=True)
-
-    # ボックスプロットの描画
-    fig = px.box(melted_df, x='category', y='value', title='各分野のスコア分布') 
-
-    # カテゴリごとのデータを取得
-    values = [melted_df[melted_df['category'] == category]['value'].values for category in categories]
-
-    # クラスカル・ウォリス検定を実行
-    stat, p = kruskal(*values) 
-
-    # 有意差が見られる場合、ポストホックテストを実行
-    if p < 0.05:
-        # ポストホックテストの実行
-        posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-        # 結果のDataFrameのカラム名とインデックスを設定
-        posthoc.columns = categories
-        posthoc.index = categories
-        
-        # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
-        significant_pairs = [
-            (idx, col)
-            for col in posthoc.columns
-            for idx in posthoc.index
-            if posthoc.loc[idx, col] < 0.05
-        ]
-
-        # 重複を取り除くために、タプルをソートして集合に変換
-        filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
-
-    else :
-        filtered_pairs = set()
-
-    return summary_stats, fig, filtered_pairs
-
-# 分野-学年間の差の検定をする関数
-def grade_test(df, categories, grades):
-
-    # "B"から始まるものだけを残す
-    grades = [grade for grade in grades if grade.startswith("B")]
-
-    # データフレームの整形
-    melted_df = df.melt(id_vars='grade', value_vars=categories,
-                        var_name='category', value_name='value')
-    melted_df = melted_df[melted_df['grade'].isin(grades)]
-    
-    # 学年ごとの平均と標準偏差を取得
-    summary_stats = melted_df.groupby(['category', 'grade']).agg(
-        mean=('value', 'mean'),
-        std=('value', 'std')
-    ).reset_index()
-
-    # categoriesの順序を設定
-    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
-    # categoriesの順にソート
-    summary_stats = summary_stats.sort_values("category", ascending=True)
-
-    # 'grade'列をgradesの順番に並べ替え
-    melted_df['grade'] = pd.Categorical(melted_df['grade'], categories=grades, ordered=True)
-    # 'category'列をcategoriesの順番に並べ替え
-    melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
-
-    melted_df = melted_df.sort_values(['grade', 'category'])
-
-    # ボックスプロットの描画
-    fig = px.box(melted_df, x='category', y='value', color='grade', title='各分野の学年ごとのスコア分布') 
-
-    # 結果を格納するためのリスト
-    result_pairs = []
-    flag = 0
-
-    for category in categories:
-        # 学年ごとのデータを取得
-        values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
-        
-        # クラスカル・ウォリス検定を実行
-        stat, p = kruskal(*values) 
-
-        # 有意差が見られる場合、ポストホックテストを実行
-        if p < 0.05:
-            # ポストホックテストの実行
-            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-            # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = grades
-            posthoc.index = grades
-            
-            # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
-            significant_pairs = [
-                (category, idx, col)
-                for col in posthoc.columns
-                for idx in posthoc.index
-                if posthoc.loc[idx, col] < 0.05
-            ]
-
-            # 重複を取り除くために、タプルをソートして集合に変換
-            filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
-
-            result_pairs.append(filtered_pairs)
-        else:
-            # ポストホックテストの実行
-            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-            # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = grades
-            posthoc.index = grades
-
-
-    return summary_stats, fig, result_pairs
+    # 結果を返す
+    return significantly_large, significantly_small
 
 # ファイルアップロード
 st.file_uploader("集計結果（5件法）のcsvをアップロード",
@@ -294,6 +150,10 @@ try:
     cols[0].dataframe(summary_df)
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
+
+    large_skills, small_skills = find_significant_skills(st.session_state['question_df'])
+    st.write("有意に大きい列とその平均値:", large_skills)
+    st.write("有意に小さい列とその平均値:", small_skills)
 
     # タブを作成
     tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布"])
