@@ -98,7 +98,7 @@ def find_significant_skills(df):
     # 各スキル列の平均値と全体平均を比較し、p値を計算
     p_values = {}
     for skill in skill_columns:
-        meann = df[skill_columns].mean()
+        meann = df[skill].mean()
         t_stat, p_value = stats.ttest_1samp(df[skill], meann)
         p_values[skill] = p_value
 
