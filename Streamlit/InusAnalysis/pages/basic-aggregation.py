@@ -106,6 +106,9 @@ def find_significant_skills(df):
         # p値を保存
         p_values[skill] = p_value
 
+
+    st.write(p_values)
+
     # 有意水準を設定（例: 0.05）
     significance_level = 0.05
     
