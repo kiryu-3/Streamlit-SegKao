@@ -90,6 +90,7 @@ def find_significant_skills(df):
 
     # 各列の平均値を計算
     means = df[skill_columns].mean()
+    
 
     # 全体平均を計算
     overall_mean = df[skill_columns].values.flatten().mean()
@@ -97,7 +98,8 @@ def find_significant_skills(df):
     # 各スキル列の平均値と全体平均を比較し、p値を計算
     p_values = {}
     for skill in skill_columns:
-        t_stat, p_value = stats.ttest_1samp(df[skill], means)
+        meann = df[skill_columns].mean()
+        t_stat, p_value = stats.ttest_1samp(df[skill], meann)
         p_values[skill] = p_value
 
     st.write(p_values)
