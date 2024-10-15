@@ -97,13 +97,13 @@ def find_significant_skills(df):
     # 各スキル列の平均値と全体平均を比較し、p値を計算
     p_values = {}
     for skill in skill_columns:
-        t_stat, p_value = stats.ttest_1samp(df[skill], overall_mean)
+        t_stat, p_value = stats.ttest_1samp(df[skill], means)
         p_values[skill] = p_value
 
     st.write(p_values)
     
     # 有意水準を設定（例: 0.05）
-    significance_level = 0.01
+    significance_level = 0.05
 
     # 有意に大きいものと有意に小さいものを分類
     significantly_large = {skill: means[skill] for skill, p in p_values.items() if p < significance_level and means[skill] > overall_mean}
