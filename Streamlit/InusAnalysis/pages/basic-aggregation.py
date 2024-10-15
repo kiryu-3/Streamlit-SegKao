@@ -106,7 +106,7 @@ def find_significant_skills(df):
                 
             elif means[column] < overall_mean:
                 low_columns[column] = means[column]
-
+    st.write(overall_mean)
     # 結果を返す
     return high_columns, low_columns
     
