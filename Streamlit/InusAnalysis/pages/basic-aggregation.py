@@ -98,7 +98,7 @@ def find_significant_skills(df):
     # 全体の平均値
     overall_mean = means.mean()
     
-    for column in df.columns:
+    for column in skill_columns:
         t_stat, p_value = stats.ttest_1samp(df[column], overall_mean)
         if p_value < 0.05:
             if means[column] > overall_mean:
