@@ -85,6 +85,9 @@ def upload_csv2():
 
 
 def find_significant_skills(df):
+
+    df = df[[col for col in df.columns if 'skill' in col]]
+    
     # Total number of elements in the data
     total_elements = df.size
     
