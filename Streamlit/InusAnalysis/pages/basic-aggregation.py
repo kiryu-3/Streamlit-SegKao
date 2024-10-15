@@ -100,6 +100,8 @@ def find_significant_skills(df):
         t_stat, p_value = stats.ttest_1samp(df[skill], overall_mean)
         p_values[skill] = p_value
 
+    st.write(p_values)
+    
     # 有意水準を設定（例: 0.05）
     significance_level = 0.05
 
