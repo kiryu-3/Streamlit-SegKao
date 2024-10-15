@@ -98,8 +98,8 @@ def find_significant_skills(df):
     column_3_proportions = column_3_counts / df.shape[0]
     overall_3_proportion = total_3_count / total_elements
     
-    # Perform a binomial test for each column to see if the proportion of '3's is significantly different from the overall proportion
-    p_values = [stats.binomtest(count, df.shape[0], overall_3_proportion, alternative='two-sided') for count in column_3_counts]
+    # Perform a binomial test for each column using binomtest
+    p_values = [stats.binomtest(count, df.shape[0], overall_3_proportion).pvalue for count in column_3_counts]
     
     # Determine significance for each column
     significance_level = 0.05
