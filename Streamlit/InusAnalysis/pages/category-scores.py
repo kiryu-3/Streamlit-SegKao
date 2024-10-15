@@ -60,11 +60,11 @@ def upload_csv():
         file_data = st.session_state['upload_csvfile'].read()
         df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
 
-        # 各カテゴリごとに中央値を算出
-        df['online_collab'] = df[df.columns[6:21]].median(axis=1)  # オンライン・コラボレーション力
-        df['data_utilization'] = df[df.columns[21:36]].median(axis=1)  # データ利活用力
-        df['info_sys_dev'] = df[df.columns[36:50]].median(axis=1)  # 情報システム開発力
-        df['info_ethics'] = df[df.columns[50:72]].median(axis=1)  # 情報倫理力
+        # 各カテゴリごとに平均を算出
+        df['online_collab'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
+        df['data_utilization'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
+        df['info_sys_dev'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
+        df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
 
         st.session_state['df'] = df
     else:
@@ -120,9 +120,9 @@ def categories_test(df, categories):
     melted_df = df.melt(id_vars='grade', value_vars=categories,
                         var_name='category', value_name='value')
 
-    # 全学年の中央値と標準偏差を追加
+    # 全学年の平均と標準偏差を追加
     summary_stats = melted_df.groupby('category').agg(
-        median=('value', 'median'),
+        mean=('value', 'mean'),
         std=('value', 'std')
     ).reset_index()
     summary_stats['grade'] = 'ALL'
@@ -177,9 +177,9 @@ def grade_test(df, categories, grades):
                         var_name='category', value_name='value')
     melted_df = melted_df[melted_df['grade'].isin(grades)]
     
-    # 学年ごとの中央値と標準偏差を取得
+    # 学年ごとの平均と標準偏差を取得
     summary_stats = melted_df.groupby(['category', 'grade']).agg(
-        median=('value', 'median'),
+        mean=('value', 'mean'),
         std=('value', 'std')
     ).reset_index()
 
