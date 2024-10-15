@@ -87,37 +87,27 @@ def upload_csv2():
 def find_significant_skills(df):
     # skill1 から skill66 の列を選択
     skill_columns = [f'skill{i}' for i in range(1, 67)]
-    
-    # 全スキル列の全値をフラット化して1つの配列にする（全データセット）
-    all_skills_values = df[skill_columns].values.flatten()
 
     # 各列の平均値を計算
     means = df[skill_columns].mean()
     
-    # 各スキル列と全体データの比較
-    p_values = {}
-    for skill in skill_columns:
-        # 各スキル列のデータ
-        skill_values = df[skill]
-        
-        # 全体データセットと各スキル列のデータを比較するt検定
-        t_stat, p_value = stats.ttest_1samp(skill_values, all_skills_values.mean())
-        
-        # p値を保存
-        p_values[skill] = p_value
-
-
-    st.write(p_values)
-
-    # 有意水準を設定（例: 0.05）
-    significance_level = 0.05
+    # t検定を行い、有意に高いスキルと低いスキルを特定する
+    high_columns = []
+    low_columns = []
     
-    # p値に基づいて、有意に高いものと低いものを分類
-    significantly_large = {skill: means[skill] for skill, p in p_values.items() if p < significance_level and means[skill] > all_skills_values.mean()}
-    significantly_small = {skill: means[skill] for skill, p in p_values.items() if p < significance_level and means[skill] < all_skills_values.mean()}
+    # 全体の平均値
+    overall_mean = means.mean()
+    
+    for column in df.columns:
+        t_stat, p_value = stats.ttest_1samp(df[column], overall_mean)
+        if p_value < 0.05:
+            if means[column] > overall_mean:
+                high_columns.append(column)
+            elif means[column] < overall_mean:
+                low_columns.append(column)
 
     # 結果を返す
-    return significantly_large, significantly_small
+    return high_columns, low_columns
     
 # ファイルアップロード
 st.file_uploader("集計結果（5件法）のcsvをアップロード",
