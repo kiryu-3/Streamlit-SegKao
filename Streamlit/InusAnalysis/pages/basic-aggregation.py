@@ -280,7 +280,7 @@ st.file_uploader("集計結果（5件法）のcsvをアップロード",
                        )
 
 # 設問文のファイルアップロード
-st.file_uploader("設問分のcsvをアップロード",
+st.file_uploader("設問文のcsvをアップロード",
                        type=["csv"],
                        key="upload_csvfile2",
                        on_change=upload_csv2
@@ -314,24 +314,25 @@ try:
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
 
-    # タブを作成
-    tab_list = categories + ['"どちらでもない"が多く選択された設問']
-    tabs = st.tabs(tab_list)
-
-    with tabs[0]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(tab_list[0], grades, st.session_state['df'], st.session_state['question_df'])
-
-    with tabs[1]:  # "データ利活用力"タブ
-        analyze_selected_category(tab_list[1], grades, st.session_state['df'], st.session_state['question_df'])
-
-    with tabs[2]:  # "情報システム開発力"タブ
-        analyze_selected_category(tab_list[2], grades, st.session_state['df'], st.session_state['question_df'])
-
-    with tabs[3]:  # "情報倫理力"タブ
-        analyze_selected_category(tab_list[3], grades, st.session_state['df'], st.session_state['question_df'])
-
-    with tabs[4]:  # "どちらでもない"が多く選択された設問"タブ
-            analyze_selected_category(tab_list[4], grades, st.session_state['df'], st.session_state['question_df'])
+    if len(st.session_state['question_df']) != 0:
+        # タブを作成
+        tab_list = categories + ['"どちらでもない"が多く選択された設問']
+        tabs = st.tabs(tab_list)
+    
+        with tabs[0]:  # "オンライン・コラボレーション力"タブ
+            analyze_selected_category(tab_list[0], grades, st.session_state['df'], st.session_state['question_df'])
+    
+        with tabs[1]:  # "データ利活用力"タブ
+            analyze_selected_category(tab_list[1], grades, st.session_state['df'], st.session_state['question_df'])
+    
+        with tabs[2]:  # "情報システム開発力"タブ
+            analyze_selected_category(tab_list[2], grades, st.session_state['df'], st.session_state['question_df'])
+    
+        with tabs[3]:  # "情報倫理力"タブ
+            analyze_selected_category(tab_list[3], grades, st.session_state['df'], st.session_state['question_df'])
+    
+        with tabs[4]:  # "どちらでもない"が多く選択された設問"タブ
+                analyze_selected_category(tab_list[4], grades, st.session_state['df'], st.session_state['question_df'])
 
 except Exception as e:
     st.write(e)
