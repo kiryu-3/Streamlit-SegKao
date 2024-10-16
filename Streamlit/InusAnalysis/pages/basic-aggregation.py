@@ -85,7 +85,7 @@ def upload_csv2():
 
 def test(selected_category, df, question_df):
     if selected_category != '"どちらでもない"が多く選択された設問':
-        question_df = question_df[question_df["カテゴリ"]==selected_category]]
+        question_df = question_df[question_df["カテゴリ"]==selected_category]
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
