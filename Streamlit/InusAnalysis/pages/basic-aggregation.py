@@ -296,6 +296,9 @@ if len(st.session_state['df']) != 0:
         st.rerun()  # アプリを再実行して状態を更新
         st.success("CSVファイルが消去されました。")
 
+st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
+st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレームを設定
+
 try:
     categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
