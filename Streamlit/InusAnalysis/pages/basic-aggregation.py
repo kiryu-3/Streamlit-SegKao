@@ -94,144 +94,7 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def analyze_selected_category(selected_category, grades, df, question_df):
-    if selected_category != '"どちらでもない"が多く選択された設問':
-        
-        question_df = question_df[question_df["カテゴリ"] == selected_category]
-
-        # "B"から始まるものだけを残す
-        grades = [grade for grade in grades if grade.startswith("B")]
-        df = df[df['grade'].isin(grades)]
-
-        for index, row in question_df.iterrows():
-            # skill_{qnumber}列をndarrayに変換
-            qnumber = row['通し番号'] 
-            skill_array = df[f"skill{qnumber}"].values
-
-            # 5件法の割合を計算
-            skill_point_total = len(skill_array)
-            skill_point_counts = np.array([
-                np.sum(skill_array == 1),  # 1：まったくあてはまらない
-                np.sum(skill_array == 2),  # 2：あまりあてはまらない
-                np.sum(skill_array == 3),  # 3：どちらともいえない
-                np.sum(skill_array == 4),  # 4：ややあてはまる
-                np.sum(skill_array == 5)   # 5：とてもあてはまる
-            ])
-            skill_point_percentages = (skill_point_counts / skill_point_total) * 100
-
-            # 5件法の情報
-            skill_point_labels = [
-                "まったくあてはまらない (1)", 
-                "あまりあてはまらない (2)", 
-                "どちらともいえない (3)", 
-                "ややあてはまる (4)", 
-                "とてもあてはまる (5)"
-            ]
-
-            # 指定された色
-            colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
-            
-            # 積み上げ棒グラフの作成
-            fig = go.Figure()
-
-            # 積み上げ棒グラフ
-            for i, label in enumerate(skill_point_labels):
-                fig.add_trace(go.Bar(
-                    x=[skill_point_percentages[i]],
-                    name=f"{i+1}：{skill_point_percentages[i]:.1f}%",  # 凡例に割合を表示
-                    marker_color=colors[i],  # 色を指定
-                    orientation='h',
-                    hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>",
-                ))
-                
-            # グラフのレイアウト
-            fig.update_layout(
-                barmode='stack',
-                title=f'Q{row['通し番号']}：{row["質問文"]}',
-                xaxis_title='割合 (%)',
-                yaxis=dict(showticklabels=False),  # y軸の座標（数字）を非表示にする
-                height=400,
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
-            )
-
-
-            st.plotly_chart(fig)
-
-            with st.expander("学年ごとの分布"):
-                # 積み上げ棒グラフの作成
-                fig = go.Figure()
-                
-                for grade in grades:
-                    grade_df = df[df["grade"]==grade]
-                    skill_array = grade_df[f"skill{qnumber}"].values
-    
-                    # 5件法の割合を計算
-                    skill_point_total = len(skill_array)
-                    skill_point_counts = np.array([
-                        np.sum(skill_array == 1),  # 1：まったくあてはまらない
-                        np.sum(skill_array == 2),  # 2：あまりあてはまらない
-                        np.sum(skill_array == 3),  # 3：どちらともいえない
-                        np.sum(skill_array == 4),  # 4：ややあてはまる
-                        np.sum(skill_array == 5)   # 5：とてもあてはまる
-                    ])
-                    skill_point_percentages = (skill_point_counts / skill_point_total) * 100
-        
-                    # 5件法の情報
-                    skill_point_labels = [
-                        "まったくあてはまらない (1)", 
-                        "あまりあてはまらない (2)", 
-                        "どちらともいえない (3)", 
-                        "ややあてはまる (4)", 
-                        "とてもあてはまる (5)"
-                    ]
-        
-                    # 指定された色
-                    colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
-                    
-        
-                    # 積み上げ棒グラフ
-                    for i, label in enumerate(skill_point_labels):
-                        show_legend = True if grade == grades[0] else False  # 最初のグレードのみ凡例を表示
-                        fig.add_trace(go.Bar(
-                            y=[f"{grade}"],
-                            x=[skill_point_percentages[i]],
-                            name=f"{i+1}：{skill_point_percentages[i]:.1f}%",  # 凡例に割合を表示
-                            marker_color=colors[i],  # 色を指定
-                            orientation='h',
-                            hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>",
-                            showlegend=False  # 凡例を完全に非表示にする
-                        ))
-                    
-                # グラフのレイアウト
-                fig.update_layout(
-                    barmode='stack',
-                    xaxis_title='割合 (%)',
-                    yaxis=dict(categoryorder='array', categoryarray=["B4", "B3", "B2"]),  # グレードの順序を指定
-                    height=400,
-                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
-                )
-    
-                st.plotly_chart(fig)
-
-                # 各グループのスコアをリストに分ける
-                groups = [df[df['grade'] == grade][f"skill{qnumber}"] for grade in df['grade'].unique()]
-                
-                # Kruskal-Wallis検定
-                stat, p = kruskal(*groups)
-                
-                # 有意差がある場合、事後検定 (Dunn検定)
-                if p < 0.05:
-                    st.write("学年間のスコアの有意（以下のp値が0.05以下の学年間は有意差あり）")
-                    
-                    # Dunn検定の実施
-                    posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
-                    st.write(posthoc_results)
-        
-                else:
-                    st.write("学年間のスコアの有意差はありません")
-    
-
-def find_significant_skills(df):
+def find_significantly_high_skill3s(df):
     # 'skill' を含む列を選択
     df = df[[col for col in df.columns if 'skill' in col]]
     
@@ -263,6 +126,145 @@ def find_significant_skills(df):
             significant_skills.append(skill_number)
     
     return significant_skills
+
+def analyze_selected_category(selected_category, grades, df, question_df):
+    if selected_category == '"どちらでもない"が多く選択された設問':
+        significant_skills_number = find_significantly_high_skill3s(df)
+        question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
+    else:
+        question_df = question_df[question_df["カテゴリ"] == selected_category]
+
+    # "B"から始まるものだけを残す
+    grades = [grade for grade in grades if grade.startswith("B")]
+    df = df[df['grade'].isin(grades)]
+
+    for index, row in question_df.iterrows():
+        # skill_{qnumber}列をndarrayに変換
+        qnumber = row['通し番号'] 
+        skill_array = df[f"skill{qnumber}"].values
+
+        # 5件法の割合を計算
+        skill_point_total = len(skill_array)
+        skill_point_counts = np.array([
+            np.sum(skill_array == 1),  # 1：まったくあてはまらない
+            np.sum(skill_array == 2),  # 2：あまりあてはまらない
+            np.sum(skill_array == 3),  # 3：どちらともいえない
+            np.sum(skill_array == 4),  # 4：ややあてはまる
+            np.sum(skill_array == 5)   # 5：とてもあてはまる
+        ])
+        skill_point_percentages = (skill_point_counts / skill_point_total) * 100
+
+        # 5件法の情報
+        skill_point_labels = [
+            "まったくあてはまらない (1)", 
+            "あまりあてはまらない (2)", 
+            "どちらともいえない (3)", 
+            "ややあてはまる (4)", 
+            "とてもあてはまる (5)"
+        ]
+
+        # 指定された色
+        colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
+        
+        # 積み上げ棒グラフの作成
+        fig = go.Figure()
+
+        # 積み上げ棒グラフ
+        for i, label in enumerate(skill_point_labels):
+            fig.add_trace(go.Bar(
+                x=[skill_point_percentages[i]],
+                name=f"{i+1}：{skill_point_percentages[i]:.1f}%",  # 凡例に割合を表示
+                marker_color=colors[i],  # 色を指定
+                orientation='h',
+                hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>",
+            ))
+            
+        # グラフのレイアウト
+        fig.update_layout(
+            barmode='stack',
+            title=f'Q{row['通し番号']}：{row["質問文"]}',
+            xaxis_title='割合 (%)',
+            yaxis=dict(showticklabels=False),  # y軸の座標（数字）を非表示にする
+            height=400,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
+        )
+
+
+        st.plotly_chart(fig)
+
+        with st.expander("学年ごとの分布"):
+            # 積み上げ棒グラフの作成
+            fig = go.Figure()
+            
+            for grade in grades:
+                grade_df = df[df["grade"]==grade]
+                skill_array = grade_df[f"skill{qnumber}"].values
+
+                # 5件法の割合を計算
+                skill_point_total = len(skill_array)
+                skill_point_counts = np.array([
+                    np.sum(skill_array == 1),  # 1：まったくあてはまらない
+                    np.sum(skill_array == 2),  # 2：あまりあてはまらない
+                    np.sum(skill_array == 3),  # 3：どちらともいえない
+                    np.sum(skill_array == 4),  # 4：ややあてはまる
+                    np.sum(skill_array == 5)   # 5：とてもあてはまる
+                ])
+                skill_point_percentages = (skill_point_counts / skill_point_total) * 100
+    
+                # 5件法の情報
+                skill_point_labels = [
+                    "まったくあてはまらない (1)", 
+                    "あまりあてはまらない (2)", 
+                    "どちらともいえない (3)", 
+                    "ややあてはまる (4)", 
+                    "とてもあてはまる (5)"
+                ]
+    
+                # 指定された色
+                colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
+                
+    
+                # 積み上げ棒グラフ
+                for i, label in enumerate(skill_point_labels):
+                    show_legend = True if grade == grades[0] else False  # 最初のグレードのみ凡例を表示
+                    fig.add_trace(go.Bar(
+                        y=[f"{grade}"],
+                        x=[skill_point_percentages[i]],
+                        name=f"{i+1}：{skill_point_percentages[i]:.1f}%",  # 凡例に割合を表示
+                        marker_color=colors[i],  # 色を指定
+                        orientation='h',
+                        hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>",
+                        showlegend=False  # 凡例を完全に非表示にする
+                    ))
+                
+            # グラフのレイアウト
+            fig.update_layout(
+                barmode='stack',
+                xaxis_title='割合 (%)',
+                yaxis=dict(categoryorder='array', categoryarray=["B4", "B3", "B2"]),  # グレードの順序を指定
+                height=400,
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
+            )
+
+            st.plotly_chart(fig)
+
+            # 各グループのスコアをリストに分ける
+            groups = [df[df['grade'] == grade][f"skill{qnumber}"] for grade in df['grade'].unique()]
+            
+            # Kruskal-Wallis検定
+            stat, p = kruskal(*groups)
+            
+            # 有意差がある場合、事後検定 (Dunn検定)
+            if p < 0.05:
+                st.write("学年間のスコアの有意（以下のp値が0.05以下の学年間は有意差あり）")
+                
+                # Dunn検定の実施
+                posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
+                st.write(posthoc_results)
+    
+            else:
+                st.write("学年間のスコアの有意差はありません")
+    
     
 # ファイルアップロード
 st.file_uploader("集計結果（5件法）のcsvをアップロード",
