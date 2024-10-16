@@ -106,11 +106,11 @@ def analyze_selected_category(selected_category, df, question_df):
             # 5件法の割合を計算
             skill_point_total = len(skill_array)
             skill_point_counts = np.array([
-                np.sum(skill_array == 5),  # とてもあてはまる
-                np.sum(skill_array == 4),  # まあまああてはまる
-                np.sum(skill_array == 3),  # どちらともいえない
-                np.sum(skill_array == 2),  # あまりあてはまらない
-                np.sum(skill_array == 1)   # まったくあてはまらない
+                np.sum(skill_array == 1),  # 1：まったくあてはまらない
+                np.sum(skill_array == 2),  # 2：あまりあてはまらない
+                np.sum(skill_array == 3),  # 3：どちらともいえない
+                np.sum(skill_array == 4),  # 4：ややあてはまる
+                np.sum(skill_array == 5)   # 5：とてもあてはまる
             ])
             skill_point_percentages = (skill_point_counts / skill_point_total) * 100
 
