@@ -291,6 +291,7 @@ st.file_uploader("設問分のcsvをアップロード",
 if len(st.session_state['df']) != 0:
     if st.button("アップロードしたCSVファイルを消去"):
         st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
+        st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレームを設定
         st.switch_page("top.py")
         st.rerun()  # アプリを再実行して状態を更新
         st.success("CSVファイルが消去されました。")
