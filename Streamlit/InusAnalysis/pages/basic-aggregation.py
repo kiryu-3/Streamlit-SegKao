@@ -315,7 +315,7 @@ try:
     cols[1].dataframe(question_df)
 
     if len(st.session_state['question_df']) != 0:
-        st.header("1：まったくあてはまらない　2：あまりあてはまらない　3：どちらともいえない　4：ややあてはまる　5：とてもあてはまる")
+        st.subheader("1：まったくあてはまらない　2：あまりあてはまらない　3：どちらともいえない　4：ややあてはまる　5：とてもあてはまる")
     
     # タブを作成
     tab_list = categories + ['"どちらでもない"が多く選択された設問']
