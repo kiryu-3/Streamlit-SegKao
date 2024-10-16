@@ -95,8 +95,12 @@ def upload_csv2():
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
 def analyze_selected_category(selected_category, grades, df, question_df):
-    if selected_category != '"どちらでもない"が多く選択された設問':
+    if selected_category != '"どちらでもない"が多く選択された設問'
+        
         question_df = question_df[question_df["カテゴリ"] == selected_category]
+
+        # "B"から始まるものだけを残す
+        grades = [grade for grade in grades if grade.startswith("B")]
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
@@ -155,9 +159,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             with st.expander("学年ごとの分布"):
                 # 積み上げ棒グラフの作成
                 fig = go.Figure()
-
-                # "B"から始まるものだけを残す
-                grades = [grade for grade in grades if grade.startswith("B")]
                 
                 for grade in grades:
                     grade_df = df[df["grade"]==grade]
