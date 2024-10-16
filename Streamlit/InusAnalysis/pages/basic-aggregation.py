@@ -100,7 +100,7 @@ def analyze_selected_category(selected_category, df, question_df):
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
-            qnumber = row['設問番号']  # 例えば設問番号がどこかに格納されている場合
+            qnumber = row['通し番号']  # 例えば設問番号がどこかに格納されている場合
             skill_array = df[f"skill_{qnumber}"].values
 
             # 5件法の割合を計算
