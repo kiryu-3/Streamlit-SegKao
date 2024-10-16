@@ -144,7 +144,6 @@ def analyze_selected_category(selected_category, df, question_df):
                 barmode='stack',
                 title=f'Q{row['通し番号']}：{row["質問文"]}',
                 xaxis_title='割合 (%)',
-                yaxis_title='尺度',
                 legend_title='選択肢',
                 height=400
             )
