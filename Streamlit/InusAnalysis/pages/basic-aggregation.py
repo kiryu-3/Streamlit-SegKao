@@ -218,7 +218,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 
                 # Kruskal-Wallis検定
                 stat, p = kruskal(*groups)
-                print(f"Kruskal-Wallis検定の結果: 統計量 = {stat}, p値 = {p}")
                 
                 # 有意差がある場合、事後検定 (Dunn検定)
                 if p < 0.05:
@@ -230,11 +229,11 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                     # Dunn検定結果から有意差のあるペアを抽出して表示
                     significant_pairs = posthoc_results[posthoc_results < 0.05]
                     
-                    # ペアを【{grade1}】-【{grade2}】形式で表示
+                    # ペアを【{grade1}】-【{grade2}】形式で表示（重複を避ける）
                     for grade1 in significant_pairs.index:
                         for grade2 in significant_pairs.columns:
-                            if significant_pairs.loc[grade1, grade2] < 0.05:
-                                st.write(f"【{grade1}】-【{grade2}】")
+                            if significant_pairs.loc[grade1, grade2] < 0.05 and grade1 < grade2:
+                                print(f"【{grade1}】-【{grade2}】")
                 else:
                     st.write("有意差はありません。")
     
