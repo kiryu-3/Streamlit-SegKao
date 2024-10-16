@@ -232,34 +232,34 @@ def analyze_selected_category(selected_category, grades, df, question_df):
     
 
 def find_significant_skills(df):
+    # 'skill' を含む列を選択
     df = df[[col for col in df.columns if 'skill' in col]]
     
-    # Total number of elements in the data
+    # データの総要素数
     total_elements = df.size
     
-    # Count the number of '3's in each column
+    # 各列の '3' の数をカウント
     column_3_counts = (df == 3).sum(axis=0)
     
-    # Count the number of '3's in the entire data
+    # 全体の '3' の数をカウント
     total_3_count = (df == 3).sum().sum()
     
-    # Calculate proportions of '3's in each column and overall
+    # 各列と全体の '3' の割合を計算
     column_3_proportions = column_3_counts / df.shape[0]
     overall_3_proportion = total_3_count / total_elements
     
-    # Perform a binomial test for each column using binomtest
-    p_values = []
+    # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
     significant_skills = []
     
-    for col, count, proportion in zip(df.columns, column_3_counts, column_3_proportions):
+    # 各列に対して二項検定を実施
+    for col_name, count, proportion in zip(df.columns, column_3_counts, column_3_proportions):
         binom_test = stats.binomtest(count, df.shape[0], overall_3_proportion)
         p_value = binom_test.pvalue
-        p_values.append(p_value)
         
-        # Check if the p-value is less than 0.05
-        if p_value < 0.05:
-            # Extract the number from the skill column name and store it
-            skill_number = col.replace("skill", "")
+        # p値が0.05以下かつ割合が全体より高い場合
+        if p_value < 0.05 and proportion > overall_3_proportion:
+            # 'skill' の後ろの番号を抽出してリストに追加
+            skill_number = col_name.replace('skill', '')
             significant_skills.append(skill_number)
     
     return significant_skills
