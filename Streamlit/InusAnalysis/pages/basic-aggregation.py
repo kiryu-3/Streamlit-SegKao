@@ -315,10 +315,14 @@ try:
     cols[1].dataframe(question_df)
 
     if len(st.session_state['question_df']) != 0:
-        st.write(
+        st.markdown(
             """
-            #### 1：まったくあてはまらない　2：あまりあてはまらない  \n####3：どちらともいえない  \n####4：ややあてはまる　5：とてもあてはまる
-            """)
+            #### 1：まったくあてはまらない　2：あまりあてはまらない<br>
+            #### 3：どちらともいえない<br>
+            #### 4：ややあてはまる　5：とてもあてはまる
+            """,
+            unsafe_allow_html=True
+        )
     
     # タブを作成
     tab_list = categories + ['"どちらでもない"が多く選択された設問']
