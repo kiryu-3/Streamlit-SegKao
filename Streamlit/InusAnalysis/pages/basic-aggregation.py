@@ -204,7 +204,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 fig.update_layout(
                     barmode='stack',
                     xaxis_title='割合 (%)',
-                    yaxis=dict(categoryorder='array', categoryarray=["B2", "B3", "B4"]),  # グレードの順序を指定
+                    yaxis=dict(categoryorder='array', categoryarray=["B4", "B3", "B2"]),  # グレードの順序を指定
                     height=400,
                     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
                 )
