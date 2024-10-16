@@ -100,7 +100,7 @@ def analyze_selected_category(selected_category, df, question_df):
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
-            qnumber = row['通し番号']  # 例えば設問番号がどこかに格納されている場合
+            qnumber = row['通し番号'] 
             skill_array = df[f"skill{qnumber}"].values
 
             # 5件法の割合を計算
@@ -115,7 +115,16 @@ def analyze_selected_category(selected_category, df, question_df):
             skill_point_percentages = (skill_point_counts / skill_point_total) * 100
 
             # 5件法の情報
-            skill_point_labels = ["とてもあてはまる (5)", "まあまああてはまる (4)", "どちらともいえない (3)", "あまりあてはまらない (2)", "まったくあてはまらない (1)"]
+            skill_point_labels = [
+                "まったくあてはまらない (1)", 
+                "あまりあてはまらない (2)", 
+                "どちらともいえない (3)", 
+                "ややあてはまる (4)", 
+                "とてもあてはまる (5)"
+            ]
+
+            # 指定された色
+            colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
             
             # 積み上げ棒グラフの作成
             fig = go.Figure()
@@ -125,6 +134,7 @@ def analyze_selected_category(selected_category, df, question_df):
                 fig.add_trace(go.Bar(
                     x=[skill_point_percentages[i]],
                     name=label,
+                    marker_color=colors[i],  # 色を指定
                     orientation='h',
                     hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>"
                 ))
@@ -132,7 +142,7 @@ def analyze_selected_category(selected_category, df, question_df):
             # グラフのレイアウト
             fig.update_layout(
                 barmode='stack',
-                title=f'{row["質問文"]}',
+                title=f'Q{row['通し番号']}：{row["質問文"]}',
                 xaxis_title='割合 (%)',
                 yaxis_title='尺度',
                 legend_title='選択肢',
