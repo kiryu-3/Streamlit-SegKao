@@ -95,7 +95,7 @@ def upload_csv2():
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
 def analyze_selected_category(selected_category, grades, df, question_df):
-    if selected_category != '"どちらでもない"が多く選択された設問'
+    if selected_category != '"どちらでもない"が多く選択された設問':
         
         question_df = question_df[question_df["カテゴリ"] == selected_category]
 
