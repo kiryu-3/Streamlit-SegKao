@@ -34,10 +34,10 @@ def display_summary(df, categories, grades):
     
     # 各分野の質問数を辞書に格納
     question_counts = {
-        'online_collab': len(df.columns[6:21]),
-        'data_utilization': len(df.columns[21:36]),
-        'info_sys_dev': len(df.columns[36:50]),
-        'info_ethics': len(df.columns[50:72])
+        'オンライン・コラボレーション力': len(df.columns[6:21]),
+        'データ利活用力': len(df.columns[21:36]),
+        '情報システム開発力': len(df.columns[36:50]),
+        '情報倫理力': len(df.columns[50:72])
     }
     
     # データフレームを作成
