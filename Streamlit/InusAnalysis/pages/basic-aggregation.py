@@ -67,10 +67,10 @@ def upload_csv():
                 
 
         # 各カテゴリごとに平均を算出
-        df['online_collab'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
-        df['data_utilization'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
-        df['info_sys_dev'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
-        df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
+        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
+        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
+        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
+        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
 
         st.session_state['df'] = df
     else:
