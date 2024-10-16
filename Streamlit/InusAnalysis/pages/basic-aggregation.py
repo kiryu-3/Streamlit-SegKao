@@ -130,6 +130,7 @@ def find_significantly_high_skill3s(df):
 def analyze_selected_category(selected_category, grades, df, question_df):
     if selected_category == 'どちらでもない"が多く選択された設問':
         significant_skills_number = find_significantly_high_skill3s(df)
+        st.write(significant_skills_number)
         question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
     else:
         question_df = question_df[question_df["カテゴリ"] == selected_category]
