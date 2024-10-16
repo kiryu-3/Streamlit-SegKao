@@ -83,22 +83,23 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def test(selected_category, df, question_df):
+def analyze_selected_category(selected_category, df, question_df):
     if selected_category != '"どちらでもない"が多く選択された設問':
-        question_df = question_df[question_df["カテゴリ"]==selected_category]
+        question_df = question_df[question_df["カテゴリ"] == selected_category]
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
-            skill_array = row[f"skill_{qnumber}"].values
+            qnumber = row['設問番号']  # 例えば設問番号がどこかに格納されている場合
+            skill_array = df[f"skill_{qnumber}"].values
 
             # 5件法の割合を計算
             skill_point_total = len(skill_array)
             skill_point_counts = np.array([
-                np.sum(skill_point_scale == 5),  # とてもあてはまる
-                np.sum(skill_point_scale == 4),  # まあまああてはまる
-                np.sum(skill_point_scale == 3),  # どちらともいえない
-                np.sum(skill_point_scale == 2),  # あまりあてはまらない
-                np.sum(skill_point_scale == 1)   # まったくあてはまらない
+                np.sum(skill_array == 5),  # とてもあてはまる
+                np.sum(skill_array == 4),  # まあまああてはまる
+                np.sum(skill_array == 3),  # どちらともいえない
+                np.sum(skill_array == 2),  # あまりあてはまらない
+                np.sum(skill_array == 1)   # まったくあてはまらない
             ])
             skill_point_percentages = (skill_point_counts / skill_point_total) * 100
 
@@ -114,7 +115,7 @@ def test(selected_category, df, question_df):
                     x=[skill_point_percentages[i]],
                     name=label,
                     orientation='h',
-                    hovertemplate=f"%{{x:.1f}}%<br>N= {five_point_counts[i]}<extra></extra>"
+                    hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>"
                 ))
             
             # グラフのレイアウト
@@ -127,7 +128,7 @@ def test(selected_category, df, question_df):
                 height=400
             )
 
-            st.pyplot(fig_hist)
+            st.plotly_chart(fig)
             
     
 
@@ -223,16 +224,16 @@ try:
     tabs = st.tabs(tab_list)
 
     with tabs[0]:  # "オンライン・コラボレーション力"タブ
-        test(st.session_state['df'], st.session_state['question_df'], tab_list[0])
+        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[0])
 
     with tabs[1]:  # "オンライン・コラボレーション力"タブ
-        test(st.session_state['df'], st.session_state['question_df'], tab_list[1])
+        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[1])
 
     with tabs[2]:  # "オンライン・コラボレーション力"タブ
-        test(st.session_state['df'], st.session_state['question_df'], tab_list[2])
+        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[2])
 
     with tabs[3]:  # "オンライン・コラボレーション力"タブ
-        test(st.session_state['df'], st.session_state['question_df'], tab_list[3])
+        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[3])
 
 except Exception as e:
     st.write(e)
