@@ -313,26 +313,21 @@ try:
     cols[0].dataframe(summary_df)
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
+    
+    # タブを作成
+    tab_list = categories + ['"どちらでもない"が多く選択された設問']
+    tabs = st.tabs(tab_list)
 
     if len(st.session_state['question_df']) != 0:
-        # タブを作成
-        tab_list = categories + ['"どちらでもない"が多く選択された設問']
-        tabs = st.tabs(tab_list)
+        # タブとカテゴリのループ
+        for i, tab in enumerate(tabs):
+            with tab:
+                analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
+    else:
+        # 各タブに同じエラーメッセージを表示
+        for tab in tabs:
+            with tab:
+                st.error("設問文のcsvをアップロードしてください")
     
-        with tabs[0]:  # "オンライン・コラボレーション力"タブ
-            analyze_selected_category(tab_list[0], grades, st.session_state['df'], st.session_state['question_df'])
-    
-        with tabs[1]:  # "データ利活用力"タブ
-            analyze_selected_category(tab_list[1], grades, st.session_state['df'], st.session_state['question_df'])
-    
-        with tabs[2]:  # "情報システム開発力"タブ
-            analyze_selected_category(tab_list[2], grades, st.session_state['df'], st.session_state['question_df'])
-    
-        with tabs[3]:  # "情報倫理力"タブ
-            analyze_selected_category(tab_list[3], grades, st.session_state['df'], st.session_state['question_df'])
-    
-        with tabs[4]:  # "どちらでもない"が多く選択された設問"タブ
-                analyze_selected_category(tab_list[4], grades, st.session_state['df'], st.session_state['question_df'])
-
-except Exception as e:
+    except Exception as e:
     st.write(e)
