@@ -329,5 +329,5 @@ try:
             with tab:
                 st.error("設問文のcsvをアップロードしてください")
     
-    except Exception as e:
+except Exception as e:
     st.write(e)
