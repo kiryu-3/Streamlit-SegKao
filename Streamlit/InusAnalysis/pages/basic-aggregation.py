@@ -94,7 +94,7 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def analyze_selected_category(selected_category, df, question_df):
+def analyze_selected_category(selected_category, grades, df, question_df):
     if selected_category != '"どちらでもない"が多く選択された設問':
         question_df = question_df[question_df["カテゴリ"] == selected_category]
 
@@ -149,7 +149,59 @@ def analyze_selected_category(selected_category, df, question_df):
             )
 
             st.plotly_chart(fig)
-            
+
+            with st.expander("学年ごとの分布"):
+                # 積み上げ棒グラフの作成
+                fig = go.Figure()
+                
+                for grade in grades:
+                    grade_df = df[df["grade"]==grade]
+                    skill_array = grade_df[f"skill{qnumber}"].values
+    
+                    # 5件法の割合を計算
+                    skill_point_total = len(skill_array)
+                    skill_point_counts = np.array([
+                        np.sum(skill_array == 1),  # 1：まったくあてはまらない
+                        np.sum(skill_array == 2),  # 2：あまりあてはまらない
+                        np.sum(skill_array == 3),  # 3：どちらともいえない
+                        np.sum(skill_array == 4),  # 4：ややあてはまる
+                        np.sum(skill_array == 5)   # 5：とてもあてはまる
+                    ])
+                    skill_point_percentages = (skill_point_counts / skill_point_total) * 100
+        
+                    # 5件法の情報
+                    skill_point_labels = [
+                        "まったくあてはまらない (1)", 
+                        "あまりあてはまらない (2)", 
+                        "どちらともいえない (3)", 
+                        "ややあてはまる (4)", 
+                        "とてもあてはまる (5)"
+                    ]
+        
+                    # 指定された色
+                    colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
+                    
+        
+                    # 積み上げ棒グラフ
+                    for i, label in enumerate(skill_point_labels):
+                        fig.add_trace(go.Bar(
+                            y=[f"{grade}"],
+                            x=[skill_point_percentages[i]],
+                            name=label,
+                            marker_color=colors[i],  # 色を指定
+                            orientation='h',
+                            hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>"
+                        ))
+                    
+                # グラフのレイアウト
+                fig.update_layout(
+                    barmode='stack',
+                    xaxis_title='割合 (%)',
+                    legend_title='選択肢',
+                    height=400
+                )
+    
+                st.plotly_chart(fig)
     
 
 def find_significant_skills(df):
@@ -244,16 +296,16 @@ try:
     tabs = st.tabs(tab_list)
 
     with tabs[0]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(tab_list[0], st.session_state['df'], st.session_state['question_df'])
+        analyze_selected_category(tab_list[0], grades, st.session_state['df'], st.session_state['question_df'])
 
     with tabs[1]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(tab_list[1], st.session_state['df'], st.session_state['question_df'])
+        analyze_selected_category(tab_list[1], grades, st.session_state['df'], st.session_state['question_df'])
 
     with tabs[2]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(tab_list[2], st.session_state['df'], st.session_state['question_df'])
+        analyze_selected_category(tab_list[2], grades, st.session_state['df'], st.session_state['question_df'])
 
     with tabs[3]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(tab_list[3], st.session_state['df'], st.session_state['question_df'])
+        analyze_selected_category(tab_list[3], grades, st.session_state['df'], st.session_state['question_df'])
 
 except Exception as e:
     st.write(e)
