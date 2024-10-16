@@ -224,16 +224,16 @@ try:
     tabs = st.tabs(tab_list)
 
     with tabs[0]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[0])
+        analyze_selected_category(tab_list[0], st.session_state['df'], st.session_state['question_df'])
 
     with tabs[1]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[1])
+        analyze_selected_category(tab_list[1], st.session_state['df'], st.session_state['question_df'])
 
     with tabs[2]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[2])
+        analyze_selected_category(tab_list[2], st.session_state['df'], st.session_state['question_df'])
 
     with tabs[3]:  # "オンライン・コラボレーション力"タブ
-        analyze_selected_category(st.session_state['df'], st.session_state['question_df'], tab_list[3])
+        analyze_selected_category(tab_list[3], st.session_state['df'], st.session_state['question_df'])
 
 except Exception as e:
     st.write(e)
