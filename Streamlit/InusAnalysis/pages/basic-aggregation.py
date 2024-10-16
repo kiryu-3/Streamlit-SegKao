@@ -75,7 +75,7 @@ def upload_csv2():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile2'] is not None:
         # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile'].read()
+        file_data = st.session_state['upload_csvfile2'].read()
         df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
 
         st.session_state['question_df'] = df
