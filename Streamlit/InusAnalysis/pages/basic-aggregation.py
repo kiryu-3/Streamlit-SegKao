@@ -137,7 +137,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                     marker_color=colors[i],  # 色を指定
                     orientation='h',
                     hovertemplate=f"%{{x:.1f}}%<br>N= {skill_point_counts[i]}<extra></extra>",
-                    showlegend=show_legend  # 最初のグレードだけ凡例を表示
                 ))
                 
             # グラフのレイアウト
