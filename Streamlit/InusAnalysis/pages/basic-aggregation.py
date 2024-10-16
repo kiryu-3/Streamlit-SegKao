@@ -169,6 +169,11 @@ try:
     dfdf = find_significant_skills(st.session_state['df'])
     st.write("3割合:", dfdf)
 
+    option = st.selectbox(
+        "表示したいカテゴリを選択してください",
+        ("オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"),
+    )
+
     # タブを作成
     tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布"])
 
