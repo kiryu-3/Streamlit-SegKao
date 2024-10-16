@@ -296,9 +296,6 @@ if len(st.session_state['df']) != 0:
         st.rerun()  # アプリを再実行して状態を更新
         st.success("CSVファイルが消去されました。")
 
-st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
-st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレームを設定
-
 try:
     categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
@@ -321,16 +318,17 @@ try:
     tab_list = categories + ['"どちらでもない"が多く選択された設問']
     tabs = st.tabs(tab_list)
 
-    if len(st.session_state['question_df']) != 0:
-        # タブとカテゴリのループ
-        for i, tab in enumerate(tabs):
-            with tab:
-                analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
-    else:
+    if len(st.session_state['question_df']) == 0:
         # 各タブに同じエラーメッセージを表示
         for tab in tabs:
             with tab:
                 st.error("設問文のcsvをアップロードしてください")
+        
+    else:
+        # タブとカテゴリのループ
+        for i, tab in enumerate(tabs):
+            with tab:
+                analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
     pass
