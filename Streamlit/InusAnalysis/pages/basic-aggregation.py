@@ -101,6 +101,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
 
         # "B"から始まるものだけを残す
         grades = [grade for grade in grades if grade.startswith("B")]
+        df = df[melted_df['grade'].isin(grades)]
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
@@ -226,8 +227,14 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                     # Dunn検定の実施
                     posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
                     
-                    # Dunn検定結果の表示
-                    st.write(posthoc_results)
+                    # Dunn検定結果から有意差のあるペアを抽出して表示
+                    significant_pairs = posthoc_results[posthoc_results < 0.05]
+                    
+                    # ペアを【{grade1}】-【{grade2}】形式で表示
+                    for grade1 in significant_pairs.index:
+                        for grade2 in significant_pairs.columns:
+                            if significant_pairs.loc[grade1, grade2] < 0.05:
+                                st.write(f"【{grade1}】-【{grade2}】")
                 else:
                     st.write("有意差はありません。")
     
