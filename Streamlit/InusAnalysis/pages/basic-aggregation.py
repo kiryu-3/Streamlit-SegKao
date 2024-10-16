@@ -153,6 +153,9 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             with st.expander("学年ごとの分布"):
                 # 積み上げ棒グラフの作成
                 fig = go.Figure()
+
+                # "B"から始まるものだけを残す
+                grades = [grade for grade in grades if grade.startswith("B")]
                 
                 for grade in grades:
                     grade_df = df[df["grade"]==grade]
@@ -272,6 +275,7 @@ try:
     categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
     categories_ja = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
+    st.write(grades)
 
     selected_columns = st.session_state['df'].iloc[:, :5]
     categories_columns = st.session_state['df'][categories]
