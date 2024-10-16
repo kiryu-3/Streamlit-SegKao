@@ -210,6 +210,25 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 )
     
                 st.plotly_chart(fig)
+
+                # 各グループのスコアをリストに分ける
+                groups = [df[df['grade'] == grade][f"skill{qnumber}"] for grade in df['grade'].unique()]
+                
+                # Kruskal-Wallis検定
+                stat, p = kruskal(*groups)
+                print(f"Kruskal-Wallis検定の結果: 統計量 = {stat}, p値 = {p}")
+                
+                # 有意差がある場合、事後検定 (Dunn検定)
+                if p < 0.05:
+                    print("有意差が認められました。どの学年間に有意差があるかを確認します。")
+                    
+                    # Dunn検定の実施
+                    posthoc_results = sp.posthoc_dunn(df, group_col='grade', p_adjust='bonferroni')
+                    
+                    # Dunn検定結果の表示
+                    st.write(posthoc_results)
+                else:
+                    st.write("有意差はありません。")
     
 
 def find_significant_skills(df):
