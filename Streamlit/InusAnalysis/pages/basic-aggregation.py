@@ -330,4 +330,4 @@ try:
                 st.error("設問文のcsvをアップロードしてください")
     
 except Exception as e:
-    pass
+    st.write(e)
