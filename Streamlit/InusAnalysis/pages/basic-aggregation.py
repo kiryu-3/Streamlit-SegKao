@@ -221,7 +221,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 
                 # 有意差がある場合、事後検定 (Dunn検定)
                 if p < 0.05:
-                    print("有意差が認められました。どの学年間に有意差があるかを確認します。")
+                    st.write("有意差が認められた学年")
                     
                     # Dunn検定の実施
                     posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
@@ -229,13 +229,17 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                     # Dunn検定結果から有意差のあるペアを抽出して表示
                     significant_pairs = posthoc_results[posthoc_results < 0.05]
                     
-                    # ペアを【{grade1}】-【{grade2}】形式で表示（重複を避ける）
-                    for grade1 in significant_pairs.index:
-                        for grade2 in significant_pairs.columns:
-                            if significant_pairs.loc[grade1, grade2] < 0.05 and grade1 < grade2:
-                                print(f"【{grade1}】-【{grade2}】")
+                    # ペアを【{grade1}】-【{grade2}】形式で表示（重複なし）
+                    printed_pairs = set()
+                    for i, grade1 in enumerate(significant_pairs.index):
+                        for j, grade2 in enumerate(significant_pairs.columns):
+                            if i < j and significant_pairs.loc[grade1, grade2] < 0.05:
+                                pair = (grade1, grade2)
+                                if pair not in printed_pairs:
+                                    st.write(f"【{grade1}】-【{grade2}】")
+                                    printed_pairs.add(pair)
                 else:
-                    st.write("有意差はありません。")
+                    st.write("学年間の有意差はありません")
     
 
 def find_significant_skills(df):
