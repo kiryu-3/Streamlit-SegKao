@@ -223,7 +223,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                     print("有意差が認められました。どの学年間に有意差があるかを確認します。")
                     
                     # Dunn検定の実施
-                    posthoc_results = sp.posthoc_dunn(df, group_col='grade', p_adjust='bonferroni')
+                    posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
                     
                     # Dunn検定結果の表示
                     st.write(posthoc_results)
