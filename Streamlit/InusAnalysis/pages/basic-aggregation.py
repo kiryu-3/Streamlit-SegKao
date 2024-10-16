@@ -223,9 +223,10 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 if p < 0.05:
                     st.write("有意差が認められた学年")
                     
+                    
                     # Dunn検定の実施
                     posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
-                    
+                    st.write(posthoc_results)
                     # Dunn検定結果から有意差のあるペアを抽出して表示
                     significant_pairs = posthoc_results[posthoc_results < 0.05]
                     
