@@ -309,25 +309,24 @@ try:
     cols[1].write("### 各分野の質問数")
     cols[1].dataframe(question_df)
 
-    dfdf = find_significant_skills(st.session_state['df'])
-    st.write("3割合:", dfdf)
-
     # タブを作成
-    # tab_list = categories_ja + ['"どちらでもない"が多く選択された設問']
-    tab_list = categories_ja
+    tab_list = categories_ja + ['"どちらでもない"が多く選択された設問']
     tabs = st.tabs(tab_list)
 
     with tabs[0]:  # "オンライン・コラボレーション力"タブ
         analyze_selected_category(tab_list[0], grades, st.session_state['df'], st.session_state['question_df'])
 
-    with tabs[1]:  # "オンライン・コラボレーション力"タブ
+    with tabs[1]:  # "データ利活用力"タブ
         analyze_selected_category(tab_list[1], grades, st.session_state['df'], st.session_state['question_df'])
 
-    with tabs[2]:  # "オンライン・コラボレーション力"タブ
+    with tabs[2]:  # "情報システム開発力"タブ
         analyze_selected_category(tab_list[2], grades, st.session_state['df'], st.session_state['question_df'])
 
-    with tabs[3]:  # "オンライン・コラボレーション力"タブ
+    with tabs[3]:  # "情報倫理力"タブ
         analyze_selected_category(tab_list[3], grades, st.session_state['df'], st.session_state['question_df'])
+
+    with tabs[4]:  # "どちらでもない"が多く選択された設問"タブ
+            analyze_selected_category(tab_list[4], grades, st.session_state['df'], st.session_state['question_df'])
 
 except Exception as e:
     st.write(e)
