@@ -101,7 +101,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
 
         # "B"から始まるものだけを残す
         grades = [grade for grade in grades if grade.startswith("B")]
-        df = df[melted_df['grade'].isin(grades)]
+        df = df[df['grade'].isin(grades)]
 
         for index, row in question_df.iterrows():
             # skill_{qnumber}列をndarrayに変換
