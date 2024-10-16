@@ -142,12 +142,11 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             # グラフのレイアウト
             fig.update_layout(
                 barmode='stack',
-                 title=f'Q{row['通し番号']}：{row["質問文"]}',
+                title=f'Q{row['通し番号']}：{row["質問文"]}',
                 xaxis_title='割合 (%)',
-                legend_title='選択肢',
                 yaxis=dict(categoryorder='array', categoryarray=grades),  # グレードの順序を指定
                 height=400,
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)  # 凡例をグラフの上に配置
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="reversed")  # 凡例をグラフの上に配置
             )
 
 
@@ -205,10 +204,9 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 fig.update_layout(
                     barmode='stack',
                     xaxis_title='割合 (%)',
-                    legend_title='選択肢',
                     yaxis=dict(categoryorder='array', categoryarray=grades),  # グレードの順序を指定
                     height=400,
-                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5)  # 凡例をグラフの上に配置
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="reversed")  # 凡例をグラフの上に配置
                 )
     
                 st.plotly_chart(fig)
