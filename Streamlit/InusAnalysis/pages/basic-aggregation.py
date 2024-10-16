@@ -83,6 +83,53 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
+def test(selected_category, df, question_df):
+    if selected_category != '"どちらでもない"が多く選択された設問':
+        question_df = question_df[question_df["カテゴリ"]==selected_category]]
+
+        for index, row in question_df.iterrows():
+            # skill_{qnumber}列をndarrayに変換
+            skill_array = row[f"skill_{qnumber}"].values
+
+            # 5件法の割合を計算
+            skill_point_total = len(skill_array)
+            skill_point_counts = np.array([
+                np.sum(skill_point_scale == 5),  # とてもあてはまる
+                np.sum(skill_point_scale == 4),  # まあまああてはまる
+                np.sum(skill_point_scale == 3),  # どちらともいえない
+                np.sum(skill_point_scale == 2),  # あまりあてはまらない
+                np.sum(skill_point_scale == 1)   # まったくあてはまらない
+            ])
+            skill_point_percentages = (skill_point_counts / skill_point_total) * 100
+
+            # 5件法の情報
+            skill_point_labels = ["とてもあてはまる (5)", "まあまああてはまる (4)", "どちらともいえない (3)", "あまりあてはまらない (2)", "まったくあてはまらない (1)"]
+            
+            # 積み上げ棒グラフの作成
+            fig = go.Figure()
+
+            # 積み上げ棒グラフ
+            for i, label in enumerate(skill_point_labels):
+                fig.add_trace(go.Bar(
+                    x=[skill_point_percentages[i]],
+                    name=label,
+                    orientation='h',
+                    hovertemplate=f"%{{x:.1f}}%<br>N= {five_point_counts[i]}<extra></extra>"
+                ))
+            
+            # グラフのレイアウト
+            fig.update_layout(
+                barmode='stack',
+                title=f'{row["質問文"]}',
+                xaxis_title='割合 (%)',
+                yaxis_title='尺度',
+                legend_title='選択肢',
+                height=400
+            )
+
+            st.pyplot(fig_hist)
+            
+    
 
 def find_significant_skills(df):
 
@@ -150,6 +197,7 @@ if len(st.session_state['df']) != 0:
 
 try:
     categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
+    categories_ja = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
 
     selected_columns = st.session_state['df'].iloc[:, :5]
@@ -169,40 +217,22 @@ try:
     dfdf = find_significant_skills(st.session_state['df'])
     st.write("3割合:", dfdf)
 
-    option = st.selectbox(
-        "表示したいカテゴリを選択してください",
-        ("オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"),
-    )
-
     # タブを作成
-    tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布"])
+    # tab_list = categories_ja + ['"どちらでもない"が多く選択された設問']
+    tab_list = categories_ja
+    tabs = st.tabs(tab_list)
 
-    with tabs[0]:  # "正規性の検定"タブ
-        normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
-        st.dataframe(normality_df)
-        with st.expander("各分野のスコア分布"):
-            st.pyplot(fig_hist)
-        with st.expander("Q-Qプロット"):
-            st.pyplot(fig_qq)
+    with tabs[0]:  # "オンライン・コラボレーション力"タブ
+        test(st.session_state['df'], st.session_state['question_df'], tab_list[0])
 
-    with tabs[1]:  # "各分野のスコア分布"タブ
-        categories_df, fig, filtered_pairs = categories_test(st.session_state['df'], categories)
-        st.dataframe(categories_df)
-        with st.expander("各分野のスコア分布"):
-            st.plotly_chart(fig)
-            st.write("有意差が見られる分野間の組み合わせ：")
-            for category1, category2 in filtered_pairs:
-                st.write(f"【{category1}】-【{category2}】")
+    with tabs[1]:  # "オンライン・コラボレーション力"タブ
+        test(st.session_state['df'], st.session_state['question_df'], tab_list[1])
 
-    with tabs[2]:  # "各分野の学年別のスコア分布"タブ
-        grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
-        st.dataframe(grade_df)
-        with st.expander("各分野の学年別のスコア分布"):
-            st.plotly_chart(fig)
-            st.write("有意差が見られる各分野の学年間の組み合わせ：")
-            for result_set in result_pairs:
-                for category, grade1, grade2 in result_set:
-                    st.write(f"【{category}】：【{grade1}】-【{grade2}】")
+    with tabs[2]:  # "オンライン・コラボレーション力"タブ
+        test(st.session_state['df'], st.session_state['question_df'], tab_list[2])
+
+    with tabs[3]:  # "オンライン・コラボレーション力"タブ
+        test(st.session_state['df'], st.session_state['question_df'], tab_list[3])
 
 except Exception as e:
     st.write(e)
