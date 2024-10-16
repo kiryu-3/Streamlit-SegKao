@@ -296,10 +296,8 @@ if len(st.session_state['df']) != 0:
         st.success("CSVファイルが消去されました。")
 
 try:
-    categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
-    categories_ja = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
+    categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
-    st.write(grades)
 
     selected_columns = st.session_state['df'].iloc[:, :5]
     categories_columns = st.session_state['df'][categories]
@@ -316,7 +314,7 @@ try:
     cols[1].dataframe(question_df)
 
     # タブを作成
-    tab_list = categories_ja + ['"どちらでもない"が多く選択された設問']
+    tab_list = categories + ['"どちらでもない"が多く選択された設問']
     tabs = st.tabs(tab_list)
 
     with tabs[0]:  # "オンライン・コラボレーション力"タブ
