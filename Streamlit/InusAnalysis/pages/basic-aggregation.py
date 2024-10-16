@@ -144,7 +144,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 barmode='stack',
                 title=f'Q{row['通し番号']}：{row["質問文"]}',
                 xaxis_title='割合 (%)',
-                yaxis=dict(categoryorder='array', categoryarray=grades),  # グレードの順序を指定
+                yaxis=dict(showticklabels=False),  # y軸の座標（数字）を非表示にする
                 height=400,
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
             )
