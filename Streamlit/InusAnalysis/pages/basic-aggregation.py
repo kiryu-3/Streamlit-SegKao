@@ -58,7 +58,13 @@ def upload_csv():
     if st.session_state['upload_csvfile'] is not None:
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile'].read()
-        df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
+        try:
+            # Shift-JISで読み込みを試みる
+            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+        except UnicodeDecodeError:
+            # Shift-JISで失敗したらUTF-8で再試行
+            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python") 
+                
 
         # 各カテゴリごとに平均を算出
         df['online_collab'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
@@ -76,7 +82,12 @@ def upload_csv2():
     if st.session_state['upload_csvfile2'] is not None:
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile2'].read()
-        df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
+        try:
+            # Shift-JISで読み込みを試みる
+            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+        except UnicodeDecodeError:
+            # Shift-JISで失敗したらUTF-8で再試行
+            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python") 
 
         st.session_state['question_df'] = df
     else:
