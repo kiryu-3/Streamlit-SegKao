@@ -232,7 +232,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
     
 
 def find_significant_skills(df):
-
     df = df[[col for col in df.columns if 'skill' in col]]
     
     # Total number of elements in the data
@@ -250,27 +249,20 @@ def find_significant_skills(df):
     
     # Perform a binomial test for each column using binomtest
     p_values = []
-    significance_results = []
-    for count, proportion in zip(column_3_counts, column_3_proportions):
+    significant_skills = []
+    
+    for col, count, proportion in zip(df.columns, column_3_counts, column_3_proportions):
         binom_test = stats.binomtest(count, df.shape[0], overall_3_proportion)
         p_value = binom_test.pvalue
         p_values.append(p_value)
         
-        # Check if the proportion in the column is significantly higher than the overall proportion
-        if proportion > overall_3_proportion and p_value < 0.05:
-            significance_results.append(True)
-        else:
-            significance_results.append(False)
+        # Check if the p-value is less than 0.05
+        if p_value < 0.05:
+            # Extract the number from the skill column name and store it
+            skill_number = col.replace("skill", "")
+            significant_skills.append(skill_number)
     
-    # Create a DataFrame for the results
-    result_df = pd.DataFrame({
-        'Column': df.columns,
-        'Proportion_of_3': column_3_proportions,
-        'P_value': p_values,
-        'Significant': significance_results
-    })
-
-    return result_df
+    return significant_skills
     
 # ファイルアップロード
 st.file_uploader("集計結果（5件法）のcsvをアップロード",
