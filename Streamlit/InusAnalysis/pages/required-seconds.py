@@ -84,7 +84,7 @@ def normality_test(df, categories):
     }
 
     # 結果の表示
-    st.write("### 正規性検定の結果")
+    st.write("#### 正規性検定の結果")
     result_df = pd.DataFrame(results).T  # 結果をデータフレームに変換
     # st.dataframe(df)
 
