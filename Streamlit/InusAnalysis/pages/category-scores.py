@@ -34,10 +34,10 @@ def display_summary(df, categories, grades):
     
     # 各分野の質問数を辞書に格納
     question_counts = {
-        'online_collab': len(df.columns[6:21]),
-        'data_utilization': len(df.columns[21:36]),
-        'info_sys_dev': len(df.columns[36:50]),
-        'info_ethics': len(df.columns[50:72])
+        'オンライン・コラボレーション力': len(df.columns[6:21]),
+        'データ利活用力': len(df.columns[21:36]),
+        '情報システム開発力': len(df.columns[36:50]),
+        '情報倫理力': len(df.columns[50:72])
     }
     
     # データフレームを作成
@@ -61,10 +61,10 @@ def upload_csv():
         df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
 
         # 各カテゴリごとに平均を算出
-        df['online_collab'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
-        df['data_utilization'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
-        df['info_sys_dev'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
-        df['info_ethics'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
+        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
+        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
+        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
+        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
 
         st.session_state['df'] = df
     else:
@@ -258,7 +258,7 @@ if len(st.session_state['df']) != 0:
         st.success("CSVファイルが消去されました。")
 
 try:
-    categories = ['online_collab', 'data_utilization', 'info_sys_dev', 'info_ethics']
+    categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
 
     selected_columns = st.session_state['df'].iloc[:, :5]
@@ -269,7 +269,7 @@ try:
     summary_df, question_df = display_summary(st.session_state['df'], categories, grades)
 
     # 表形式で表示
-    cols = st.columns(2)
+    cols = st.columns([3, 7])
     cols[0].write("### 各学年の人数")
     cols[0].dataframe(summary_df)
     cols[1].write("### 各分野の質問数")
@@ -306,4 +306,4 @@ try:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
 except Exception as e:
-    st.write(e)
+    pass
