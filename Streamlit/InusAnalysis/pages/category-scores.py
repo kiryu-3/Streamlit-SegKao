@@ -263,6 +263,9 @@ try:
     categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
 
+    # user_idが22のものを除去する
+    st.session_state['df'] = st.session_state['df'][st.session_state['df']["user_id"] != 22]
+
     selected_columns = st.session_state['df'].iloc[:, :5]
     categories_columns = st.session_state['df'][categories]
     final_df = pd.concat([selected_columns, categories_columns], axis=1)
