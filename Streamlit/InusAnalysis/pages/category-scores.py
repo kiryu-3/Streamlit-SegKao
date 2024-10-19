@@ -120,6 +120,8 @@ def categories_test(df, categories):
     melted_df = df.melt(id_vars='grade', value_vars=categories,
                         var_name='category', value_name='value')
 
+    st.write(melted_df)
+
     # 全学年の平均と標準偏差を追加
     summary_stats = melted_df.groupby('category').agg(
         mean=('value', 'mean'),
