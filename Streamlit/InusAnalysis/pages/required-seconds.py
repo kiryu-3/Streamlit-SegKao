@@ -237,13 +237,13 @@ try:
     quantile99 = st.session_state['df']["required_time_seconds"].quantile(0.99)
     
     # 外れ値を除去する
-    st.session_state['df'] = st.session_state['df'][(st.session_state['df']["required_time_seconds"] > quantile1) & (st.session_state['df']["required_time_seconds"] < quantile99)]
+    st.session_state['cleaned_df'] = st.session_state['df'][(st.session_state['df']["required_time_seconds"] > quantile1) & (st.session_state['df']["required_time_seconds"] < quantile99)]
 
     # タブを作成
     tabs = st.tabs(["正規性の検定", "所要時間分布", "学年間の所要時間分布"])
 
     with tabs[0]:  # "正規性の検定"タブ
-        normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
+        normality_df, fig_hist, fig_qq = normality_test(st.session_state['cleaned_df'], categories)
         st.dataframe(normality_df)
         with st.expander("分野ごとのスコア分布"):
             st.pyplot(fig_hist)
@@ -251,13 +251,13 @@ try:
             st.pyplot(fig_qq)
 
     with tabs[1]:  # "所要時間分布"タブ
-        categories_df, fig = categories_test(st.session_state['df'], categories)
+        categories_df, fig = categories_test(st.session_state['cleaned_df'], categories)
         st.dataframe(categories_df)
         with st.expander("所要時間分布"):
             st.plotly_chart(fig)
 
     with tabs[2]:  # "学年間の所要時間分布"タブ
-        grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
+        grade_df, fig, result_pairs = grade_test(st.session_state['cleaned_df'], categories, grades)
         st.dataframe(grade_df)
         with st.expander("学年間の所要時間分布"):
             st.plotly_chart(fig)
