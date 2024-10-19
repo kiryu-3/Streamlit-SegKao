@@ -270,9 +270,9 @@ try:
 
     # 表形式で表示
     cols = st.columns([3, 7])
-    cols[0].write("### 各学年の人数")
+    cols[0].write("#### 各学年の人数")
     cols[0].dataframe(summary_df)
-    cols[1].write("### 各分野の質問数")
+    cols[1].write("#### 各分野の質問数")
     cols[1].dataframe(question_df)
 
     # タブを作成
