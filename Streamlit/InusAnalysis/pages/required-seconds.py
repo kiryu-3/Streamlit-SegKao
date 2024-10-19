@@ -219,6 +219,9 @@ try:
     categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
     grades = sorted(list(st.session_state['df']['grade'].unique()))
 
+    # user_idが22のものを除去する
+    st.session_state['df'] = st.session_state['df'][st.session_state['df']["user_id"] != 22]
+
     selected_columns = st.session_state['df'].iloc[:, :6]
     categories_columns = st.session_state['df'][categories]
     final_df = pd.concat([selected_columns, categories_columns], axis=1)
@@ -235,15 +238,12 @@ try:
 
     quantile1 = st.session_state['df']["required_time_seconds"].quantile(0.01)
     quantile99 = st.session_state['df']["required_time_seconds"].quantile(0.99)
-    
-    # 外れ値を除去する
-    st.session_state['cleaned_df'] = st.session_state['df'][(st.session_state['df']["required_time_seconds"] > quantile1) & (st.session_state['df']["required_time_seconds"] < quantile99)]
 
     # タブを作成
     tabs = st.tabs(["正規性の検定", "所要時間分布", "学年間の所要時間分布"])
 
     with tabs[0]:  # "正規性の検定"タブ
-        normality_df, fig_hist, fig_qq = normality_test(st.session_state['cleaned_df'], categories)
+        normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
         st.dataframe(normality_df)
         with st.expander("分野ごとのスコア分布"):
             st.pyplot(fig_hist)
@@ -251,13 +251,13 @@ try:
             st.pyplot(fig_qq)
 
     with tabs[1]:  # "所要時間分布"タブ
-        categories_df, fig = categories_test(st.session_state['cleaned_df'], categories)
+        categories_df, fig = categories_test(st.session_state['df'], categories)
         st.dataframe(categories_df)
         with st.expander("所要時間分布"):
             st.plotly_chart(fig)
 
     with tabs[2]:  # "学年間の所要時間分布"タブ
-        grade_df, fig, result_pairs = grade_test(st.session_state['cleaned_df'], categories, grades)
+        grade_df, fig, result_pairs = grade_test(st.session_state['df'], categories, grades)
         st.dataframe(grade_df)
         with st.expander("学年間の所要時間分布"):
             st.plotly_chart(fig)
