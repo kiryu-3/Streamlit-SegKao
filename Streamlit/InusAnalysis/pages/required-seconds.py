@@ -227,10 +227,10 @@ try:
     summary_df, question_df = display_summary(st.session_state['df'], categories, grades)
 
     # 表形式で表示
-    cols = st.columns(2)
+    cols = st.columns([3, 7])
     cols[0].write("####  各学年の人数")
     cols[0].dataframe(summary_df)
-    cols[1].write("### 各分野の質問数")
+    cols[1].write("#### 各分野の質問数")
     cols[1].dataframe(question_df)
 
     quantile1 = st.session_state['df']["required_time_seconds"].quantile(0.01)
