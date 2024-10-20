@@ -132,7 +132,7 @@ def display_sunburst(df):
     st.subheader("サンバーストチャート")
     st.plotly_chart(fig_sunburst)
 
-st.header("コメントの分析")
+st.header("アンケートコメントの分析")
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
                   type=["csv"],
