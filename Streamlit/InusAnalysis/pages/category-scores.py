@@ -179,9 +179,6 @@ def grade_test(df, categories, grades):
                         var_name='category', value_name='value')
     melted_df = melted_df[melted_df['grade'].isin(grades)]
 
-    st.write(melted_df)
-
-    
     # 学年ごとの平均と標準偏差を取得
     summary_stats = melted_df.groupby(['category', 'grade']).agg(
         mean=('value', 'mean'),
@@ -273,6 +270,17 @@ def qualification_test(df, categories, grades):
 
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
+
+    # 資格有無ごとの平均と標準偏差を取得
+    summary_stats = melted_df.groupby(['category', 'qualification_status']).agg(
+        mean=('value', 'mean'),
+        std=('value', 'std')
+    ).reset_index()
+
+    # categoriesの順序を設定
+    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
+    # categoriesの順にソート
+    summary_stats = summary_stats.sort_values("category", ascending=True)
     
     # 'qualification_status'列をqualificationsの順番に並べ替え
     melted_df['qualification_status'] = pd.Categorical(melted_df['qualification_status'], categories=qualifications, ordered=True)
@@ -298,7 +306,7 @@ def qualification_test(df, categories, grades):
             # ポストホックテストの実行
             result_columns.append(category)
     
-    return qualification_summary, fig, result_columns
+    return qualification_summary, summary_stats, fig, result_columns
 
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
@@ -368,8 +376,9 @@ try:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
     with tabs[3]:  # "各分野の資格有無別のスコア分布"タブ
-        grade_df, fig, result_columns = qualification_test(st.session_state['df'], categories, grades)
-        st.dataframe(grade_df)
+        qualification_summary, summary_stats, fig, result_columns = qualification_test(st.session_state['df'], categories, grades)
+        st.dataframe(qualification_summary)
+        st.dataframe(summary_stats)
         with st.expander("各分野の資格有無別のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる分野：")
