@@ -256,7 +256,7 @@ def qualification_test(df, categories, grades):
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
-                        var_name='category', value_name='value')
+                        var_name='qualification_status', value_name='value')
     
     
     # 学年ごとにqualification_statusを集計
