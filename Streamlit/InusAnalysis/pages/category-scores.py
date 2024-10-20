@@ -252,10 +252,10 @@ def qualification_test(df, categories, grades):
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
 
-    qualifications = df['qualification_status'].unique()[::-1]
-
     df = df.dropna(subset=['qualification_status'])
     df = df[df['grade'].isin(grades)]
+
+    qualifications = df['qualification_status'].unique()[::-1]
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
