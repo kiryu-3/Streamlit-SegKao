@@ -272,17 +272,18 @@ def qualification_test(df, categories, grades):
     melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
 
     melted_df = melted_df.sort_values(['qualification_status', 'category'])
+    qualifications = melted_df['qualification_status'].unique()
 
     # ボックスプロットの描画
-    fig = px.box(melted_df, x='category', y='value', color='grade', title='各分野の学年ごとのスコア分布') 
+    fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の学年ごとのスコア分布') 
 
     # 結果を格納するためのリスト
     result_pairs = []
     flag = 0
 
     for category in categories:
-        # 学年ごとのデータを取得
-        values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
+        # 資格有無ごとのデータを取得
+        values = [melted_df[melted_df['category']==category][melted_df['qualification_status'] == qualification]['value'].values for qualification in qualifications]
         
         # クラスカル・ウォリス検定を実行
         stat, p = kruskal(*values) 
@@ -293,8 +294,8 @@ def qualification_test(df, categories, grades):
             posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
 
             # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = grades
-            posthoc.index = grades
+            posthoc.columns = qualifications
+            posthoc.index = qualifications
             
             # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
             significant_pairs = [
@@ -313,8 +314,8 @@ def qualification_test(df, categories, grades):
             posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
 
             # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = grades
-            posthoc.index = grades
+            posthoc.columns = qualifications
+            posthoc.index = qualifications
     
     return qualification_summary, fig, result_pairs
 
