@@ -113,8 +113,12 @@ def display_treemap(df):
     st.plotly_chart(fig_treemap)
 
 def display_sunburst(df):
+
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
+
+    # ビルド（データ件数によっては処理に時間を要します）
+    npt.build_graph(stopwords=stopwords, min_edge_frequency=25)
     
     fig_sunburst = npt.sunburst(
         title='Sunburst chart',
@@ -139,7 +143,7 @@ if len(st.session_state.get('df', [])) != 0:
     if st.button("アップロードしたCSVファイルを消去"):
         st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
         st.success("CSVファイルが消去されました。")
-        st.experimental_rerun()  # アプリを再実行して状態を更新
+        st.rerun()  # アプリを再実行して状態を更新
 
 try:
     df = st.session_state['df']
