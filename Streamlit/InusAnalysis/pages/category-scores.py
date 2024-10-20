@@ -256,6 +256,7 @@ def qualification_test(df, categories, grades):
     df = df[df['grade'].isin(grades)]
 
     qualifications = sorted(df['qualification_status'].unique(), reverse=True)
+    st.write(qualifications)
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
