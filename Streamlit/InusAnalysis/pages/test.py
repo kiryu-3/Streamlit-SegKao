@@ -64,10 +64,10 @@ if len(st.session_state['df']) != 0:
 
 try:
     df = st.session_state['df']
-    st.write(df)
+    st.write(df['comment'])
     
     # 形態素結果をリスト化し、データフレームに結果を列追加する
-    df['words'] = df['comments'].apply(mecab_text)
+    df['words'] = df['comment'].apply(mecab_text)
     
     # Streamlitのタイトル
     st.title("コメント分析アプリ")
