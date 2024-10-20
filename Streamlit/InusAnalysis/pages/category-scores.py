@@ -283,6 +283,7 @@ def qualification_test(df, categories, grades):
     fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の学年ごとのスコア分布') 
 
     # 結果を格納するためのリスト
+    result_columns = []
     flag = 0
 
     for category in categories:
@@ -295,30 +296,9 @@ def qualification_test(df, categories, grades):
         # 有意差が見られる場合、ポストホックテストを実行
         if p < 0.05:
             # ポストホックテストの実行
-            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-            # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = qualifications
-            posthoc.index = qualifications
-
-            # p値が0.05以下の要素を取得
-            significant_pairs = posthoc[posthoc < 0.05].stack().index.tolist()
-
-            st.write(significant_pairs)
-
-        else:
-            # ポストホックテストの実行
-            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
-
-            
-
-            # 結果のDataFrameのカラム名とインデックスを設定
-            posthoc.columns = qualifications
-            posthoc.index = qualifications
-
-            st.write(posthoc)
+            result_columns.append(category)
     
-    return qualification_summary, fig, significant_cols
+    return qualification_summary, fig, result_columns
 
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
