@@ -132,6 +132,7 @@ def display_sunburst(df):
     st.subheader("サンバーストチャート")
     st.plotly_chart(fig_sunburst)
 
+st.header("コメントの分析")
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
                   type=["csv"],
@@ -157,10 +158,7 @@ try:
     # アンケート内容と名詞のリスト（words列）のみを取り出して、新たにデータフレーム作成
     df = df[['comment','words']]
 
-    st.write(df)
-    
-    # Streamlitのタイトル
-    st.title("コメント分析アプリ")
+    st.write(df['comment'])
 
     # タブを作成
     tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
