@@ -271,7 +271,7 @@ def qualification_test(df, categories, grades):
         .unstack(fill_value=0)
     )
     
-    qualification_summary = qualification_summary.reindex(columns=qualifications[::-1], fill_value=0)
+    qualification_summary = qualification_summary.reindex(columns=qualifications, fill_value=0)
 
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
