@@ -201,7 +201,7 @@ def grade_test(df, categories, grades):
 
 st.header("所要時間の分析")
 # ファイルアップロード
-st.file_uploader("CSVファイルをアップロード",
+st.file_uploader("集計結果（5件法）のcsvをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
                        on_change=upload_csv
