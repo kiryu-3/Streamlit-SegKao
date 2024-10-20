@@ -56,24 +56,6 @@ def display_unigram(df):
     st.subheader("頻出単語ランキング")
     st.plotly_chart(fig_unigram)
 
-def display_co_network(df):
-    npt = nlplot.NLPlot(df, target_col='words')
-    stopwords = npt.get_stopword(top_n=0, min_freq=0)
-    
-    npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
-    
-    fig_co_network = npt.co_network(
-        title='Co-occurrence network',
-        sizing=100,
-        node_size='adjacency_frequency',
-        color_palette='hls',
-        width=1100,
-        height=700,
-        save=False
-    )
-    st.subheader("共起ネットワーク")
-    st.plotly_chart(fig_co_network)
-
 def display_wordcloud(df):
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
@@ -111,6 +93,24 @@ def display_treemap(df):
     )
     st.subheader("ツリーマップ")
     st.plotly_chart(fig_treemap)
+
+def display_co_network(df):
+    npt = nlplot.NLPlot(df, target_col='words')
+    stopwords = npt.get_stopword(top_n=0, min_freq=0)
+    
+    npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
+    
+    fig_co_network = npt.co_network(
+        title='Co-occurrence network',
+        sizing=100,
+        node_size='adjacency_frequency',
+        color_palette='hls',
+        width=1100,
+        height=700,
+        save=False
+    )
+    st.subheader("共起ネットワーク")
+    st.plotly_chart(fig_co_network)
 
 def display_sunburst(df):
 
@@ -163,20 +163,20 @@ try:
     st.title("コメント分析アプリ")
 
     # タブを作成
-    tab_list = ["頻出単語ランキング", "共起ネットワーク", "ワードクラウド", "ツリーマップ", "サンバーストチャート"]
+    tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
     tabs = st.tabs(tab_list)
     
     # 各表示関数を呼び出す
     with tabs[0]:
         display_unigram(df)
     with tabs[1]:
-        display_co_network(df)
-    with tabs[2]:
         display_wordcloud(df)
-    with tabs[3]:
+    with tabs[2]:
         display_treemap(df)
+    with tabs[3]:
+        display_co_network(df)
     with tabs[4]:
         display_sunburst(df)
 
 except Exception as e:
-    st.write(e)
+    pass
