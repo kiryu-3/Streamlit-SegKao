@@ -256,7 +256,6 @@ def qualification_test(df, categories, grades):
     df = df[df['grade'].isin(grades)]
 
     qualifications = sorted(df['qualification_status'].unique(), reverse=True)
-    st.write(qualifications)
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
@@ -303,9 +302,9 @@ def qualification_test(df, categories, grades):
             posthoc.columns = qualifications
             posthoc.index = qualifications
             
-            # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
+            # 有意差が見られるカテゴリ間をリスト内包表記で取得
             significant_pairs = [
-                (category, idx, col)
+                (col)
                 for col in posthoc.columns
                 for idx in posthoc.index
                 if posthoc.loc[idx, col] < 0.05
