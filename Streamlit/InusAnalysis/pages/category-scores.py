@@ -178,6 +178,9 @@ def grade_test(df, categories, grades):
     melted_df = df.melt(id_vars='grade', value_vars=categories,
                         var_name='category', value_name='value')
     melted_df = melted_df[melted_df['grade'].isin(grades)]
+
+    st.write(melted_df)
+
     
     # 学年ごとの平均と標準偏差を取得
     summary_stats = melted_df.groupby(['category', 'grade']).agg(
