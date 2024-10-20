@@ -389,4 +389,4 @@ try:
                     st.write(f"【{result_column}】")
 
 except Exception as e:
-    st.write(e)
+    pass
