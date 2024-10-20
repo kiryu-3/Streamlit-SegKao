@@ -275,8 +275,6 @@ def qualification_test(df, categories, grades):
 
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
-
-    st.write(qualification_summary)
     
     # 'qualification_status'列をqualificationsの順番に並べ替え
     melted_df['qualification_status'] = pd.Categorical(melted_df['qualification_status'], categories=qualifications, ordered=True)
@@ -403,7 +401,7 @@ try:
             st.write("有意差が見られる分野：")
             for result_set in result_pairs:
                 for category, grade1, grade2 in result_set:
-                    st.write(f"【{category}】：【{grade1}】-【{grade2}】")
+                    st.write(f"【{category}】")
 
 except Exception as e:
     st.write(e)
