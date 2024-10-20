@@ -272,7 +272,7 @@ def qualification_test(df, categories, grades):
     melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
 
     melted_df = melted_df.sort_values(['qualification_status', 'category'])
-    qualifications = melted_df['qualification_status'].unique()
+    qualifications = melted_df['qualification_status'].unique()[::-1]
 
     # ボックスプロットの描画
     fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の学年ごとのスコア分布') 
