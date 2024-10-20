@@ -128,5 +128,32 @@ try:
     plt.imshow(fig_wc, interpolation="bilinear")
     plt.axis("off")
     st.pyplot(plt)
+
+    # ツリーマップを作成
+    fig_treemap = npt.treemap(
+        title='Tree map',
+        ngram=1,
+        top_n=50,
+        width=1300,
+        height=600,
+        stopwords=stopwords,
+        verbose=False,
+        save=False
+    )
+    st.subheader("ツリーマップ")
+    st.plotly_chart(fig_treemap)
+
+    # サンバーストチャートを作成
+    fig_sunburst = npt.sunburst(
+        title='Sunburst chart',
+        colorscale=True,
+        color_continuous_scale='Oryel',
+        width=1000,
+        height=800,
+        save=False
+    )
+    st.subheader("サンバーストチャート")
+    st.plotly_chart(fig_sunburst)
+    
 except Exception as e:
     st.write(e)
