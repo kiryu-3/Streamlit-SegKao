@@ -300,6 +300,8 @@ def qualification_test(df, categories, grades):
             # 結果のDataFrameのカラム名とインデックスを設定
             posthoc.columns = qualifications
             posthoc.index = qualifications
+
+            st.write(posthoc)
             
             # 有意差が見られるカテゴリ間をリスト内包表記で取得
             significant_cols = [
