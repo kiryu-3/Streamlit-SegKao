@@ -179,4 +179,4 @@ try:
         display_sunburst(df)
 
 except Exception as e:
-    pass
+    st.write(e)
