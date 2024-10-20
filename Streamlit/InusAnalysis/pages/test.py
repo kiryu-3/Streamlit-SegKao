@@ -64,6 +64,8 @@ if len(st.session_state['df']) != 0:
 
 try:
     df = st.session_state['df']
+    # 欠損値がある行を取り除く
+    df = df.dropna(subset=['comment'])
     st.write(df['comment'])
     
     # 形態素結果をリスト化し、データフレームに結果を列追加する
