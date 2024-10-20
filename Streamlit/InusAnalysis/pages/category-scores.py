@@ -290,7 +290,7 @@ def qualification_test(df, categories, grades):
     melted_df = melted_df.sort_values(['qualification_status', 'category'])
 
     # ボックスプロットの描画
-    fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の学年ごとのスコア分布') 
+    fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の資格有無ごとのスコア分布') 
 
     # 結果を格納するためのリスト
     result_columns = []
