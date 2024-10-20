@@ -6,10 +6,7 @@ import plotly.graph_objects as go
 import networkx as nx
 import MeCab
 import nlplot  # nlplotをインポート
-from plotly.offline import iplot
 import io
-from io import BytesIO
-import itertools
 
 def upload_csv():
     # csvがアップロードされたとき
@@ -19,24 +16,21 @@ def upload_csv():
         df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
 
         # 各カテゴリごとに平均を算出
-        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
-        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
-        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
-        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
+        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)
+        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)
+        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)
+        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)
 
         st.session_state['df'] = df
     else:
-        # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
 
-# 文章を分解し、名詞のみを取り込む
 def mecab_text(text):
     tagger = MeCab.Tagger("")
     tagger.parse('')
     node = tagger.parseToNode(text)
 
     word_list = []
-
     while node:
         word_type = node.feature.split(',')[0]
         if word_type == '名詞':
@@ -46,41 +40,10 @@ def mecab_text(text):
         
     return word_list
 
-# ファイルアップロード
-st.file_uploader("CSVファイルをアップロード",
-                       type=["csv"],
-                       key="upload_csvfile",
-                       on_change=upload_csv
-                       )
-
-# データフレームを空にするボタン
-# csvがアップロードされたとき
-if len(st.session_state['df']) != 0:
-    if st.button("アップロードしたCSVファイルを消去"):
-        st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
-        st.switch_page("top.py")
-        st.rerun()  # アプリを再実行して状態を更新
-        st.success("CSVファイルが消去されました。")
-
-try:
-    df = st.session_state['df']
-    # 欠損値がある行を取り除く
-    df = df.dropna(subset=['comment'])
-    st.write(df['comment'])
-    
-    # 形態素結果をリスト化し、データフレームに結果を列追加する
-    df['words'] = df['comment'].apply(mecab_text)
-    
-    # Streamlitのタイトル
-    st.title("コメント分析アプリ")
-    
-    # NLPlotを使用して分析する
+def display_unigram(df):
     npt = nlplot.NLPlot(df, target_col='words')
-    
-    # ストップワードを設定
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
-    # 単語頻出ランキングを作成
     fig_unigram = npt.bar_ngram(
         title='uni-gram',
         xaxis_label='word_count',
@@ -90,14 +53,15 @@ try:
         stopwords=stopwords,
     )
     
-    # 単語頻出ランキングを表示
     st.subheader("頻出単語ランキング")
     st.plotly_chart(fig_unigram)
+
+def display_co_network(df):
+    npt = nlplot.NLPlot(df, target_col='words')
+    stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
-    # 共起ネットワーク図作成
     npt.build_graph(stopwords=stopwords, min_edge_frequency=2)
     
-    # 共起ネットワークを表示
     fig_co_network = npt.co_network(
         title='Co-occurrence network',
         sizing=100,
@@ -109,8 +73,11 @@ try:
     )
     st.subheader("共起ネットワーク")
     st.plotly_chart(fig_co_network)
+
+def display_wordcloud(df):
+    npt = nlplot.NLPlot(df, target_col='words')
+    stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
-    # ワードクラウドを作成
     fig_wc = npt.wordcloud(
         width=1000,
         height=600,
@@ -122,14 +89,16 @@ try:
         save=False
     )
     
-    # ワードクラウドを表示
     st.subheader("ワードクラウド")
     plt.figure(figsize=(10, 15))
     plt.imshow(fig_wc, interpolation="bilinear")
     plt.axis("off")
     st.pyplot(plt)
 
-    # ツリーマップを作成
+def display_treemap(df):
+    npt = nlplot.NLPlot(df, target_col='words')
+    stopwords = npt.get_stopword(top_n=0, min_freq=0)
+    
     fig_treemap = npt.treemap(
         title='Tree map',
         ngram=1,
@@ -143,7 +112,10 @@ try:
     st.subheader("ツリーマップ")
     st.plotly_chart(fig_treemap)
 
-    # サンバーストチャートを作成
+def display_sunburst(df):
+    npt = nlplot.NLPlot(df, target_col='words')
+    stopwords = npt.get_stopword(top_n=0, min_freq=0)
+    
     fig_sunburst = npt.sunburst(
         title='Sunburst chart',
         colorscale=True,
@@ -154,6 +126,48 @@ try:
     )
     st.subheader("サンバーストチャート")
     st.plotly_chart(fig_sunburst)
+
+# ファイルアップロード
+st.file_uploader("CSVファイルをアップロード",
+                  type=["csv"],
+                  key="upload_csvfile",
+                  on_change=upload_csv
+                  )
+
+# データフレームを空にするボタン
+if len(st.session_state.get('df', [])) != 0:
+    if st.button("アップロードしたCSVファイルを消去"):
+        st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
+        st.success("CSVファイルが消去されました。")
+        st.experimental_rerun()  # アプリを再実行して状態を更新
+
+try:
+    df = st.session_state['df']
+    # 欠損値がある行を取り除く
+    df = df.dropna(subset=['comment'])
+    st.write(df['comment'])
     
+    # 形態素結果をリスト化し、データフレームに結果を列追加する
+    df['words'] = df['comment'].apply(mecab_text)
+    
+    # Streamlitのタイトル
+    st.title("コメント分析アプリ")
+
+    # タブを作成
+    tab_list = ["頻出単語ランキング", "共起ネットワーク", "ワードクラウド", "ツリーマップ", "サンバーストチャート"]
+    tabs = st.tabs(tab_list)
+    
+    # 各表示関数を呼び出す
+    with tab[0]:
+        display_unigram(df)
+    with tab[1]:
+        display_co_network(df)
+    with tab[2]:
+        display_wordcloud(df)
+    with tab[3]:
+        display_treemap(df)
+    with tab[4]:
+        display_sunburst(df)
+
 except Exception as e:
     st.write(e)
