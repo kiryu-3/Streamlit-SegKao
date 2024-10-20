@@ -368,15 +368,13 @@ try:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
     with tabs[3]:  # "各分野の資格有無別のスコア分布"タブ
-        grade_df, fig, significant_cols = qualification_test(st.session_state['df'], categories, grades)
+        grade_df, fig, result_columns = qualification_test(st.session_state['df'], categories, grades)
         st.dataframe(grade_df)
         with st.expander("各分野の資格有無別のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる分野：")
-            st.write(significant_cols)
-            for result_set in result_pairs:
-                for category, grade1, grade2 in result_set:
-                    st.write(f"【{category}】")
+            for result_column in result_columns:
+                    st.write(f"【{result_column}】")
 
 except Exception as e:
     st.write(e)
