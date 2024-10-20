@@ -158,7 +158,7 @@ try:
     # アンケート内容と名詞のリスト（words列）のみを取り出して、新たにデータフレーム作成
     df = df[['comment','words']]
 
-    st.dataframe(df['comment'], width=500)
+    st.dataframe(df['comment'], width=1000)
 
     # タブを作成
     tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
