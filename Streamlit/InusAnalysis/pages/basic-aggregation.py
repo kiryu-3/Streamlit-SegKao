@@ -342,4 +342,4 @@ try:
                 analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
-    pass
+    st.write(e)
