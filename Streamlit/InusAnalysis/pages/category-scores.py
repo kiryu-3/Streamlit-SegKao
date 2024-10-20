@@ -273,8 +273,8 @@ def qualification_test(df, categories, grades):
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
 
-    # 'category'列をqualificationsの順番に並べ替え
-    melted_df['category'] = pd.Categorical(melted_df['category'], categories=qualifications, ordered=True)
+    # 'qualification_status'列をqualificationsの順番に並べ替え
+    melted_df['qualification_status'] = pd.Categorical(melted_df['qualification_status'], categories=qualifications, ordered=True)
 
     melted_df = melted_df.sort_values(['qualification_status', 'category'])
 
