@@ -310,7 +310,7 @@ def qualification_test(df, categories, grades):
     
     return qualification_summary, summary_stats, fig, result_columns
 
-st.header("スコアの分析")
+st.header("分野別スコアの分析")
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
                        type=["csv"],
