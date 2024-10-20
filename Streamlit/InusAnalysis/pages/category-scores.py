@@ -250,11 +250,12 @@ def qualification_test(df, categories, grades):
     grades = [grade for grade in grades if grade.startswith("B")]
 
     df = df.dropna(subset=['qualification_status'])
+    df = df[df['grade'].isin(grades)]
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
                         var_name='category', value_name='value')
-    melted_df = melted_df[melted_df['grade'].isin(grades)]
+    
     
     # 学年ごとにqualification_statusを集計
     qualification_summary = (
@@ -267,8 +268,6 @@ def qualification_test(df, categories, grades):
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
 
-    # 'grade'列をgradesの順番に並べ替え
-    melted_df['grade'] = pd.Categorical(melted_df['grade'], categories=grades, ordered=True)
     # 'category'列をcategoriesの順番に並べ替え
     melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
 
