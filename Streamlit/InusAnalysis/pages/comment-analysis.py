@@ -60,7 +60,7 @@ def display_co_network(df):
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
-    npt.build_graph(stopwords=stopwords, min_edge_frequency=10)
+    npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
     
     fig_co_network = npt.co_network(
         title='Co-occurrence network',
@@ -118,7 +118,7 @@ def display_sunburst(df):
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
 
     # ビルド（データ件数によっては処理に時間を要します）
-    npt.build_graph(stopwords=stopwords, min_edge_frequency=10)
+    npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
 
     
     fig_sunburst = npt.sunburst(
