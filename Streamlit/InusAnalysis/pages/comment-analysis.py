@@ -120,7 +120,6 @@ def display_sunburst(df):
     # ビルド（データ件数によっては処理に時間を要します）
     npt.build_graph(stopwords=stopwords, min_edge_frequency=25)
 
-    st.write(df)
     
     fig_sunburst = npt.sunburst(
         title='Sunburst chart',
@@ -151,10 +150,14 @@ try:
     df = st.session_state['df']
     # 欠損値がある行を取り除く
     df = df.dropna(subset=['comment'])
-    st.write(df['comment'])
     
     # 形態素結果をリスト化し、データフレームに結果を列追加する
     df['words'] = df['comment'].apply(mecab_text)
+
+    # アンケート内容と名詞のリスト（words列）のみを取り出して、新たにデータフレーム作成
+    df = df[{'comment','words'}]
+
+    st.write(df)
     
     # Streamlitのタイトル
     st.title("コメント分析アプリ")
@@ -176,4 +179,4 @@ try:
         display_sunburst(df)
 
 except Exception as e:
-    st.write(e)
+    pass
