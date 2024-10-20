@@ -303,11 +303,10 @@ def qualification_test(df, categories, grades):
             posthoc.index = qualifications
             
             # 有意差が見られるカテゴリ間をリスト内包表記で取得
-            significant_pairs = [
-                (col)
+            significant_cols = [
+                col
                 for col in posthoc.columns
-                for idx in posthoc.index
-                if posthoc.loc[idx, col] < 0.05
+                if any(posthoc[col] < 0.05)
             ]
 
             # 重複を取り除くために、タプルをソートして集合に変換
