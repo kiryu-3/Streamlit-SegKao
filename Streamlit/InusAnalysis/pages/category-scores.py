@@ -243,6 +243,82 @@ def grade_test(df, categories, grades):
 
     return summary_stats, fig, result_pairs
 
+# 分野-資格有無間の差の検定をする関数
+def qualification_test(df, categories, grades):
+
+    # "B"から始まるものだけを残す
+    grades = [grade for grade in grades if grade.startswith("B")]
+
+    df = df.dropna(subset=['qualification_status'])
+
+    # データフレームの整形
+    melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
+                        var_name='category', value_name='value')
+    melted_df = melted_df[melted_df['grade'].isin(grades)]
+    
+    # 学年ごとにqualification_statusを集計
+    qualification_summary = (
+        df
+        .groupby(['grade', 'qualification_status'])
+        .size()
+        .unstack(fill_value=0)
+    )
+    
+    # 集計表をデータフレームに変換
+    qualification_summary = qualification_summary.reset_index()
+
+    # 'grade'列をgradesの順番に並べ替え
+    melted_df['grade'] = pd.Categorical(melted_df['grade'], categories=grades, ordered=True)
+    # 'category'列をcategoriesの順番に並べ替え
+    melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
+
+    melted_df = melted_df.sort_values(['qualification_status', 'category'])
+
+    # ボックスプロットの描画
+    fig = px.box(melted_df, x='category', y='value', color='grade', title='各分野の学年ごとのスコア分布') 
+
+    # 結果を格納するためのリスト
+    result_pairs = []
+    flag = 0
+
+    for category in categories:
+        # 学年ごとのデータを取得
+        values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
+        
+        # クラスカル・ウォリス検定を実行
+        stat, p = kruskal(*values) 
+
+        # 有意差が見られる場合、ポストホックテストを実行
+        if p < 0.05:
+            # ポストホックテストの実行
+            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+            # 結果のDataFrameのカラム名とインデックスを設定
+            posthoc.columns = grades
+            posthoc.index = grades
+            
+            # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
+            significant_pairs = [
+                (category, idx, col)
+                for col in posthoc.columns
+                for idx in posthoc.index
+                if posthoc.loc[idx, col] < 0.05
+            ]
+
+            # 重複を取り除くために、タプルをソートして集合に変換
+            filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
+
+            result_pairs.append(filtered_pairs)
+        else:
+            # ポストホックテストの実行
+            posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+            # 結果のDataFrameのカラム名とインデックスを設定
+            posthoc.columns = grades
+            posthoc.index = grades
+    
+    return qualification_summary, fig, result_pairs
+
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
                        type=["csv"],
@@ -281,7 +357,7 @@ try:
     cols[1].dataframe(question_df)
 
     # タブを作成
-    tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布"])
+    tabs = st.tabs(["正規性の検定", "各分野のスコア分布", "各分野の学年別のスコア分布", "各分野の資格有無別のスコア分布"])
 
     with tabs[0]:  # "正規性の検定"タブ
         normality_df, fig_hist, fig_qq = normality_test(st.session_state['df'], categories)
@@ -306,6 +382,16 @@ try:
         with st.expander("各分野の学年別のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる各分野の学年間の組み合わせ：")
+            for result_set in result_pairs:
+                for category, grade1, grade2 in result_set:
+                    st.write(f"【{category}】：【{grade1}】-【{grade2}】")
+
+    with tabs[3]:  # "各分野の資格有無別のスコア分布"タブ
+        grade_df, fig, result_pairs = qualification_test(st.session_state['df'], categories, grades)
+        st.dataframe(grade_df)
+        with st.expander("各分野の資格有無別のスコア分布"):
+            st.plotly_chart(fig)
+            st.write("有意差が見られる分野：")
             for result_set in result_pairs:
                 for category, grade1, grade2 in result_set:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
