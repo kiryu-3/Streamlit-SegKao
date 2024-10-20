@@ -7,6 +7,9 @@ import networkx as nx
 import MeCab
 import nlplot  # nlplotをインポート
 from plotly.offline import iplot
+import io
+from io import BytesIO
+import itertools
 
 def upload_csv():
     # csvがアップロードされたとき
