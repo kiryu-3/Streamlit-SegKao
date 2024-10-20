@@ -314,9 +314,13 @@ def qualification_test(df, categories, grades):
             # ポストホックテストの実行
             posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
 
+            
+
             # 結果のDataFrameのカラム名とインデックスを設定
             posthoc.columns = qualifications
             posthoc.index = qualifications
+
+            st.write(posthoc)
     
     return qualification_summary, fig, significant_cols
 
