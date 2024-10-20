@@ -301,14 +301,10 @@ def qualification_test(df, categories, grades):
             posthoc.columns = qualifications
             posthoc.index = qualifications
 
-            st.write(posthoc)
-            
-            # 有意差が見られるカテゴリ間をリスト内包表記で取得
-            significant_cols = [
-                col
-                for col in posthoc.columns
-                if any(posthoc[col] < 0.05)
-            ]
+            # p値が0.05以下の要素を取得
+            significant_pairs = posthoc[posthoc < 0.05].stack().index.tolist()
+
+            st.write(significant_pairs)
 
         else:
             # ポストホックテストの実行
