@@ -249,6 +249,8 @@ def qualification_test(df, categories, grades):
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
 
+    qualifications = melted_df['qualification_status'].unique()[::-1]
+
     df = df.dropna(subset=['qualification_status'])
     df = df[df['grade'].isin(grades)]
 
@@ -268,11 +270,10 @@ def qualification_test(df, categories, grades):
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
 
-    # 'category'列をcategoriesの順番に並べ替え
-    melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
+    # 'qualification_status'列をqualificationsの順番に並べ替え
+    melted_df['qualification_status'] = pd.Categorical(melted_df['qualification_status'], categories=qualifications, ordered=True)
 
     melted_df = melted_df.sort_values(['qualification_status', 'category'])
-    qualifications = melted_df['qualification_status'].unique()[::-1]
 
     # ボックスプロットの描画
     fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の学年ごとのスコア分布') 
