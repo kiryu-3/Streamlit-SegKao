@@ -312,7 +312,7 @@ def qualification_test(df, categories, grades):
 
 st.header("分野別スコアの分析")
 # ファイルアップロード
-st.file_uploader("CSVファイルをアップロード",
+st.file_uploader("集計結果（5件法）のcsvをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
                        on_change=upload_csv
