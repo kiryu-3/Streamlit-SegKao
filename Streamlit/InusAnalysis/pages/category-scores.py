@@ -276,6 +276,9 @@ def qualification_test(df, categories, grades):
         mean=('value', 'mean'),
         std=('value', 'std')
     ).reset_index()
+    
+    # category列で並び替えた後、qualification_status列の逆順で並び替え
+    summary_stats = summary_stats.sort_values(by=['category', 'qualification_status'], ascending=[True, False])
 
     # categoriesの順序を設定
     summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
