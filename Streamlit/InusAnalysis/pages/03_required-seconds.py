@@ -199,6 +199,7 @@ def grade_test(df, categories, grades):
         
     return summary_stats, fig, result_pairs
 
+st.header("コメントの分析")
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
                        type=["csv"],
