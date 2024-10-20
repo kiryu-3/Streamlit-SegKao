@@ -261,7 +261,7 @@ def qualification_test(df, categories, grades):
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
                         var_name='category', value_name='value')
     
-    
+    st.write(melted_df)
     # 学年ごとにqualification_statusを集計
     qualification_summary = (
         df
