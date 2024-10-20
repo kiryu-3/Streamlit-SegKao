@@ -249,14 +249,14 @@ def qualification_test(df, categories, grades):
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
 
-    qualifications = melted_df['qualification_status'].unique()[::-1]
+    qualifications = df['qualification_status'].unique()[::-1]
 
     df = df.dropna(subset=['qualification_status'])
     df = df[df['grade'].isin(grades)]
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
-                        var_name='qualification_status', value_name='value')
+                        var_name='category', value_name='value')
     
     
     # 学年ごとにqualification_statusを集計
