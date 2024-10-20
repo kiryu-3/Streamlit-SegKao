@@ -31,14 +31,14 @@ st.write("左に表示されているサイドバーから行いたい分析項�
 
 st.subheader('各項目説明')
 
-with st.expander("設問別スコアの分析(basic-aggregation)"):
+with st.expander("設問別スコアの分析（basic-aggregation）"):
   st.markdown("""
     - チェック結果と設問のcsv2つをアップロードすると、設問ごとのスコア分布を確認できる  
     - 各設問ごとに、対象全体のスコア分布と、学年別のスコア分布を確認できる  
     - "どちらともいえない"が有位に多く選択された設問とその分布を確認できる  
   """)
 
-with st.expander("分野別スコアの分析(category-scores)"):
+with st.expander("分野別スコアの分析（category-scores）"):
   st.markdown("""
     - チェック結果のcsvをアップロードすると、分野ごとのスコア分布を確認できる      
     - 分野ごとのスコア分布が正規分布かどうか、シャピロウィルク検定によって判定できる      
@@ -47,14 +47,14 @@ with st.expander("分野別スコアの分析(category-scores)"):
     - 分野別において、資格の有無でスコアの有意差があるかどうかを判定できる      
   """)
 
-with st.expander("所要時間の分析(required-seconds)"):
+with st.expander("所要時間の分析（required-seconds）"):
   st.markdown("""
     - チェック結果のcsvをアップロードすると、所要時間の分布を確認できる      
     - 所要時間の分布が正規分布かどうか、シャピロウィルク検定によって判定できる      
     - 学年間で所要時間の有意差があるかどうか、ある場合はどの学年間かを判定できる      
   """)
 
-with st.expander("アンケートコメントの分析(comment-analysis)"):
+with st.expander("アンケートコメントの分析（comment-analysis）"):
   st.markdown("""
     - チェック結果のcsvをアップロードすると、アンケートに記入された自由記述コメントを確認できる  
     - 頻出単語ランキング、ワードクラウド、ツリーマップ、共起ネットワーク、サンバーストチャートを表示できる  
