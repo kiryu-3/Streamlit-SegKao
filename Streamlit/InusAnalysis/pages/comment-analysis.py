@@ -155,7 +155,7 @@ try:
     df['words'] = df['comment'].apply(mecab_text)
 
     # アンケート内容と名詞のリスト（words列）のみを取り出して、新たにデータフレーム作成
-    df = df['comment','words']
+    df = df[['comment','words']]
 
     st.write(df)
     
