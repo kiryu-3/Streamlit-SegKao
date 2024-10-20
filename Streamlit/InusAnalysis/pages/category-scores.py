@@ -262,7 +262,6 @@ def qualification_test(df, categories, grades):
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
                         var_name='category', value_name='value')
     
-    st.write(melted_df)
     # 学年ごとにqualification_statusを集計
     qualification_summary = (
         df
@@ -399,6 +398,7 @@ try:
         with st.expander("各分野の資格有無別のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる分野：")
+            st.write(result_pairs)
             for result_set in result_pairs:
                 for category, grade1, grade2 in result_set:
                     st.write(f"【{category}】")
