@@ -283,7 +283,6 @@ def qualification_test(df, categories, grades):
     fig = px.box(melted_df, x='category', y='value', color='qualification_status', title='各分野の学年ごとのスコア分布') 
 
     # 結果を格納するためのリスト
-    result_pairs = []
     flag = 0
 
     for category in categories:
@@ -309,10 +308,6 @@ def qualification_test(df, categories, grades):
                 if any(posthoc[col] < 0.05)
             ]
 
-            # 重複を取り除くために、タプルをソートして集合に変換
-            filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
-
-            result_pairs.append(filtered_pairs)
         else:
             # ポストホックテストの実行
             posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
@@ -321,7 +316,7 @@ def qualification_test(df, categories, grades):
             posthoc.columns = qualifications
             posthoc.index = qualifications
     
-    return qualification_summary, fig, result_pairs
+    return qualification_summary, fig, significant_cols
 
 # ファイルアップロード
 st.file_uploader("CSVファイルをアップロード",
@@ -391,12 +386,12 @@ try:
                     st.write(f"【{category}】：【{grade1}】-【{grade2}】")
 
     with tabs[3]:  # "各分野の資格有無別のスコア分布"タブ
-        grade_df, fig, result_pairs = qualification_test(st.session_state['df'], categories, grades)
+        grade_df, fig, significant_cols = qualification_test(st.session_state['df'], categories, grades)
         st.dataframe(grade_df)
         with st.expander("各分野の資格有無別のスコア分布"):
             st.plotly_chart(fig)
             st.write("有意差が見られる分野：")
-            st.write(result_pairs)
+            st.write(significant_cols)
             for result_set in result_pairs:
                 for category, grade1, grade2 in result_set:
                     st.write(f"【{category}】")
