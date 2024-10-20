@@ -329,7 +329,8 @@ try:
     tab_list = categories + ['"どちらでもない"が多く選択された設問']
     tabs = st.tabs(tab_list)
 
-    if len(st.session_state['question_df']) == 0:
+    # question_dfが未定義または空の場合のチェック
+    if 'question_df' not in st.session_state or len(st.session_state['question_df']) == 0:
         # 各タブに同じエラーメッセージを表示
         for tab in tabs:
             with tab:
