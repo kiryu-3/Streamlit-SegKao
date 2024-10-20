@@ -119,6 +119,8 @@ def display_sunburst(df):
 
     # ビルド（データ件数によっては処理に時間を要します）
     npt.build_graph(stopwords=stopwords, min_edge_frequency=25)
+
+    st.write(df)
     
     fig_sunburst = npt.sunburst(
         title='Sunburst chart',
