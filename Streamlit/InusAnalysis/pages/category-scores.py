@@ -274,6 +274,8 @@ def qualification_test(df, categories, grades):
     # 集計表をデータフレームに変換
     qualification_summary = qualification_summary.reset_index()
 
+    st.write(qualification_summary)
+
     # qualificationsの順にソート
     qualification_summary = qualification_summary.sort_values("qualification_status", ascending=True)
 
