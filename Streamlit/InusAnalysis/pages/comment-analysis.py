@@ -158,15 +158,15 @@ try:
     tabs = st.tabs(tab_list)
     
     # 各表示関数を呼び出す
-    with tab[0]:
+    with tabs[0]:
         display_unigram(df)
-    with tab[1]:
+    with tabs[1]:
         display_co_network(df)
-    with tab[2]:
+    with tabs[2]:
         display_wordcloud(df)
-    with tab[3]:
+    with tabs[3]:
         display_treemap(df)
-    with tab[4]:
+    with tabs[4]:
         display_sunburst(df)
 
 except Exception as e:
