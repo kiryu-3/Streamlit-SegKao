@@ -326,7 +326,7 @@ try:
         )
     
     # タブを作成
-    tab_list = categories + ['"どちらでもない"が多く選択された設問']
+    tab_list = categories + ['"どちらともいえない"が多く選択された設問']
     tabs = st.tabs(tab_list)
 
     # question_dfが未定義または空の場合のチェック
