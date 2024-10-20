@@ -8,6 +8,24 @@ import MeCab
 import nlplot  # nlplotをインポート
 from plotly.offline import iplot
 
+def upload_csv():
+    # csvがアップロードされたとき
+    if st.session_state['upload_csvfile'] is not None:
+        # アップロードされたファイルデータを読み込む
+        file_data = st.session_state['upload_csvfile'].read()
+        df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")  
+
+        # 各カテゴリごとに平均を算出
+        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
+        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
+        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
+        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
+
+        st.session_state['df'] = df
+    else:
+        # upload_csvfileがNoneの場合、空のデータフレームを作成
+        st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
+
 # 文章を分解し、名詞のみを取り込む
 def mecab_text(text):
     tagger = MeCab.Tagger("")
