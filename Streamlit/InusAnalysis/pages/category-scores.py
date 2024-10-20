@@ -255,7 +255,7 @@ def qualification_test(df, categories, grades):
     df = df.dropna(subset=['qualification_status'])
     df = df[df['grade'].isin(grades)]
 
-    qualifications = df['qualification_status'].unique()[::-1]
+    qualifications = sorted(df['qualification_status'].unique(), reverse=True)
 
     # データフレームの整形
     melted_df = df.melt(id_vars='qualification_status', value_vars=categories,
