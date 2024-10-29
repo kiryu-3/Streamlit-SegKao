@@ -66,9 +66,9 @@ def upload_csv():
                 break
 
         
-        st.session_state['question_df'] = df
+        st.session_state['df'] = df
     else:
-        st.session_state['question_df'] = pd.DataFrame()
+        st.session_state['df'] = pd.DataFrame()
 
 def upload_csv2():
     # csvがアップロードされたとき
@@ -110,7 +110,7 @@ if len(st.session_state['df']) != 0:
                            type=["csv"],
                            key="upload_csvfile2",
                            accept_multiple_files=True,
-                           on_change=upload_csv
+                           on_change=upload_csv2
                            )
 
 try: 
