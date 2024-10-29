@@ -88,12 +88,12 @@ try:
             st.write(df)
 
             # ユーザーに数字を入力してもらう
-            max_question_number = st.number_input("表示する質問番号の上限を入力してください", min_value=1, step=1)
+            max_question_number = st.number_input("表示する質問番号の上限を入力してください", min_value=2, step=1)
         
             # 質問を格納するリスト
             questions = []
         
-            for number in range(max_question_number):
+            for number in range(1, max_question_number):
                 # Qの問題文を探す
                 q_index = df[df[0] == f'Q {number}'].index[0]  # Qのインデックスを取得
                 q_question = df.iloc[q_index + 1, 0]  # Qの問題文を取得
