@@ -87,12 +87,25 @@ try:
         for df in st.session_state['df']:
             st.write(df)
 
-            # Q1の問題文を探す
-            q1_index = df[df[0] == 'Q 1'].index[0]  # Q1のインデックスを取得
-            q1_question = df.iloc[q1_index + 1, 0]  # Q1の問題文を取得
-            
-            # 結果を表示
-            st.write("Q1の問題文:", q1_question)
+            # ユーザーに数字を入力してもらう
+            max_question_number = st.number_input("表示する質問番号の上限を入力してください", min_value=1, step=1)
+        
+            # 質問を格納するリスト
+            questions = []
+        
+            # 「Q」の行を探してその次の行を収集
+            for index, row in df.iterrows():
+                if 'Q' in str(row[0]):  # 「Q」が含まれる行を見つける
+                    question_number = int(row[0].split()[1])  # 質問番号を取得
+                    if question_number <= max_question_number:  # 入力された数字以下の質問番号を確認
+                        # 次の行が存在する場合、その内容を質問として追加
+                        if index + 1 < len(df):
+                            questions.append((row[0], df.iloc[index + 1, 0]))  # (質問番号, 質問文)
+
+    # 結果の表示
+    st.write("質問文:")
+    for question in questions:
+        st.write(f"{question[0]}: {question[1]}")  # 質問番号と問題文を表示
             
         download_name = f"df_{idx+1}"
         st.write("ファイル名を入力してください")
