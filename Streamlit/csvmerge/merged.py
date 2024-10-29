@@ -105,6 +105,7 @@ st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード
                        )
 
 try:
+    st.write(st.session_state['df'])
     if len(st.session_state['df']) != 0:
         st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
                                type=["csv"],
