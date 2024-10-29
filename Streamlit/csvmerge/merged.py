@@ -73,7 +73,7 @@ def upload_csv2():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile2'] is not None:
 
-        st.session_state['question_df'] = list()
+        st.session_state['question_df'] = dict()
         
         for idx, upload_data in enumerate(st.session_state['upload_csvfile2']):
             # アップロードされたファイルデータを読み込む
@@ -84,14 +84,19 @@ def upload_csv2():
             encoding = result['encoding']
 
             try:
-                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
+                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
+                # 設問番号を取得（1行目の1列目の値）
+                q_number = temp_df.iloc[0, 1]  # 設問番号を取得
+
+                df = pd.read_csv(io.BytesIO(file_data), header=3, encoding=encoding, on_bad_lines="skip", engine="python")
+                st.session_state['question_df'][f'Q{q_number}'] = df
+                
                 st.write(df)
             except Exception as e:
                 st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
-            st.session_state['question_df'].append(df)
     else:
-        st.session_state['question_df'] = list()
+        st.session_state['question_df'] = dict()
 
 # 初期化
 if 'df' not in st.session_state:
@@ -114,23 +119,13 @@ try:
                                accept_multiple_files=True,
                                on_change=upload_csv2
                                )
-    
-        merged_df = st.session_state['question_df'][0]
-        st.write(merged_df)
-    
-        # 設問番号を取得（1行目の1列目の値）
-        q_number = merged_df.iloc[0, 1]  # 設問番号を取得
-        q_context = st.session_state['question_dict'][f'Q{q_number}']
-    
-        # 3行目を新しいヘッダーとして設定
-        new_header = merged_df.iloc[3]  # 4行目を取得
-        merged_df = merged_df[4:]  # 4行目以降のデータを取得
-        merged_df.columns = new_header  # 新しいヘッダーを設定
-        merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
-    
-        if len(st.session_state['question_df']) != 1:
-            # 最初のデータフレームを基準にして結合
-            for df in st.session_state['question_df'][1:]:
+        
+        # 最初のデータフレームを基準にして結合
+        merged_df = None
+        for df in st.session_state['question_df'].values():
+            if merged_df is None:
+                merged_df = df
+            else:
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = df.iloc[0, 1]  # 設問番号を取得
                 q_context = st.session_state['question_dict'][f'Q{question_number}']
@@ -144,7 +139,7 @@ try:
                 merged_df = pd.merge(merged_df, df, on="[学籍番号", how="outer", suffixes=('', '_y'))
                 # 不要な重複列を削除
                 merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
-                
+             
         merged_df.rename(columns={'[学籍番号': '学籍番号'})
         
         csv_file = merged_df.to_csv(index=False)
