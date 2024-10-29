@@ -152,5 +152,5 @@ try:
                   file_name=f'{st.session_state['anketo_name']}.csv'
                 )
         st.divider()
-except:
-    pass
+except Exception as e:
+    st.write(e)
