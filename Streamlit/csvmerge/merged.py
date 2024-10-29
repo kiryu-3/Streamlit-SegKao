@@ -62,11 +62,11 @@ def upload_csv():
             file_data = uploaddata.read()
             # バイナリデータからPandas DataFrameを作成
             try:
-                df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python")
+                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="utf-8", engine="python")
                 st.session_state["ja_honyaku"][idx] = False
             except UnicodeDecodeError:
                 # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
-                df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
+                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="shift-jis", engine="python")
                 st.session_state["ja_honyaku"][idx] = True
 
             # カラムの型を自動で適切に変換
