@@ -59,6 +59,8 @@ def upload_csv():
         raw_data = io.BytesIO(file_data).read()
         result = chardet.detect(raw_data)
         encoding = result['encoding']
+        if result['encoding'] == 'SHIFT_JIS':
+            encoding = 'CP932'
         st.write(encoding)
         
         try:
