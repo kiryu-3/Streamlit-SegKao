@@ -121,8 +121,8 @@ try:
         q_context = st.session_state['question_dict'][f'Q{q_number}']
     
         # 3行目を新しいヘッダーとして設定
-        new_header = merged_df.iloc[2]  # 3行目を取得
-        merged_df = merged_df[3:]  # 3行目以降のデータを取得
+        new_header = merged_df.iloc[3]  # 4行目を取得
+        merged_df = merged_df[4:]  # 4行目以降のデータを取得
         merged_df.columns = new_header  # 新しいヘッダーを設定
         merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
     
@@ -135,8 +135,8 @@ try:
                 q_context = st.session_state['question_dict'][f'Q{question_number}']
         
                 # 3行目を新しいヘッダーとして設定
-                new_header = df.iloc[2]  # 3行目を取得
-                df = df[3:]  # 3行目以降のデータを取得
+                new_header = df.iloc[3]  # 4行目を取得
+                df = df[4:]  # 4行目以降のデータを取得
                 df.columns = new_header  # 新しいヘッダーを設定
                 df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
                 
