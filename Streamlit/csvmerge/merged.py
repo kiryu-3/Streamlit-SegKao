@@ -157,11 +157,11 @@ try:
         st.write(merged_df)
         # st.write(merged_df.columns)
         
-        csv_file = merged_df.to_csv(index=False, encoding="shift-jis")
+        csv_file = merged_df.to_csv(buf := BytesIO(), index=False)
         st.write(st.session_state['encoding'])
         st.download_button(
                   label="Download CSV",
-                  data=csv_file,
+                  data=csv_file.getvalue(),
                   file_name=f'{st.session_state['anketo_name']}.csv'
                 )
         st.divider()
