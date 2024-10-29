@@ -145,6 +145,7 @@ try:
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'})
 
+        st.write(merged_df.columns)
         st.write(merged_df)
         
         csv_file = merged_df.to_csv(index=False)
