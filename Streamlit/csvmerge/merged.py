@@ -59,6 +59,7 @@ def upload_csv():
         raw_data = io.BytesIO(file_data).read()
         result = chardet.detect(raw_data)
         encoding = result['encoding']
+        st.write(encoding)
         
         try:
             df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, engine="python")
