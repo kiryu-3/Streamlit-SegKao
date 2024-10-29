@@ -79,7 +79,7 @@ st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード
                        on_change=upload_csv
                        )
 
-st..file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
+st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
                        type=["csv"],
                        key="upload_csvfile2",
                        accept_multiple_files=True,
