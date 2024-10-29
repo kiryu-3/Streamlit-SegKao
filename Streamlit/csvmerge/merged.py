@@ -32,6 +32,7 @@ def upload_csv():
         raw_data = io.BytesIO(file_data).read()
         result = chardet.detect(raw_data)
         encoding = result['encoding']
+        st.session_state['encoding'] = result['encoding']
         
         try:
             df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
@@ -156,7 +157,7 @@ try:
         st.write(merged_df)
         # st.write(merged_df.columns)
         
-        csv_file = merged_df.to_csv(index=False, quotechar='"', encoding=encoding)
+        csv_file = merged_df.to_csv(index=False, quotechar='"', encoding=st.session_state['encoding'])
         st.download_button(
                   label="Download CSV",
                   data=csv_file,
