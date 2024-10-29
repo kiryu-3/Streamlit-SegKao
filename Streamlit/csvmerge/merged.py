@@ -83,12 +83,25 @@ def upload_csv2():
             result = chardet.detect(raw_data)
             encoding = result['encoding']
 
+            # CSVを読み込む
+            data = st.session_state['upload_csvfile2'].getvalue().decode(st.session_state['encoding'])
+            lines = data.splitlines()
+        
+            # 修正したいCSVデータを新たに作成
+            output_lines = []
+            for line in lines:
+                # 自由記述部分をダブルクォーテーションで囲む
+                fields = line.strip().split(',')
+                if len(fields) > 5:  # コメントがある場合
+                    fields[5] = f'"{fields[5]}"'
+                output_lines.append(','.join(fields))
+
             try:
-                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
+                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
-                df = pd.read_csv(io.BytesIO(file_data), header=2, encoding=encoding, engine="python")
+                df = pd.read_csv(io.BytesIO(file_data), header=2, encoding=encoding, quotechar='"', engine="python")
                 st.write(df)
                 
                 answer_col_index = df.columns.get_loc(" 回答内容]")  # "回答内容]"列の位置を取得
