@@ -131,13 +131,13 @@ try:
             if merged_df is None:
                 merged_df = df
                 
-                q_context = st.session_state['question_dict'][f'Q{q_number}']
+                q_context = st.session_state['question_dict']['q_number']
                 
                 merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
             else:
-                q_context = st.session_state['question_dict'][f'Q{q_number}']
+                q_context = st.session_state['question_dict']['q_number']
         
-                df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
+                df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'})
                 
                 merged_df = pd.merge(merged_df, df, on="[学籍番号", how="outer", suffixes=('', '_y'))
                 # 不要な重複列を削除
