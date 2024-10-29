@@ -120,5 +120,5 @@ try:
     
     with st.expander("Code"):
         st.code(code)
-except as e:
+except Exception as e:
     st.write(e)
