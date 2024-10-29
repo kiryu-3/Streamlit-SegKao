@@ -65,7 +65,6 @@ def upload_csv():
                 st.write(f"予期しないエラーが発生しました: {e}")
                 break
 
-        
         st.session_state['df'] = df
     else:
         st.session_state['df'] = pd.DataFrame()
@@ -113,35 +112,42 @@ if len(st.session_state['df']) != 0:
                            on_change=upload_csv2
                            )
 
-try: 
+        merged_df = st.session_state['question_df'][0]
 
-    # # 結果の表示
-    # st.write("質問文:")
-    # for question in questions:
-    #     st.write(f"{question[0]}: {question[1]}")  # 質問番号と問題文を表示
-            
-    #     download_name = f"df_{idx+1}"
-    #     st.write("ファイル名を入力してください")
-    #     st.text_input(
-    #       label="Press Enter to Apply",
-    #       value=f"{download_name}_filtered",
-    #       key=f"download_name_{idx}"
-    #     )
+        # 設問番号を取得（1行目の1列目の値）
+        q_number = merged_df.iloc[0, 1]  # 設問番号を取得
+        q_context = st.session_state['question_dict'][f'Q{question_number}']
 
-    #     download_df = pd.DataFrame(value)
-    #     if st.session_state['select_mode'] == "***CSVファイル***":
-    #         if st.session_state["ja_honyaku"][idx]:
-    #           csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-    #         else:
-    #           csv_file = download_df.to_csv(index=False, encoding="utf-8")    
-    #     else:
-    #         csv_file = download_df.to_csv(index=False)
-    #     st.download_button(
-    #           label="Download CSV",
-    #           data=csv_file,
-    #           file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
-    #         )
+        # 3行目を新しいヘッダーとして設定
+        new_header = merged_df.iloc[2]  # 3行目を取得
+        merged_df = merged_df[3:]  # 3行目以降のデータを取得
+        merged_df.columns = new_header  # 新しいヘッダーを設定
+        merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
+
+    if len(st.session_state['question_df']) != 1:
+        # 最初のデータフレームを基準にして結合
+        for df in st.session_state['question_df'][1:]:
+
+            # 設問番号を取得（1行目の1列目の値）
+            q_number = df.iloc[0, 1]  # 設問番号を取得
+            q_context = st.session_state['question_dict'][f'Q{question_number}']
+
+            # 3行目を新しいヘッダーとして設定
+            new_header = df.iloc[2]  # 3行目を取得
+            df = df[3:]  # 3行目以降のデータを取得
+            df.columns = new_header  # 新しいヘッダーを設定
+            df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
             
+            merged_df = pd.merge(merged_df, df, on="[学籍番号", how="outer", suffixes=('', '_y'))
+            # 不要な重複列を削除
+            merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
+            
+    merged_df.rename(columns={'[学籍番号': '学籍番号'})
+
+    csv_file = merged_df.to_csv(index=False)
+    st.download_button(
+              label="Download CSV",
+              data=csv_file,
+              file_name=f'{st.session_state['anketo_name']}.csv'
+            )
     st.divider()
-except Exception as e:
-    st.write(e)
