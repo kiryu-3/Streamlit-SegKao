@@ -161,7 +161,7 @@ try:
         st.write(st.session_state['encoding'])
         st.download_button(
                   label="Download CSV",
-                  data=csv_file.getvalue(),
+                  data=buf.getvalue(),
                   file_name=f'{st.session_state['anketo_name']}.csv'
                 )
         st.divider()
