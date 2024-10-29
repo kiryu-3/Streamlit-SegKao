@@ -87,8 +87,6 @@ def upload_csv2():
                 temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
-                st.write("temp_df")
-                st.write(temp_df)
 
                 df = pd.read_csv(io.BytesIO(file_data), header=2, encoding=encoding, on_bad_lines="skip", engine="python")
                 
@@ -96,7 +94,6 @@ def upload_csv2():
                 df = df.iloc[:, :answer_col_index + 1]  # "回答内容]"列までの列を選択
                 
                 st.session_state['question_df'][f'Q{q_number}'] = df
-                st.write(df)
             except Exception as e:
                 st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
@@ -145,7 +142,7 @@ try:
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'}, inplace=True)
 
-        st.write(merged_df.columns)
+        st.subheader("結合後のデータ")
         st.write(merged_df)
         
         csv_file = merged_df.to_csv(index=False)
