@@ -23,33 +23,6 @@ hide_menu_style = """
 """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-def reduce_mem_usage(df, verbose=True):
-    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-    start_mem = df.memory_usage().sum() / 1024**2
-    for col in df.columns:
-        col_type = df[col].dtypes
-        if col_type in numerics:
-            c_min = df[col].min()
-            c_max = df[col].max()
-            if str(col_type)[:3] == 'int':
-                if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
-                    df[col] = df[col].astype(np.int8)
-                elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
-                    df[col] = df[col].astype(np.int16)
-                elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
-                    df[col] = df[col].astype(np.int32)
-                elif c_min > np.iinfo(np.int64).min and c_max < np.iinfo(np.int64).max:
-                    df[col] = df[col].astype(np.int64)
-            else:
-                if c_min > np.finfo(np.float16).min and c_max < np.finfo(np.float16).max:
-                    df[col] = df[col].astype(np.float16)
-                elif c_min > np.finfo(np.float32).min and c_max < np.finfo(np.float32).max:
-                    df[col] = df[col].astype(np.float32)
-                else:
-                    df[col] = df[col].astype(np.float64)
-    end_mem = df.memory_usage().sum() / 1024**2
-    return df
-
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
@@ -61,7 +34,7 @@ def upload_csv():
         encoding = result['encoding']
         
         try:
-            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
+            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip")
         except Exception as e:
             st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
@@ -100,21 +73,25 @@ def upload_csv():
 def upload_csv2():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile2'] is not None:
-        for idx, uploaddata in enumerate(st.session_state['upload_csvfile2']):
+
+        st.session_state['question_df'] = list()
+        
+        for idx, upload_data in enumerate(st.session_state['upload_csvfile2']):
             # アップロードされたファイルデータを読み込む
-            file_data = uploaddata.read()
-            # バイナリデータからPandas DataFrameを作成
+            file_data = upload_data.read()
+            # エンコーディングを検出
+            raw_data = io.BytesIO(file_data).read()
+            result = chardet.detect(raw_data)
+            encoding = result['encoding']
+
             try:
-                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="utf-8", engine="python")
-            except UnicodeDecodeError:
-                # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
-                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="shift-jis", engine="python")
+                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip")
+            except Exception as e:
+                st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
-            
-
-            st.session_state['question_df'] = df
+            st.session_state['question_df'].append(df)
     else:
-        st.session_state['question_df'] = pd.DataFrame()
+        st.session_state['question_df'] = list()
 
 # 初期化
 if 'df' not in st.session_state:
@@ -128,12 +105,13 @@ st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード
                        on_change=upload_csv
                        )
 
-st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
-                       type=["csv"],
-                       key="upload_csvfile2",
-                       accept_multiple_files=True,
-                       on_change=upload_csv
-                       )
+if len(st.session_state['df']) != 0:
+    st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
+                           type=["csv"],
+                           key="upload_csvfile2",
+                           accept_multiple_files=True,
+                           on_change=upload_csv
+                           )
 
 try: 
     if len(st.session_state['df']) != 0:
