@@ -34,7 +34,7 @@ def upload_csv():
         encoding = result['encoding']
         
         try:
-            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
+            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
         except Exception as e:
             st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
@@ -83,7 +83,7 @@ def upload_csv2():
             encoding = result['encoding']
 
             try:
-                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
+                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
