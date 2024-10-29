@@ -59,9 +59,6 @@ def upload_csv():
         raw_data = io.BytesIO(file_data).read()
         result = chardet.detect(raw_data)
         encoding = result['encoding']
-        if result['encoding'] == 'SHIFT_JIS':
-            encoding = 'CP932'
-        st.write(encoding)
         
         try:
             df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
@@ -70,6 +67,8 @@ def upload_csv():
 
         q_number = 1  # 初期値を設定
         st.session_state['question_dict'] = dict()
+
+        st.write(df)
         
         while True:  # 無限ループ
             try:
