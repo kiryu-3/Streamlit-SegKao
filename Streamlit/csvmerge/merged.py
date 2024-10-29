@@ -42,8 +42,6 @@ def upload_csv():
         
         q_number = 1  # 初期値を設定
         st.session_state['question_dict'] = dict()
-
-        st.write(st.session_state['anketo_name'])
         
         while True:  # 無限ループ
             try:
@@ -95,7 +93,7 @@ def upload_csv2():
                 
                 st.session_state['question_df'][f'Q{q_number}'] = df
             except Exception as e:
-                st.write(f"データの読み込み中にエラーが発生しました: {e}")
+                (f"データの読み込み中にエラーが発生しました: {e}")
 
     else:
         st.session_state['question_df'] = dict()
@@ -113,7 +111,6 @@ st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード
                        )
 
 try:
-    st.write(st.session_state['df'])
     if len(st.session_state['df']) != 0:
         st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
                                type=["csv"],
