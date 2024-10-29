@@ -84,7 +84,7 @@ def upload_csv2():
             encoding = result['encoding']
 
             try:
-                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, engine="python")
+                df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
                 st.write(df)
             except Exception as e:
                 st.write(f"データの読み込み中にエラーが発生しました: {e}")
