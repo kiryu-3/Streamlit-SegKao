@@ -88,8 +88,8 @@ try:
             st.write(df)
 
             # Q1の問題文を探す
-            q1_index = data[data[0] == 'Q 1'].index[0]  # Q1のインデックスを取得
-            q1_question = data.iloc[q1_index + 1, 0]  # Q1の問題文を取得
+            q1_index = df[df[0] == 'Q 1'].index[0]  # Q1のインデックスを取得
+            q1_question = df.iloc[q1_index + 1, 0]  # Q1の問題文を取得
             
             # 結果を表示
             st.write("Q1の問題文:", q1_question)
