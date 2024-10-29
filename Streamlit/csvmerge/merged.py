@@ -141,6 +141,8 @@ try:
                 merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'})
+
+        st.write(merged_df)
         
         csv_file = merged_df.to_csv(index=False)
         st.download_button(
