@@ -99,7 +99,7 @@ try:
                 q_question = df.iloc[q1_index + 1, 0]  # Qの問題文を取得
                 
                 # 結果を表示
-                st.write(f"Q{number}の問題文:", q1_question)
+                st.write(f"Q{number}の問題文:", q_question)
 
     # 結果の表示
     st.write("質問文:")
