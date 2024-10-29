@@ -114,54 +114,34 @@ if len(st.session_state['df']) != 0:
                            )
 
 try: 
-    if len(st.session_state['df']) != 0:
-        for df in st.session_state['df']:
-            st.write(df)
 
-            # ユーザーに数字を入力してもらう
-            max_question_number = st.number_input("表示する質問番号の上限を入力してください", min_value=2, step=1)
-        
-            # 質問を格納するリスト
-            questions = []
-        
-            for number in range(1, max_question_number):
-                # Qの問題文を探す
-                q_index = df[df[0] == f'Q {number}'].index[0]  # Qのインデックスを取得
-                q_question = df.iloc[q_index + 1, 0]  # Qの問題文を取得
-                
-                # 結果を表示
-                st.write(f"Q{number}の問題文:", q_question)
-
-    # 結果の表示
-    st.write("質問文:")
-    for question in questions:
-        st.write(f"{question[0]}: {question[1]}")  # 質問番号と問題文を表示
+    # # 結果の表示
+    # st.write("質問文:")
+    # for question in questions:
+    #     st.write(f"{question[0]}: {question[1]}")  # 質問番号と問題文を表示
             
-        download_name = f"df_{idx+1}"
-        st.write("ファイル名を入力してください")
-        st.text_input(
-          label="Press Enter to Apply",
-          value=f"{download_name}_filtered",
-          key=f"download_name_{idx}"
-        )
+    #     download_name = f"df_{idx+1}"
+    #     st.write("ファイル名を入力してください")
+    #     st.text_input(
+    #       label="Press Enter to Apply",
+    #       value=f"{download_name}_filtered",
+    #       key=f"download_name_{idx}"
+    #     )
 
-        download_df = pd.DataFrame(value)
-        if st.session_state['select_mode'] == "***CSVファイル***":
-            if st.session_state["ja_honyaku"][idx]:
-              csv_file = download_df.to_csv(index=False, encoding="shift-jis")
-            else:
-              csv_file = download_df.to_csv(index=False, encoding="utf-8")    
-        else:
-            csv_file = download_df.to_csv(index=False)
-        st.download_button(
-              label="Download CSV",
-              data=csv_file,
-              file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
-            )
+    #     download_df = pd.DataFrame(value)
+    #     if st.session_state['select_mode'] == "***CSVファイル***":
+    #         if st.session_state["ja_honyaku"][idx]:
+    #           csv_file = download_df.to_csv(index=False, encoding="shift-jis")
+    #         else:
+    #           csv_file = download_df.to_csv(index=False, encoding="utf-8")    
+    #     else:
+    #         csv_file = download_df.to_csv(index=False)
+    #     st.download_button(
+    #           label="Download CSV",
+    #           data=csv_file,
+    #           file_name=f'{st.session_state[f"download_name_{idx}"]}.csv'
+    #         )
             
     st.divider()
-    
-    with st.expander("Code"):
-        st.code(code)
 except Exception as e:
     st.write(e)
