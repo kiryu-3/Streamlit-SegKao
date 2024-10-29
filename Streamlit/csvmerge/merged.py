@@ -7,7 +7,7 @@ import requests
 from PIL import Image
 import io
 from io import BytesIO
-
+import chardet
 
 # Streamlit ページの設定
 st.set_page_config(
@@ -55,12 +55,15 @@ def upload_csv():
     if st.session_state['upload_csvfile'] is not None:
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile'].read()
-        # バイナリデータからPandas DataFrameを作成
+        # エンコーディングを検出
+        raw_data = io.BytesIO(file_data).read()
+        result = chardet.detect(raw_data)
+        encoding = result['encoding']
+        
         try:
-            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="utf-8", engine="python")
-        except UnicodeDecodeError:
-            # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
-            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="shift-jis", engine="python")
+            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, engine="python")
+        except Exception as e:
+            st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
         q_number = 1  # 初期値を設定
         st.session_state['question_dict'] = dict()
