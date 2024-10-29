@@ -131,7 +131,6 @@ try:
         if len(st.session_state['question_df']) != 1:
             # 最初のデータフレームを基準にして結合
             for df in st.session_state['question_df'][1:]:
-                st.write(df)
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = df.iloc[0, 1]  # 設問番号を取得
                 q_context = st.session_state['question_dict'][f'Q{question_number}']
