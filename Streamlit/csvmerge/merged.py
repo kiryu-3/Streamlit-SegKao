@@ -65,10 +65,12 @@ def upload_csv():
         except Exception as e:
             st.write(f"データの読み込み中にエラーが発生しました: {e}")
 
+        st.session_state['anketo_name'] = df.iloc[0, 1]  # Qの問題文を取得
+        
         q_number = 1  # 初期値を設定
         st.session_state['question_dict'] = dict()
 
-        st.write(df)
+        st.write(st.session_state['anketo_name'])
         
         while True:  # 無限ループ
             try:
