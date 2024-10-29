@@ -117,7 +117,7 @@ try:
     
         # 設問番号を取得（1行目の1列目の値）
         q_number = merged_df.iloc[0, 1]  # 設問番号を取得
-        q_context = st.session_state['question_dict'][f'Q{question_number}']
+        q_context = st.session_state['question_dict'][f'Q{q_number}']
     
         # 3行目を新しいヘッダーとして設定
         new_header = merged_df.iloc[2]  # 3行目を取得
