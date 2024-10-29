@@ -53,7 +53,47 @@ def reduce_mem_usage(df, verbose=True):
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
-        for idx, uploaddata in enumerate(st.session_state['upload_csvfile']):
+        # アップロードされたファイルデータを読み込む
+        file_data = st.session_state['upload_csvfile'].read()
+        # バイナリデータからPandas DataFrameを作成
+        try:
+            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="utf-8", engine="python")
+        except UnicodeDecodeError:
+            # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
+            df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="shift-jis", engine="python")
+
+        q_number = 1  # 初期値を設定
+        st.session_state['question_dict'] = dict()
+        
+        while True:  # 無限ループ
+            try:
+                # Qの問題文を探す
+                q_index = df[df[0] == f'Q {q_number}'].index[0]  # Qのインデックスを取得
+                q_question = df.iloc[q_index + 1, 0]  # Qの問題文を取得
+                
+                # 結果を表示
+                st.write(f"Q{q_number}の問題文:", q_question)
+                st.session_state['question_dict'][f'Q{q_number}'] = q_question
+                
+                q_number += 1  # 次の番号に進む
+            except IndexError:
+                # インデックスエラーが発生した場合にループを抜ける
+                st.write("ループを終了します。")
+                break
+            except Exception as e:
+                # 他のエラーをキャッチする場合
+                st.write(f"予期しないエラーが発生しました: {e}")
+                break
+
+        
+        st.session_state['question_df'] = df
+    else:
+        st.session_state['question_df'] = pd.DataFrame()
+
+def upload_csv2():
+    # csvがアップロードされたとき
+    if st.session_state['upload_csvfile2'] is not None:
+        for idx, uploaddata in enumerate(st.session_state['upload_csvfile2']):
             # アップロードされたファイルデータを読み込む
             file_data = uploaddata.read()
             # バイナリデータからPandas DataFrameを作成
@@ -62,6 +102,8 @@ def upload_csv():
             except UnicodeDecodeError:
                 # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
                 df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="shift-jis", engine="python")
+
+            
 
             st.session_state['question_df'] = df
     else:
