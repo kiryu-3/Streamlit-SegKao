@@ -145,6 +145,11 @@ try:
                 merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'}, inplace=True)
+        
+        columns_to_sort = merged_df.columns[5:]  # 6列目以降の列を取得
+        sorted_columns = sorted(columns_to_sort)  # 日本語順にソート
+        new_order = list(merged_df.columns[:5]) + sorted_columns  # 新しい列の順番を作成（最初の5列 + ソートされた列）
+        merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
         st.subheader("結合後のデータ")
         st.write(merged_df)
