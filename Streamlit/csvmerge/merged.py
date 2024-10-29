@@ -157,7 +157,7 @@ try:
         st.write(merged_df)
         # st.write(merged_df.columns)
         
-        csv_file = merged_df.to_csv(index=False, encoding="utf-8")
+        csv_file = merged_df.to_csv(index=False, encoding="shift_jis")
         st.write(st.session_state['encoding'])
         st.download_button(
                   label="Download CSV",
