@@ -127,7 +127,7 @@ try:
                 
                 q_context = st.session_state['question_dict'][q_number]
                 
-                merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'}, inplace=True)
+                merged_df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
             else:
                 q_context = st.session_state['question_dict'][q_number]
         
