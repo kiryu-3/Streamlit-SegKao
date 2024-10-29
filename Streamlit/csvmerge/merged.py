@@ -23,10 +23,6 @@ hide_menu_style = """
 """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-# 初期モード設定
-if 'select_mode' not in st.session_state:  # 初期化
-    st.session_state.select_mode = "***CSVファイル***"
-
 def reduce_mem_usage(df, verbose=True):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     start_mem = df.memory_usage().sum() / 1024**2
@@ -91,7 +87,21 @@ try:
         for df in st.session_state['df']:
             st.write(df)
         
-    
+            # 質問を格納するリスト
+            questions = []
+            
+            # 「Q」の行を探してその次の行を収集
+            for index, row in df.iterrows():
+                if 'Q' in str(row[0]):  # 「Q」が含まれる行を見つける
+                    # 次の行が存在する場合、その内容を質問として追加
+                    if index + 1 < len(data):
+                        questions.append(data.iloc[index + 1, 0])
+
+    # 結果の表示
+    st.write("質問文:")
+    for question in questions:
+        st.write(question)
+            
             download_name = f"df_{idx+1}"
             st.write("ファイル名を入力してください")
             st.text_input(
