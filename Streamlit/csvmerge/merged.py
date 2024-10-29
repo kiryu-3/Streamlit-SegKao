@@ -87,6 +87,7 @@ def upload_csv2():
                 temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
+                st.write(temp_df)
 
                 df = pd.read_csv(io.BytesIO(file_data), header=3, encoding=encoding, on_bad_lines="skip", engine="python")
                 st.session_state['question_df'][f'Q{q_number}'] = df
