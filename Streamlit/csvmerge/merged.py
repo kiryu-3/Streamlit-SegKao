@@ -133,17 +133,17 @@ try:
                 
                 q_context = st.session_state['question_dict'][q_number]
                 
-                merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
+                merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'}, inplace=True)
             else:
                 q_context = st.session_state['question_dict'][q_number]
         
-                df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'})
+                df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
                 
                 merged_df = pd.merge(merged_df, df, on="[学籍番号", how="outer", suffixes=('', '_y'))
                 # 不要な重複列を削除
                 merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
              
-        merged_df.rename(columns={'[学籍番号': '学籍番号'})
+        merged_df.rename(columns={'[学籍番号': '学籍番号'}, inplace=True)
 
         st.write(merged_df.columns)
         st.write(merged_df)
