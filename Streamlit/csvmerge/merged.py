@@ -127,18 +127,14 @@ try:
         
         # 最初のデータフレームを基準にして結合
         merged_df = None
-        for df in st.session_state['question_df'].values():
+        for q_number, df in st.session_state['question_df'].items():
             if merged_df is None:
                 merged_df = df
-
-                # 設問番号を取得（1行目の1列目の値）
-                q_number = df.iloc[0, 1]  # 設問番号を取得
+                
                 q_context = st.session_state['question_dict'][f'Q{q_number}']
                 
                 merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
             else:
-                # 設問番号を取得（1行目の1列目の値）
-                q_number = df.iloc[0, 1]  # 設問番号を取得
                 q_context = st.session_state['question_dict'][f'Q{q_number}']
         
                 df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
