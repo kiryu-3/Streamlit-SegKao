@@ -156,5 +156,5 @@ try:
                 )
         st.divider()
 except Exception as e:
-    pass
-    # st.write(e)
+    # pass
+    st.write(e)
