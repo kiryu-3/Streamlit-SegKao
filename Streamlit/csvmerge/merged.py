@@ -93,14 +93,13 @@ try:
             # 質問を格納するリスト
             questions = []
         
-            # 「Q」の行を探してその次の行を収集
-            for index, row in df.iterrows():
-                if 'Q' in str(row[0]):  # 「Q」が含まれる行を見つける
-                    question_number = int(row[0].split()[1])  # 質問番号を取得
-                    if question_number <= max_question_number:  # 入力された数字以下の質問番号を確認
-                        # 次の行が存在する場合、その内容を質問として追加
-                        if index + 1 < len(df):
-                            questions.append((row[0], df.iloc[index + 1, 0]))  # (質問番号, 質問文)
+            for number in range(max_question_number):
+                # Qの問題文を探す
+                q_index = df[df[0] == f'Q {number}'].index[0]  # Qのインデックスを取得
+                q_question = df.iloc[q1_index + 1, 0]  # Qの問題文を取得
+                
+                # 結果を表示
+                st.write(f"Q{number}の問題文:", q1_question)
 
     # 結果の表示
     st.write("質問文:")
