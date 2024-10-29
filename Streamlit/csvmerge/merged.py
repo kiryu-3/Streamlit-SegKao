@@ -84,7 +84,8 @@ def upload_csv2():
             encoding = result['encoding']
 
             # CSVを読み込む
-            data = st.session_state['upload_csvfile2'].getvalue().decode(st.session_state['encoding'])
+            uploaded_file = st.session_state.upload_csvfile2
+            data = uploaded_file.getvalue().decode(st.session_state['encoding'])
             lines = data.splitlines()
         
             # 修正したいCSVデータを新たに作成
