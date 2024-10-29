@@ -128,14 +128,14 @@ try:
                 q_context = st.session_state['question_dict'][q_number]
 
                 # 回答内容をカンマで結合する
-                merged_df = merged_df.groupby('[学籍番号', as_index=False).agg({' 回答内容]': lambda x: ','.join(x.astype(str))})
+                merged_df = merged_df.groupby(['[学籍番号', '氏名', 'フリガナ', 'クラス', '出席番号'], as_index=False).agg({' 回答内容]': lambda x: ','.join(x.astype(str))})
                 
                 merged_df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
             else:
                 q_context = st.session_state['question_dict'][q_number]
 
                 # 回答内容をカンマで結合する
-                df = df.groupby('[学籍番号', as_index=False).agg({' 回答内容]': lambda x: ','.join(x.astype(str))})
+                df = df.groupby(['[学籍番号', '氏名', 'フリガナ', 'クラス', '出席番号'], as_index=False).agg({' 回答内容]': lambda x: ','.join(x.astype(str))})
         
                 df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
                 
