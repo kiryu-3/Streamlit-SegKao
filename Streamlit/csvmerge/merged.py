@@ -123,6 +123,7 @@ try:
         # 最初のデータフレームを基準にして結合
         merged_df = None
         for q_number, df in st.session_state['question_df'].items():
+            st.write(df)
             if merged_df is None:
                 merged_df = df
                 
@@ -153,7 +154,7 @@ try:
 
         st.subheader("結合後のデータ")
         st.write(merged_df)
-        st.write(merged_df.columns)
+        # st.write(merged_df.columns)
         
         csv_file = merged_df.to_csv(index=False)
         st.download_button(
