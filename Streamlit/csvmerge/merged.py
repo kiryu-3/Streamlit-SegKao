@@ -96,7 +96,7 @@ try:
             for number in range(max_question_number):
                 # Qの問題文を探す
                 q_index = df[df[0] == 'Q 1'].index[0]  # Qのインデックスを取得
-                q_question = df.iloc[q1_index + 1, 0]  # Qの問題文を取得
+                q_question = df.iloc[q_index + 1, 0]  # Qの問題文を取得
                 
                 # 結果を表示
                 st.write(f"Q{number}の問題文:", q_question)
