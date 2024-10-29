@@ -8,16 +8,10 @@ from PIL import Image
 import io
 from io import BytesIO
 
-# 画像ファイルのパス
-image_path = os.path.join(os.path.dirname(__file__), '..', 'icon_image.jpg')
-
-# 画像をPILのImageオブジェクトとして読み込む
-image = Image.open(image_path)
 
 # Streamlit ページの設定
 st.set_page_config(
     page_title="EDAML-hub",
-    page_icon=image,
     layout="wide",
     initial_sidebar_state="expanded"
 )
