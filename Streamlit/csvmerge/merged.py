@@ -150,4 +150,5 @@ try:
                 )
         st.divider()
 except Exception as e:
-    st.write(e)
+    pass
+    # st.write(e)
