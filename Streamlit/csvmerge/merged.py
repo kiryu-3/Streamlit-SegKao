@@ -131,11 +131,11 @@ try:
             if merged_df is None:
                 merged_df = df
                 
-                q_context = st.session_state['question_dict']['q_number']
+                q_context = st.session_state['question_dict'][q_number]
                 
                 merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
             else:
-                q_context = st.session_state['question_dict']['q_number']
+                q_context = st.session_state['question_dict'][q_number]
         
                 df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'})
                 
