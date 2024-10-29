@@ -52,32 +52,36 @@ def reduce_mem_usage(df, verbose=True):
 
 def upload_csv():
     # csvがアップロードされたとき
-    st.session_state['df'] = list()
-    st.session_state["ja_honyaku"] = list()
-    
     if st.session_state['upload_csvfile'] is not None:
-        st.session_state["ja_honyaku"] += [False] * len(st.session_state['upload_csvfile'])
         for idx, uploaddata in enumerate(st.session_state['upload_csvfile']):
             # アップロードされたファイルデータを読み込む
             file_data = uploaddata.read()
             # バイナリデータからPandas DataFrameを作成
             try:
                 df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="utf-8", engine="python")
-                st.session_state["ja_honyaku"][idx] = False
             except UnicodeDecodeError:
                 # UTF-8で読み取れない場合はShift-JISエンコーディングで再試行
                 df = pd.read_csv(io.BytesIO(file_data), header=None, encoding="shift-jis", engine="python")
-                st.session_state["ja_honyaku"][idx] = True
 
-            # カラムの型を自動で適切に変換
-            st.session_state[f'df_{idx+1}'] = reduce_mem_usage(df)
-            st.session_state['df'].append(st.session_state[f'df_{idx+1}'])
+            st.session_state['question_df'] = df
+    else:
+        st.session_state['question_df'] = pd.DataFrame()
 
+# 初期化
+if 'df' not in st.session_state:
+    st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
 
 st.title('Mito-CSV')
-st.sidebar.file_uploader(label="CSVファイルをアップロード（複数可）",
+st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
+                       accept_multiple_files=False,
+                       on_change=upload_csv
+                       )
+
+st..file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
+                       type=["csv"],
+                       key="upload_csvfile2",
                        accept_multiple_files=True,
                        on_change=upload_csv
                        )
