@@ -89,6 +89,7 @@ def upload_csv2():
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
                 df = pd.read_csv(io.BytesIO(file_data), header=2, encoding=encoding, on_bad_lines="skip", engine="python")
+                st.write(df)
                 
                 answer_col_index = df.columns.get_loc(" 回答内容]")  # "回答内容]"列の位置を取得
                 df = df.iloc[:, :answer_col_index + 1]  # "回答内容]"列までの列を選択
