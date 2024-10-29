@@ -86,21 +86,13 @@ try:
     if len(st.session_state['df']) != 0:
         for df in st.session_state['df']:
             st.write(df)
-        
-            # 質問を格納するリスト
-            questions = []
-            
-            # 「Q」の行を探してその次の行を収集
-            for index, row in df.iterrows():
-                if 'Q' in str(row[0]):  # 「Q」が含まれる行を見つける
-                    # 次の行が存在する場合、その内容を質問として追加
-                    if index + 1 < len(data):
-                        questions.append(data.iloc[index + 1, 0])
 
-    # 結果の表示
-    st.write("質問文:")
-    for question in questions:
-        st.write(question)
+            # Q1の問題文を探す
+            q1_index = data[data[0] == 'Q 1'].index[0]  # Q1のインデックスを取得
+            q1_question = data.iloc[q1_index + 1, 0]  # Q1の問題文を取得
+            
+            # 結果を表示
+            st.write("Q1の問題文:", q1_question)
             
         download_name = f"df_{idx+1}"
         st.write("ファイル名を入力してください")
