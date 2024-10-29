@@ -112,26 +112,26 @@ if len(st.session_state['df']) != 0:
                            on_change=upload_csv2
                            )
 
-        merged_df = st.session_state['question_df'][0]
+    merged_df = st.session_state['question_df'][0]
 
-        # 設問番号を取得（1行目の1列目の値）
-        q_number = merged_df.iloc[0, 1]  # 設問番号を取得
-        q_context = st.session_state['question_dict'][f'Q{question_number}']
+    # 設問番号を取得（1行目の1列目の値）
+    q_number = merged_df.iloc[0, 1]  # 設問番号を取得
+    q_context = st.session_state['question_dict'][f'Q{question_number}']
 
-        # 3行目を新しいヘッダーとして設定
-        new_header = merged_df.iloc[2]  # 3行目を取得
-        merged_df = merged_df[3:]  # 3行目以降のデータを取得
-        merged_df.columns = new_header  # 新しいヘッダーを設定
-        merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
+    # 3行目を新しいヘッダーとして設定
+    new_header = merged_df.iloc[2]  # 3行目を取得
+    merged_df = merged_df[3:]  # 3行目以降のデータを取得
+    merged_df.columns = new_header  # 新しいヘッダーを設定
+    merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
 
     if len(st.session_state['question_df']) != 1:
         # 最初のデータフレームを基準にして結合
         for df in st.session_state['question_df'][1:]:
-
+    
             # 設問番号を取得（1行目の1列目の値）
             q_number = df.iloc[0, 1]  # 設問番号を取得
             q_context = st.session_state['question_dict'][f'Q{question_number}']
-
+    
             # 3行目を新しいヘッダーとして設定
             new_header = df.iloc[2]  # 3行目を取得
             df = df[3:]  # 3行目以降のデータを取得
@@ -143,7 +143,7 @@ if len(st.session_state['df']) != 0:
             merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
             
     merged_df.rename(columns={'[学籍番号': '学籍番号'})
-
+    
     csv_file = merged_df.to_csv(index=False)
     st.download_button(
               label="Download CSV",
