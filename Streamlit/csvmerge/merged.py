@@ -66,6 +66,7 @@ def upload_csv():
         st.session_state['df'] = df
     else:
         st.session_state['df'] = pd.DataFrame()
+        st.session_state['question_df'] = dict()
 
 def upload_csv2():
     # csvがアップロードされたとき
@@ -96,7 +97,6 @@ def upload_csv2():
                 (f"データの読み込み中にエラーが発生しました: {e}")
 
     else:
-        st.session_state['df'] = pd.DataFrame()
         st.session_state['question_df'] = dict()
 
 # 初期化
