@@ -90,7 +90,7 @@ def upload_csv2():
                 st.write("temp_df")
                 st.write(temp_df)
 
-                df = pd.read_csv(io.BytesIO(file_data), header=3, encoding=encoding, on_bad_lines="skip", engine="python")
+                df = pd.read_csv(io.BytesIO(file_data), header=2, encoding=encoding, on_bad_lines="skip", engine="python")
                 st.session_state['question_df'][f'Q{q_number}'] = df
                 
                 st.write(df)
