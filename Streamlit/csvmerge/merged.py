@@ -130,15 +130,17 @@ try:
         for df in st.session_state['question_df'].values():
             if merged_df is None:
                 merged_df = df
+
+                # 設問番号を取得（1行目の1列目の値）
+                q_number = df.iloc[0, 1]  # 設問番号を取得
+                q_context = st.session_state['question_dict'][f'Q{question_number}']
+                
+                merged_df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
             else:
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = df.iloc[0, 1]  # 設問番号を取得
                 q_context = st.session_state['question_dict'][f'Q{question_number}']
         
-                # 3行目を新しいヘッダーとして設定
-                new_header = df.iloc[3]  # 4行目を取得
-                df = df[4:]  # 4行目以降のデータを取得
-                df.columns = new_header  # 新しいヘッダーを設定
                 df.rename(columns={' 回答内容]': f'Q{q_number}：{q_context}'})
                 
                 merged_df = pd.merge(merged_df, df, on="[学籍番号", how="outer", suffixes=('', '_y'))
