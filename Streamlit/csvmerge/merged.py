@@ -136,7 +136,7 @@ try:
     if len(st.session_state['df']) != 0:
         st.sidebar.write(st.session_state['question_dict'])
         
-        st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
+        st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）\n（例）：sumamry.csv, outline.csv",
                                type=["csv"],
                                key="upload_csvfile2",
                                accept_multiple_files=True,
