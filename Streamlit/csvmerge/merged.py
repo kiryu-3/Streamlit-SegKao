@@ -204,7 +204,7 @@ try:
                 except :
                     # エラーが発生したときに unique_values を表示
                     st.write("TypeError発生: unique_valuesの内容は以下です")
-                    st.write(unique_values)
+                    st.write(q_candidate)
                     break  # 必要に応じて、ループを停止する場合
                 
             # 半角スペースを区切り文字として結合
