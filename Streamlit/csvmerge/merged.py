@@ -184,31 +184,31 @@ try:
 
             # 欠損値や空の値を除いた一意の値リストを取得
             unique_values = [str(value) for value in merged_df[column].unique() if pd.notna(value) and str(value).strip() != ""]
+
+            # リストを初期化
+            q_candidates = []
+            
+            # q_index+1からq_index+10までをループ
+            for i in range(q_index + 1, q_index + 11):
+                # st.session_state['df'].iloc[i, 1] が欠損値でない場合にリストにまとめる
+                if pd.notna(st.session_state['df'].iloc[i, 1]):
+                    # 条件に合った範囲の値をリストに追加
+                    q_candidates = list(st.session_state['df'].iloc[q_index + 1:i, 0])
+                    break  # 最初の条件を満たす範囲が見つかればループを終了
            
-            
-            # 欠損値や空の値を除いてリストに変換し、テキストを正規化
-            q_candidates = [
-                q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
-                if pd.notna(q_candidate) and str(q_candidate).strip() != ""
-            ]
+            if len(q_candidates) == 0:
+                # 欠損値や空の値を除いてリストに変換し、テキストを正規化
+                q_candidates = [
+                    q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
+                    if pd.notna(q_candidate) and str(q_candidate).strip() != ""
+                ]
 
-            
-            
-            st.divider()
 
-            for q_candidate in q_candidates:
-               # 各 unique_value を正規化し、比較対象も正規化
-                try:
-                    if any(q_candidate in value for value in unique_values):
-                        st.write("test")
-                        break
-                    st.write(q_candidate)
-                    q_sentence.append(q_candidate)
-                except :
-                    # エラーが発生したときに unique_values を表示
-                    st.write("TypeError発生: unique_valuesの内容は以下です")
-                    st.write(q_candidate)
-                    break  # 必要に応じて、ループを停止する場合
+                for q_candidate in q_candidates:
+                   # 各 unique_value を正規化し、比較対象も正規化
+                   if any(q_candidate in value for value in unique_values):
+                        st.write(q_candidate)
+                        q_sentence.append(q_candidate)
                 
             # 半角スペースを区切り文字として結合
             q_sentence_str = "　".join(q_sentence)
