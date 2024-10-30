@@ -194,6 +194,7 @@ try:
                 if pd.notna(st.session_state['df'].iloc[i, 1]):
                     # 条件に合った範囲の値をリストに追加
                     q_candidates = list(st.session_state['df'].iloc[q_index + 1:i, 0])
+                    st.write(q_candidates)
                     break  # 最初の条件を満たす範囲が見つかればループを終了
            
             if len(q_candidates) == 0:
