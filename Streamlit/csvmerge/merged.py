@@ -96,6 +96,7 @@ def upload_csv2():
             
             # 各データ行を処理
             for line in lines[1:]:
+                st.write(line)
                 fields = line.split(',')
                 
                 # 最終列の内容をダブルクォーテーションで囲む
@@ -109,7 +110,7 @@ def upload_csv2():
             
             # 新しいデータを作成
             new_data = f"{header}\n" + "\n".join(new_data_rows)
-            st.write(new_data)
+            # st.write(new_data)
 
             try:
                 temp_df = pd.read_csv(io.StringIO(new_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
