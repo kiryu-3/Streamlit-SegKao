@@ -87,7 +87,7 @@ def upload_csv2():
             data = file_data.decode(encoding)
             # データを行単位で分割
             lines = data.strip().split('\n')
-            
+            st.write(lines)
             # ヘッダーを取得
             header = lines[0]
             
