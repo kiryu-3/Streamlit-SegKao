@@ -125,7 +125,9 @@ if 'df' not in st.session_state:
     st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
 
 st.title('Portal-CSV-merged')
-st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード",
+# ラベルの改行に対応
+st.sidebar.markdown("設問文のCSVファイルをアップロード<br>（例）：summary.csv, outline.csv", unsafe_allow_html=True)
+st.sidebar.file_uploader(label="",
                        type=["csv"],
                        key="upload_csvfile",
                        accept_multiple_files=False,
@@ -136,7 +138,7 @@ try:
     if len(st.session_state['df']) != 0:
         st.sidebar.write(st.session_state['question_dict'])
         
-        st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）/n（例）：sumamry.csv, outline.csv",
+        st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
                                type=["csv"],
                                key="upload_csvfile2",
                                accept_multiple_files=True,
