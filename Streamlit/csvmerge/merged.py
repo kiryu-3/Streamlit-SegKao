@@ -198,7 +198,7 @@ try:
             for q_candidate in q_candidates:
                 if "IT系に興味もあるが、" in clean_text(str(merged_df[column].unique()[0])):
                     st.write("kaoru")
-                    st.write(clean_text(str(q_candidate))  # 空白・改行削除して表示
+                    st.write(clean_text(str(q_candidate)))  # 空白・改行削除して表示
                # 各 unique_value を正規化し、比較対象も正規化
                 if any(q_candidate == clean_text(str(unique_value)) for unique_value in merged_df[column].unique()):
                     st.write("test")
