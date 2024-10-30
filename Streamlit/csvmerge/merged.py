@@ -207,7 +207,7 @@ try:
                 for q_candidate in q_candidates:
                    # 各 unique_value を正規化し、比較対象も正規化
                    if any(q_candidate in value for value in unique_values):
-                        st.write(q_candidate)
+    
                         q_sentence.append(q_candidate)
                 
             # 半角スペースを区切り文字として結合
