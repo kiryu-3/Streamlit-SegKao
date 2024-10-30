@@ -194,7 +194,7 @@ try:
                 if pd.notna(st.session_state['df'].iloc[i, 1]):
                     # 条件に合った範囲の値をリストに追加
                     q_candidates = list(st.session_state['df'].iloc[q_index + 1:i, 0])
-                    st.write(q_candidates)
+                    q_sentence.append(q_candidate)
                     break  # 最初の条件を満たす範囲が見つかればループを終了
            
             if len(q_candidates) == 0:
@@ -208,7 +208,6 @@ try:
                 for q_candidate in q_candidates:
                    # 各 unique_value を正規化し、比較対象も正規化
                    if any(q_candidate in value for value in unique_values):
-    
                         q_sentence.append(q_candidate)
                 
             # 半角スペースを区切り文字として結合
