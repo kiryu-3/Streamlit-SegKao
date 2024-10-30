@@ -177,9 +177,11 @@ try:
         for column in merged_df.columns[5:]:
             q_index = st.session_state['question_dict'][column]
             q_sentence = list()
-            
+            st.write(merged_df[column].unique()[0])
             q_candidates = list(st.session_state['df'].iloc[q_index:q_index+10, 0])
             for q_candidate in q_candidates:
+                st.write(q_candidate)
+                
                 if q_candidate in merged_df[column].unique()[0]:
                     break
                 q_sentence.append(q_candidate)
