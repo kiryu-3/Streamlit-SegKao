@@ -189,13 +189,14 @@ try:
             st.divider()
             for q_candidate in q_candidates:
                 # st.write(q_candidate, merged_df[column].unique()[0])
-                st.write(q_candidate)
+                
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
                 if q_candidate in merged_df[column].unique():
-                    st.write(q_candidate, merged_df[column].unique()[0])
+                    # st.write(q_candidate, merged_df[column].unique()[0])
                     st.write("test")
                     break
+                st.write(q_candidate)
                 q_sentence.append(q_candidate)
                 
             # 半角スペースを区切り文字として結合
