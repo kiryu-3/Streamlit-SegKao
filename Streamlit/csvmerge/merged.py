@@ -188,7 +188,8 @@ try:
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
                 if q_candidate in merged_df[column].unique()[0] or merged_df[column].unique()[0] in q_candidate:
-                    st.write(q_candidate, merged_df[column].unique()[0])
+                    # st.write(q_candidate, merged_df[column].unique()[0])
+                    st.write("test")
                     break
                 q_sentence.append(q_candidate)
                 
