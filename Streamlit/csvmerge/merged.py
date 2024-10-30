@@ -183,7 +183,7 @@ try:
             q_sentence = list()
 
             # 欠損値や空の値を除いた一意の値リストを取得
-            unique_values = [value for value in merged_df[column].unique() if pd.notna(value) and str(value).strip() != ""]
+            unique_values = [str(value) for value in merged_df[column].unique() if pd.notna(value) and str(value).strip() != ""]
             st.write(unique_values)
             
             # 欠損値や空の値を除いてリストに変換し、テキストを正規化
