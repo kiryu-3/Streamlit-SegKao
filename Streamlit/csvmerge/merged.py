@@ -114,7 +114,7 @@ def upload_csv2():
 
                 st.write(temp_df)
 
-                df = pd.read_csv(rows, header=header, encoding=st.session_state['encoding'], quotechar='"', engine="python")
+                df = pd.DataFrame(rows, columns=header)
                 st.write(df)
                 
                 st.session_state['question_df'][f'Q{q_number}'] = df
