@@ -108,13 +108,13 @@ def upload_csv2():
                 rows.append(row)
 
             try:
-                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=st.session_state['upload_csvfile'], on_bad_lines="skip", engine="python")
+                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=st.session_state['encoding'], on_bad_lines="skip", engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
                 st.write(temp_df)
 
-                df = pd.read_csv(rows, columns=header, encoding=st.session_state['upload_csvfile'], quotechar='"', engine="python")
+                df = pd.read_csv(rows, columns=header, encoding=st.session_state['encoding'], quotechar='"', engine="python")
                 st.write(df)
                 
                 st.session_state['question_df'][f'Q{q_number}'] = df
