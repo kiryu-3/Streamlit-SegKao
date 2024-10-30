@@ -188,7 +188,7 @@ try:
                 if pd.notna(q_candidate) and q_candidate.strip() != ""
             ]
 
-            st.("kaoru")
+            st.write("kaoru")
             st.write(clean_text(str(merged_df[column].unique()[0])))  # 空白・改行削除して表示
             st.divider()
 
