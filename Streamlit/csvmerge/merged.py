@@ -85,23 +85,34 @@ def upload_csv2():
 
             # CSVを読み込む
             data = file_data.decode(encoding)
-            lines = data.splitlines()
-        
-            # 修正したいCSVデータを新たに作成
-            output_lines = []
-            for line in lines:
-                fields = line.strip().split(',')  # カンマで分割
-                if len(fields) > 5:  # 最終列が存在する場合
-                    # 最終列のカンマを「、」に置き換え
-                    fields[-1] = fields[-1].replace(',', '、')
-                output_lines.append(','.join(fields))
-
-            # 修正したデータを再構築
-            modified_data = '\n'.join(output_lines)
-            st.write(modified_data)
+            # データを行単位で分割
+            lines = data.strip().split('\n')
+            
+            # ヘッダーを取得
+            header = lines[0]
+            
+            # 新しいデータ行のリストを作成
+            new_data_rows = []
+            
+            # 各データ行を処理
+            for line in lines[1:]:
+                fields = line.split(',')
+                
+                # 最終列の内容をダブルクォーテーションで囲む
+                fields[-1] = f'"{" ".join(fields[5:])}"'
+                
+                # fields[5]からfields[-2]までを削除
+                fields = fields[:5] + [fields[-1]]
+                
+                # 新しいデータ行を追加
+                new_data_rows.append(','.join(fields))
+            
+            # 新しいデータを作成
+            new_data = f"{header}\n" + "\n".join(new_data_rows)
+            st.write(new_data)
 
             try:
-                temp_df = pd.read_csv(io.StringIO(modified_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
+                temp_df = pd.read_csv(io.StringIO(new_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
