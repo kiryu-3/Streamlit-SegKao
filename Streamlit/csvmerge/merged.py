@@ -66,6 +66,7 @@ def upload_csv():
                 break
 
         st.session_state['df'] = df
+        
     else:
         st.session_state['df'] = pd.DataFrame()
         st.session_state['question_df'] = dict()
@@ -93,7 +94,6 @@ def upload_csv2():
             # ヘッダーを取得し、余分な空白や引用符を削除
             header = next(reader)
             header = [cell for cell in header if cell.strip() != '']
-            st.write("Header:", header)
         
             rows = []
             for row in reader:
@@ -103,7 +103,6 @@ def upload_csv2():
                 # 列数が異なる場合、必要な列数に調整
                 if len(row) > len(header):
                     row[5] = '、'.join(row[5:])  # 5列目以降を結合し、1つの列として扱う
-                    st.write("row[5]:", row[5])
                     row = row[:len(header)]
                 rows.append(row)
 
@@ -112,10 +111,7 @@ def upload_csv2():
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
-                st.write(temp_df)
-
                 df = pd.DataFrame(rows, columns=header)
-                st.write(df)
                 
                 st.session_state['question_df'][f'Q{q_number}'] = df
             except Exception as e:
@@ -128,7 +124,7 @@ def upload_csv2():
 if 'df' not in st.session_state:
     st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
 
-st.title('Mito-CSV')
+st.title('Portal-CSV-merged')
 st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード",
                        type=["csv"],
                        key="upload_csvfile",
@@ -138,6 +134,8 @@ st.sidebar.file_uploader(label="設問文のCSVファイルをアップロード
 
 try:
     if len(st.session_state['df']) != 0:
+        st.sidebar.write(st.session_state['question_dict'])
+        
         st.file_uploader(label="設問回答のCSVファイルをアップロード（複数可）",
                                type=["csv"],
                                key="upload_csvfile2",
