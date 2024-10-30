@@ -197,7 +197,7 @@ try:
                     q_sentence.append(q_candidate)
                     break  # 最初の条件を満たす範囲が見つかればループを終了
 
-            st.write(q_candidates)
+            
             if len(q_candidates) == 0:
                 # 欠損値や空の値を除いてリストに変換し、テキストを正規化
                 q_candidates = [
@@ -210,7 +210,8 @@ try:
                    # 各 unique_value を正規化し、比較対象も正規化
                    if any(q_candidate in value for value in unique_values):
                         q_sentence.append(q_candidate)
-                
+
+            st.write(q_candidate) 
             # 半角スペースを区切り文字として結合
             q_sentence_str = "　".join(q_sentence)
             merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
