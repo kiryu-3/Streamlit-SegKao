@@ -137,7 +137,7 @@ st.sidebar.file_uploader(label="", type=["csv"],
 
 try:
     if len(st.session_state['df']) != 0:
-        st.sidebar.write(st.session_state['question_dict'])
+        # st.sidebar.write(st.session_state['question_dict'])
 
         st.markdown("設問回答のCSVファイルをアップロード（複数可、順不同）<br>(例): Q[1].csv, Q[2].csv, Q[3].csv", unsafe_allow_html=True)
         st.file_uploader(label="", type=["csv"],
