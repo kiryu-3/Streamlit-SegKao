@@ -174,33 +174,33 @@ try:
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'}, inplace=True)
 
-        # for column in merged_df.columns[5:]:
-        #     q_index = st.session_state['question_dict'][column]
-        #     q_sentence = list()
-        #     # st.write(merged_df[column].unique()[0])
-        #     # 欠損値や空の値を除いてリストに変換
-        #     q_candidates = [
-        #         q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
-        #         if pd.notna(q_candidate) and q_candidate.strip() != ""
-        #     ]
+        for column in merged_df.columns[5:]:
+            q_index = st.session_state['question_dict'][column]
+            q_sentence = list()
+            # st.write(merged_df[column].unique()[0])
+            # 欠損値や空の値を除いてリストに変換
+            q_candidates = [
+                q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
+                if pd.notna(q_candidate) and q_candidate.strip() != ""
+            ]
 
-        #     st.divider()
-        #     st.write(str(merged_df[column].unique()[0]))
-        #     st.divider()
-        #     for q_candidate in q_candidates:
-        #         # st.write(q_candidate, merged_df[column].unique()[0])
-        #         st.write(q_candidate)
+            st.divider()
+            st.write(str(merged_df[column].unique()[0]))
+            st.divider()
+            for q_candidate in q_candidates:
+                # st.write(q_candidate, merged_df[column].unique()[0])
+                st.write(q_candidate)
                 
-        #         # どちらかにどちらかが含まれていたらループを抜ける
-        #         if str(q_candidate) in str(merged_df[column].unique()[0]) or str(merged_df[column].unique()[0]) in str(q_candidate):
-        #             st.write(q_candidate, merged_df[column].unique()[0])
-        #             st.write("test")
-        #             break
-        #         q_sentence.append(q_candidate)
+                # どちらかにどちらかが含まれていたらループを抜ける
+                if q_candidate in merged_df[column].unique():
+                    st.write(q_candidate, merged_df[column].unique()[0])
+                    st.write("test")
+                    break
+                q_sentence.append(q_candidate)
                 
-        #     # 半角スペースを区切り文字として結合
-        #     q_sentence_str = " ".join(q_sentence)
-        #     merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
+            # 半角スペースを区切り文字として結合
+            q_sentence_str = " ".join(q_sentence)
+            merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
         
         columns_to_sort = merged_df.columns[5:]  # 6列目以降の列を取得
         sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('：')[0][1:]))  # 数字を基準にソート
