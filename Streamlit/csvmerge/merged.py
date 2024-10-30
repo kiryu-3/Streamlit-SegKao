@@ -1,4 +1,5 @@
 import streamlit as st
+import csv
 import numpy as np
 import pandas as pd
 import re
@@ -6,7 +7,7 @@ import os
 import requests
 from PIL import Image
 import io
-from io import BytesIO
+from io import BytesIO, StringIO
 import chardet
 
 # Streamlit ページの設定
@@ -76,53 +77,38 @@ def upload_csv2():
         st.session_state['question_df'] = dict()
         
         for idx, upload_data in enumerate(st.session_state['upload_csvfile2']):
-            # アップロードされたファイルデータを読み込む
-            file_data = upload_data.read()
-            # エンコーディングを検出
-            raw_data = io.BytesIO(file_data).read()
-            result = chardet.detect(raw_data)
-            encoding = result['encoding']
-
-            # CSVを読み込む
-            data = file_data.decode(encoding)
-            st.write(data)
-            # データを行単位で分割
-            lines = data.strip().split('\n')
+            # ファイルをStringIOに変換
+            file = StringIO(uploaded_file.getvalue().decode("shift-jis"))
             
-            # ヘッダーを取得
-            header = lines[0]
-            
-            # 新しいデータ行のリストを作成
-            new_data_rows = []
-            
-            # 各データ行を処理
-            for line in lines[1:]:
-                st.write(line)
-                fields = line.split(',')
-                
-                # 最終列の内容をダブルクォーテーションで囲む
-                fields[-1] = f'"{" ".join(fields[5:])}"'
-                
-                # fields[5]からfields[-2]までを削除
-                fields = fields[:5] + [fields[-1]]
-                
-                # 新しいデータ行を追加
-                new_data_rows.append(','.join(fields))
-            
-            # 新しいデータを作成
-            new_data = f"{header}\n" + "\n".join(new_data_rows)
-            # st.write(new_data)
+            reader = csv.reader(file)
+        
+            # 最初の3行をスキップ
+            for _ in range(3):
+                next(reader)
+        
+            # ヘッダーを取得し、余分な空白や引用符を削除
+            header = next(reader)
+            header = [cell for cell in header if cell.strip() != '']
+            st.write("Header:", header)
+        
+            rows = []
+            for row in reader:
+                # 余分な空白や引用符を削除
+                row = [cell for cell in row if cell.strip() != '']
+        
+                # 列数が異なる場合、必要な列数に調整
+                if len(row) > len(header):
+                    row[5] = '、'.join(row[5:])  # 5列目以降を結合し、1つの列として扱う
+                    row = row[:len(header)]
+                rows.append(row)
 
             try:
-                temp_df = pd.read_csv(io.StringIO(new_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
+                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=st.session_state['upload_csvfile'], on_bad_lines="skip", engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
-                df = pd.read_csv(io.StringIO(new_data), header=2, encoding=encoding, quotechar='"', engine="python")
+                df = pd.read_csv(rows, columns=header, encoding=st.session_state['upload_csvfile'], quotechar='"', engine="python")
                 st.write(df)
-                
-                answer_col_index = df.columns.get_loc(" 回答内容]")  # "回答内容]"列の位置を取得
-                df = df.iloc[:, :answer_col_index + 1]  # "回答内容]"列までの列を選択
                 
                 st.session_state['question_df'][f'Q{q_number}'] = df
             except Exception as e:
