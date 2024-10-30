@@ -55,7 +55,7 @@ def upload_csv():
                 
                 # 結果を表示
                 # st.write(f"Q{q_number}の問題文:", q_question)
-                st.session_state['question_dict'][f'Q{q_number}'] = q_question
+                st.session_state['question_dict'][f'Q{q_number}'] = q_index
                 
                 q_number += 1  # 次の番号に進む
             except IndexError:
@@ -156,21 +156,37 @@ try:
 
                 # 回答内容をカンマで結合する
                 merged_df = merged_df.groupby(['[学籍番号', ' 氏名', ' フリガナ', ' クラス', ' 出席番号'], as_index=False).agg({' 回答内容]': lambda x: ','.join(x.astype(str))})
-                
+
                 merged_df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
+                # merged_df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
             else:
                 q_context = st.session_state['question_dict'][q_number]
 
                 # 回答内容をカンマで結合する
                 df = df.groupby(['[学籍番号', ' 氏名', ' フリガナ', ' クラス', ' 出席番号'], as_index=False).agg({' 回答内容]': lambda x: ','.join(x.astype(str))})
-        
-                df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
+
+                df.rename(columns={' 回答内容]': f'{q_number}'}, inplace=True)
+                # df.rename(columns={' 回答内容]': f'{q_number}：{q_context}'}, inplace=True)
                 
                 merged_df = pd.merge(merged_df, df, on="[学籍番号", how="outer", suffixes=('', '_y'))
                 # 不要な重複列を削除
                 merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'}, inplace=True)
+
+        for column in merged_df.columns[5:]:
+            q_index = st.session_state['question_dict'][column]
+            q_sentence = list()
+            
+            q_candidates = list(st.session_state['df'].iloc[q_index:q_index+10, 0])
+            for q_candidate in q_candidates:
+                if q_candidate in merged_df[column].unique()[0]:
+                    break
+                q_sentence.append(q_candidate)
+                
+            # 半角スペースを区切り文字として結合
+            q_sentence_str = " ".join(q_sentence)
+            df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
         
         columns_to_sort = merged_df.columns[5:]  # 6列目以降の列を取得
         sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('：')[0][1:]))  # 数字を基準にソート
