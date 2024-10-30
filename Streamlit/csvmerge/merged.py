@@ -101,7 +101,7 @@ def upload_csv2():
             st.write(modified_data)
 
             try:
-                temp_df = pd.read_csv(io.StringIO(modified_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
+                temp_df = pd.read_csv(io.ByteIO(modified_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
