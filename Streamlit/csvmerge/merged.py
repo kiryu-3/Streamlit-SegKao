@@ -122,6 +122,11 @@ def upload_csv2():
     else:
         st.session_state['question_df'] = dict()
 
+# テキストの正規化関数
+def normalize_text(text):
+    # 改行、全角・半角スペースを削除
+    return re.sub(r'\s+', '', text.strip())
+
 # 初期化
 if 'df' not in st.session_state:
     st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
