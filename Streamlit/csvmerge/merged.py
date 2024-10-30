@@ -178,7 +178,11 @@ try:
             q_index = st.session_state['question_dict'][column]
             q_sentence = list()
             st.write(merged_df[column].unique()[0])
-            q_candidates = list(st.session_state['df'].iloc[q_index:q_index+10, 0])
+            # 欠損値や空の値を除いてリストに変換
+            q_candidates = [
+                q_candidate for q_candidate in st.session_state['df'].iloc[q_index:q_index+10, 0]
+                if pd.notna(q_candidate) and q_candidate.strip() != ""
+            ]
             for q_candidate in q_candidates:
                 st.write(q_candidate)
                 
