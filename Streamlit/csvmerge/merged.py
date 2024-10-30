@@ -179,7 +179,7 @@ try:
         # st.write(merged_df.columns)
         
         merged_df.to_csv(buf := BytesIO(), index=False, encoding=st.session_state['encoding'])
-        st.write(st.session_state['encoding'])
+
         st.download_button(
                   label="Download CSV",
                   data=buf.getvalue(),
