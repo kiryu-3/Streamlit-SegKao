@@ -177,17 +177,18 @@ try:
         for column in merged_df.columns[5:]:
             q_index = st.session_state['question_dict'][column]
             q_sentence = list()
-            st.write(merged_df[column].unique()[0])
+            # st.write(merged_df[column].unique()[0])
             # 欠損値や空の値を除いてリストに変換
             q_candidates = [
                 q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
                 if pd.notna(q_candidate) and q_candidate.strip() != ""
             ]
             for q_candidate in q_candidates:
-                st.write(q_candidate)
+                # st.write(q_candidate)
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
                 if q_candidate in merged_df[column].unique()[0] or merged_df[column].unique()[0] in q_candidate:
+                    st.write(q_candidate, merged_df[column].unique()[0])
                     break
                 q_sentence.append(q_candidate)
                 
