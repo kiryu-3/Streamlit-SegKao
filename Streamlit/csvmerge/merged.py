@@ -185,6 +185,7 @@ try:
             ]
             for q_candidate in q_candidates:
                 # st.write(q_candidate, merged_df[column].unique()[0])
+                st.write(type(str(merged_df[column].unique()[0])))
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
                 if str(q_candidate) in str(merged_df[column].unique()[0]) or str(merged_df[column].unique()[0]) in str(q_candidate):
