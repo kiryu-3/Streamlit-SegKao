@@ -184,11 +184,11 @@ try:
                 if pd.notna(q_candidate) and q_candidate.strip() != ""
             ]
             for q_candidate in q_candidates:
-                st.write(type(q_candidate), type(merged_df[column].unique()[0]))
+                # st.write(q_candidate, merged_df[column].unique()[0])
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
-                if q_candidate in merged_df[column].unique()[0] or merged_df[column].unique()[0] in q_candidate:
-                    # st.write(q_candidate, merged_df[column].unique()[0])
+                if str(q_candidate) in str(merged_df[column].unique()[0]) or str(merged_df[column].unique()[0]) in str(q_candidate):
+                    st.write(q_candidate, merged_df[column].unique()[0])
                     st.write("test")
                     break
                 q_sentence.append(q_candidate)
