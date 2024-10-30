@@ -187,12 +187,16 @@ try:
             st.divider()
             st.write(str(merged_df[column].unique()[0]))
             st.divider()
+
+            # 改行や余計なスペースを除去してユニーク値リストを作成
+            unique_values = [str(val).strip().replace("\n", "") for val in merged_df[column].unique()]
+
             for q_candidate in q_candidates:
-                # st.write(q_candidate, merged_df[column].unique()[0])
-                
+                # 改行や余計なスペースを除去した候補と比較
+                cleaned_candidate = q_candidate.strip().replace("\n", "")
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
-                if q_candidate in merged_df[column].unique():
+                if cleaned_candidate in unique_values:
                     # st.write(q_candidate, merged_df[column].unique()[0])
                     st.write("test")
                     break
