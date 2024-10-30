@@ -177,7 +177,7 @@ try:
         for column in merged_df.columns[5:]:
             q_index = st.session_state['question_dict'][column]
             q_sentence = list()
-            st.write(merged_df[column].unique())
+            # st.write(merged_df[column].unique())
             # 欠損値や空の値を除いてリストに変換
             q_candidates = [
                 q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
@@ -194,6 +194,7 @@ try:
             for q_candidate in q_candidates:
                 # 改行や余計なスペースを除去した候補と比較
                 cleaned_candidate = q_candidate.strip().replace("\n", "")
+                st.write(cleaned_candidate)
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
                 if any(q_candidate == str(unique_value).strip() for unique_value in merged_df[column].unique()):
