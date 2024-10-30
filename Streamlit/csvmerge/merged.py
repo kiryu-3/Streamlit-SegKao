@@ -189,16 +189,16 @@ try:
             ]
 
             
-            if "IT系に興味もあるが、" in clean_text(str(merged_df[column].unique()[0])):
-                st.write("kaoru")
-                st.write(clean_text(str(merged_df[column].unique()[0])))  # 空白・改行削除して表示
+            
             st.divider()
 
             # 改行や余計なスペースを除去してユニーク値リストを作成
             unique_values = [str(val).strip().replace("\n", "") for val in merged_df[column].unique()]
 
             for q_candidate in q_candidates:
-                st.write(q_candidate)
+                if "IT系に興味もあるが、" in clean_text(str(merged_df[column].unique()[0])):
+                    st.write("kaoru")
+                    st.write(clean_text(str(q_candidate))  # 空白・改行削除して表示
                # 各 unique_value を正規化し、比較対象も正規化
                 if any(q_candidate == clean_text(str(unique_value)) for unique_value in merged_df[column].unique()):
                     st.write("test")
