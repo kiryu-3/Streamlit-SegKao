@@ -189,7 +189,8 @@ try:
             ]
 
             st.write("kaoru")
-            st.write(clean_text(str(merged_df[column].unique()[0])))  # 空白・改行削除して表示
+            if "IT系に興味もあるが、" in clean_text(str(merged_df[column].unique()[0]))
+                st.write(clean_text(str(merged_df[column].unique()[0])))  # 空白・改行削除して表示
             st.divider()
 
             # 改行や余計なスペースを除去してユニーク値リストを作成
