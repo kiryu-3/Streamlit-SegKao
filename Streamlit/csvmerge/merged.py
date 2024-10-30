@@ -206,5 +206,6 @@ try:
                 )
         st.divider()
 except Exception as e:
+    st.write(e)
     pass
     
