@@ -186,7 +186,8 @@ try:
             for q_candidate in q_candidates:
                 st.write(q_candidate)
                 
-                if q_candidate in merged_df[column].unique()[0]:
+                # どちらかにどちらかが含まれていたらループを抜ける
+                if q_candidate in merged_df[column].unique()[0] or merged_df[column].unique()[0] in q_candidate:
                     break
                 q_sentence.append(q_candidate)
                 
