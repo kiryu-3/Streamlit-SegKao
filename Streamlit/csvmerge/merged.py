@@ -197,6 +197,7 @@ try:
             unique_values = [str(val).strip().replace("\n", "") for val in merged_df[column].unique()]
 
             for q_candidate in q_candidates:
+                st.write(q_candidate)
                # 各 unique_value を正規化し、比較対象も正規化
                 if any(q_candidate == normalize_text(str(unique_value)) for unique_value in merged_df[column].unique()):
                     st.write("test")
