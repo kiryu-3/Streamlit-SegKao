@@ -177,7 +177,7 @@ try:
         for column in merged_df.columns[5:]:
             q_index = st.session_state['question_dict'][column]
             q_sentence = list()
-            # st.write(merged_df[column].unique()[0])
+            st.write(merged_df[column].unique())
             # 欠損値や空の値を除いてリストに変換
             q_candidates = [
                 q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
