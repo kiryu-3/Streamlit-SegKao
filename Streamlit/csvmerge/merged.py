@@ -77,6 +77,10 @@ def upload_csv2():
         st.session_state['question_df'] = dict()
         
         for idx, upload_data in enumerate(st.session_state['upload_csvfile2']):
+
+            # アップロードされたファイルデータを読み込む
+            file_data = upload_data.read()
+
             # ファイルをStringIOに変換
             file = StringIO(upload_data.getvalue().decode("shift-jis"))
             
