@@ -127,24 +127,22 @@ if 'df' not in st.session_state:
 st.title('Portal-CSV-merged')
 # ラベルの改行に対応
 st.sidebar.markdown("設問文のCSVファイルをアップロード<br>(例): summary.csv, outline.csv", unsafe_allow_html=True)
-st.sidebar.file_uploader(label="",
-                       type=["csv"],
-                       key="upload_csvfile",
-                       accept_multiple_files=False,
-                       on_change=upload_csv
-                       )
+st.sidebar.file_uploader(type=["csv"],
+                         key="upload_csvfile",
+                         accept_multiple_files=False,
+                         on_change=upload_csv
+                         )
 
 try:
     if len(st.session_state['df']) != 0:
         st.sidebar.write(st.session_state['question_dict'])
 
         st.markdown("設問回答のCSVファイルをアップロード（複数可）<br>(例): Q[1].csv, Q[2].csv, Q[3].csv", unsafe_allow_html=True)
-        st.file_uploader(label="",
-                               type=["csv"],
-                               key="upload_csvfile2",
-                               accept_multiple_files=True,
-                               on_change=upload_csv2
-                               )
+        st.file_uploader(type=["csv"],
+                         key="upload_csvfile2",
+                         accept_multiple_files=True,
+                          on_change=upload_csv2
+                         )
         
         # 最初のデータフレームを基準にして結合
         merged_df = None
