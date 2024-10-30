@@ -52,17 +52,17 @@ def upload_csv():
                 q_question = df.iloc[q_index + 1, 0]  # Qの問題文を取得
                 
                 # 結果を表示
-                st.write(f"Q{q_number}の問題文:", q_question)
+                # st.write(f"Q{q_number}の問題文:", q_question)
                 st.session_state['question_dict'][f'Q{q_number}'] = q_question
                 
                 q_number += 1  # 次の番号に進む
             except IndexError:
                 # インデックスエラーが発生した場合にループを抜ける
-                st.write("ループを終了します。")
+                # st.write("ループを終了します。")
                 break
             except Exception as e:
                 # 他のエラーをキャッチする場合
-                st.write(f"予期しないエラーが発生しました: {e}")
+                # st.write(f"予期しないエラーが発生しました: {e}")
                 break
 
         st.session_state['df'] = df
@@ -188,5 +188,5 @@ try:
                 )
         st.divider()
 except Exception as e:
-    # pass
-    st.write(e)
+    pass
+    
