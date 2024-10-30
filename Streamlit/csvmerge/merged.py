@@ -204,14 +204,14 @@ try:
                     q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
                     if pd.notna(q_candidate) and str(q_candidate).strip() != ""
                 ]
-
+                st.write(q_candidates) 
 
                 for q_candidate in q_candidates:
                    # 各 unique_value を正規化し、比較対象も正規化
                    if any(q_candidate in value for value in unique_values):
                         q_sentence.append(q_candidate)
 
-            st.write(q_candidate) 
+            
             # 半角スペースを区切り文字として結合
             q_sentence_str = "　".join(q_sentence)
             merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
