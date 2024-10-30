@@ -184,7 +184,7 @@ try:
 
             # 欠損値や空の値を除いた一意の値リストを取得
             unique_values = [str(value) for value in merged_df[column].unique() if pd.notna(value) and str(value).strip() != ""]
-            # st.write(unique_values)
+            st.write(unique_values)
             
             # 欠損値や空の値を除いてリストに変換し、テキストを正規化
             q_candidates = [q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]]
