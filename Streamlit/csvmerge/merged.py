@@ -196,7 +196,7 @@ try:
                 cleaned_candidate = q_candidate.strip().replace("\n", "")
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
-                if cleaned_candidate in unique_values:
+                if any(q_candidate == str(unique_value).strip() for unique_value in merged_df[column].unique()):
                     # st.write(q_candidate, merged_df[column].unique()[0])
                     st.write("test")
                     break
