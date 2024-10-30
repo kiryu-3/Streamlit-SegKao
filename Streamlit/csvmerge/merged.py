@@ -103,6 +103,7 @@ def upload_csv2():
                 # 列数が異なる場合、必要な列数に調整
                 if len(row) > len(header):
                     row[5] = '、'.join(row[5:])  # 5列目以降を結合し、1つの列として扱う
+                    st.write("row[5]:", row[5])
                     row = row[:len(header)]
                 rows.append(row)
 
