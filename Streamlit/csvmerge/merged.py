@@ -201,7 +201,7 @@ try:
                     # st.write(q_candidate, merged_df[column].unique()[0])
                     st.write("test")
                     break
-                st.write(q_candidate)
+                # st.write(q_candidate)
                 q_sentence.append(q_candidate)
                 
             # 半角スペースを区切り文字として結合
