@@ -50,6 +50,8 @@ def upload_csv():
                 # Qの問題文を探す
                 q_index = df[df[0] == f'Q {q_number}'].index[0]  # Qのインデックスを取得
                 q_question = df.iloc[q_index + 1, 0]  # Qの問題文を取得
+                st.write(df.iloc[q_index + 1, 0])
+                st.write(df.iloc[q_index + 2, 0])
                 
                 # 結果を表示
                 # st.write(f"Q{q_number}の問題文:", q_question)
