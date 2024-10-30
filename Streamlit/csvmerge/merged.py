@@ -196,7 +196,7 @@ try:
             for q_candidate in q_candidates:
                # 各 unique_value を正規化し、比較対象も正規化
                 try:
-                    if any(q_candidate_str in value for value in unique_values):
+                    if any(q_candidate in value for value in unique_values):
                         st.write("test")
                         break
                     st.write(q_candidate)
