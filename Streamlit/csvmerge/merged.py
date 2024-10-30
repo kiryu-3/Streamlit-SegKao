@@ -181,7 +181,11 @@ try:
         for column in merged_df.columns[5:]:
             q_index = st.session_state['question_dict'][column]
             q_sentence = list()
-            # st.write(merged_df[column].unique())
+
+            # 欠損値や空の値を除いた一意の値リストを取得
+            unique_values = [value for value in merged_df[column].unique() if pd.notna(value) and str(value).strip() != ""]
+
+            
             # 欠損値や空の値を除いてリストに変換し、テキストを正規化
             q_candidates = [q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]]
 
@@ -191,7 +195,7 @@ try:
 
             for q_candidate in q_candidates:
                # 各 unique_value を正規化し、比較対象も正規化
-                if any(q_candidate in value for value in merged_df[column].unique()):
+                if any(q_candidate in value for value in unique_values):
                     st.write("test")
                     break
                         # st.write(q_candidate)
