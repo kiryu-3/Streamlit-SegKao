@@ -201,7 +201,7 @@ try:
                         break
                     st.write(q_candidate)
                     q_sentence.append(q_candidate)
-                except TypeError:
+                except :
                     # エラーが発生したときに unique_values を表示
                     st.write("TypeError発生: unique_valuesの内容は以下です")
                     st.write(unique_values)
