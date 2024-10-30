@@ -91,18 +91,23 @@ def upload_csv2():
             # 修正したいCSVデータを新たに作成
             output_lines = []
             for line in lines:
+                # カンマを「、」に置き換える
+                line = line.replace(',', '、')
                 # 自由記述部分をダブルクォーテーションで囲む
-                fields = line.strip().split(',')
+                fields = line.strip().split('、')  # カンマの代わりに「、」で分割
                 if len(fields) > 5:  # コメントがある場合
                     fields[5] = f'"{fields[5]}"'
-                output_lines.append(','.join(fields))
+                output_lines.append('、'.join(fields))
+
+            # 修正したデータを再構築
+            modified_data = '\n'.join(output_lines)
 
             try:
-                temp_df = pd.read_csv(io.BytesIO(file_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
+                temp_df = pd.read_csv(io.BytesIO(modified_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
-                df = pd.read_csv(io.BytesIO(file_data), header=2, encoding=encoding, quotechar='"', engine="python")
+                df = pd.read_csv(io.BytesIO(modified_data), header=2, encoding=encoding, quotechar='"', engine="python")
                 st.write(df)
                 
                 answer_col_index = df.columns.get_loc(" 回答内容]")  # "回答内容]"列の位置を取得
