@@ -196,7 +196,8 @@ try:
                     q_candidates = list(st.session_state['df'].iloc[q_index + 1:i, 0])
                     q_sentence.append(q_candidate)
                     break  # 最初の条件を満たす範囲が見つかればループを終了
-           
+
+            st.write(q_candidates)
             if len(q_candidates) == 0:
                 # 欠損値や空の値を除いてリストに変換し、テキストを正規化
                 q_candidates = [
