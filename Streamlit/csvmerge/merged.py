@@ -187,7 +187,10 @@ try:
            
             
             # 欠損値や空の値を除いてリストに変換し、テキストを正規化
-            q_candidates = [q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]]
+            q_candidates = [
+                q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
+                if pd.notna(q_candidate) and str(q_candidate).strip() != ""
+            ]
 
             
             
