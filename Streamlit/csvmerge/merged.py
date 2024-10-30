@@ -184,7 +184,7 @@ try:
                 if pd.notna(q_candidate) and q_candidate.strip() != ""
             ]
             for q_candidate in q_candidates:
-                # st.write(q_candidate)
+                st.write(q_candidate, merged_df[column].unique()[0])
                 
                 # どちらかにどちらかが含まれていたらループを抜ける
                 if q_candidate in merged_df[column].unique()[0] or merged_df[column].unique()[0] in q_candidate:
