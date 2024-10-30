@@ -100,6 +100,7 @@ def upload_csv2():
 
             # 修正したデータを再構築
             modified_data = '\n'.join(output_lines)
+            st.write(modified_data)
 
             try:
                 temp_df = pd.read_csv(io.BytesIO(modified_data), header=None, encoding=encoding, on_bad_lines="skip", quotechar='"', engine="python")
