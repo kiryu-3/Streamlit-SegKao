@@ -186,7 +186,7 @@ try:
                 
             # 半角スペースを区切り文字として結合
             q_sentence_str = " ".join(q_sentence)
-            df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
+            merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
         
         columns_to_sort = merged_df.columns[5:]  # 6列目以降の列を取得
         sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('：')[0][1:]))  # 数字を基準にソート
