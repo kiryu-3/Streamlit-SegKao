@@ -90,13 +90,11 @@ def upload_csv2():
             # 修正したいCSVデータを新たに作成
             output_lines = []
             for line in lines:
-                # カンマを「、」に置き換える
-                line = line.replace(',', '、')
-                # 自由記述部分をダブルクォーテーションで囲む
-                fields = line.strip().split('、')  # カンマの代わりに「、」で分割
-                if len(fields) > 5:  # コメントがある場合
-                    fields[5] = f'"{fields[5]}"'
-                output_lines.append('、'.join(fields))
+                fields = line.strip().split(',')  # カンマで分割
+                if len(fields) > 5:  # 最終列が存在する場合
+                    # 最終列のカンマを「、」に置き換え
+                    fields[-1] = fields[-1].replace(',', '、')
+                output_lines.append(','.join(fields))
 
             # 修正したデータを再構築
             modified_data = '\n'.join(output_lines)
