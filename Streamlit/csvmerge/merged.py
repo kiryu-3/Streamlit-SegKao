@@ -184,12 +184,12 @@ try:
             # st.write(merged_df[column].unique())
             # 欠損値や空の値を除いてリストに変換し、テキストを正規化
             q_candidates = [
-                normalize_text(q_candidate) for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
+                clean_text(q_candidate) for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
                 if pd.notna(q_candidate) and q_candidate.strip() != ""
             ]
 
             st.divider()
-            st.write(normalize_text(str(merged_df[column].unique()[0])))  # 空白・改行削除して表示
+            st.write(clean_text(str(merged_df[column].unique()[0])))  # 空白・改行削除して表示
             st.divider()
 
             # 改行や余計なスペースを除去してユニーク値リストを作成
@@ -198,7 +198,7 @@ try:
             for q_candidate in q_candidates:
                 st.write(q_candidate)
                # 各 unique_value を正規化し、比較対象も正規化
-                if any(q_candidate == normalize_text(str(unique_value)) for unique_value in merged_df[column].unique()):
+                if any(q_candidate == clean_text(str(unique_value)) for unique_value in merged_df[column].unique()):
                     st.write("test")
                     break
                         # st.write(q_candidate)
