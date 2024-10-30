@@ -116,7 +116,7 @@ def upload_csv2():
                 # 設問番号を取得（1行目の1列目の値）
                 q_number = temp_df.iloc[0, 1]  # 設問番号を取得
 
-                df = pd.read_csv(io.BytesIO(modified_data), header=2, encoding=encoding, quotechar='"', engine="python")
+                df = pd.read_csv(io.StringIO(new_data), header=2, encoding=encoding, quotechar='"', engine="python")
                 st.write(df)
                 
                 answer_col_index = df.columns.get_loc(" 回答内容]")  # "回答内容]"列の位置を取得
