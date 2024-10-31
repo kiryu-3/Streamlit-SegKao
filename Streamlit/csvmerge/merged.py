@@ -185,7 +185,7 @@ try:
         merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
         # デフォルト値を設定（除外した列を除く）
-        default_columns = [col for col in merged_df.columns if col not in ['学籍番号', '氏名', 'フリガナ']]
+        default_columns = [col for col in merged_df.columns if col not in ['学籍番号', ' 氏名', ' フリガナ']]
 
         selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください　',
                                           options=merged_df.columns,
