@@ -184,10 +184,13 @@ try:
         new_order = list(merged_df.columns[:5]) + sorted_columns  # 新しい列の順番を作成（最初の5列 + ソートされた列）
         merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
-        selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください',
+        selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください　',
                                           options=merged_df.columns,
                                           default=merged_df.columns,
                                           placeholder="列を選択してください")
+        st.warning("※学籍番号や名前の列は初期状態では指定されていません。")
+        st.warning("※学籍番号や氏名の列はこの2つを特別使う方以外は残さないで作業するようにしてください。")
+        
         # 選択された列を merged_df の順番に揃える
         selected_columns = [col for col in merged_df.columns if col in selected_columns]
 
