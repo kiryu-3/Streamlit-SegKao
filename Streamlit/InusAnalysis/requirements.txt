@@ -12,3 +12,4 @@ factor_analyzer
 mecab-python3
 unidic-lite
 nlplot
+chardet
