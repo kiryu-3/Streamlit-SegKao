@@ -200,7 +200,7 @@ try:
         selected_df = merged_df[selected_columns]
         st.divider()
         st.subheader("結合後のデータ")
-        st.write(selected_df)
+        st.dataframe(selected_df)
         # st.write(merged_df.columns)
         
         selected_df.to_csv(buf := BytesIO(), index=False, encoding=st.session_state['encoding'])
