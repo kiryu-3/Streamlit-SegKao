@@ -132,7 +132,7 @@ if 'df' not in st.session_state:
 
 st.title('Portal-CSV-merged')
 # ラベルの改行に対応
-st.sidebar.markdown("設問文のCSVファイルをアップロード（複数不可）<br>(例): summary.csv, outline.csv", unsafe_allow_html=True)
+st.sidebar.markdown("設問文のCSVファイルをアップロード（複数不可）<br>(例): summary.csv, outline.csv<br>Q[数字].csvはアップロードしないこと！", unsafe_allow_html=True)
 st.sidebar.file_uploader(label="", type=["csv"],
                          key="upload_csvfile",
                          accept_multiple_files=False,
