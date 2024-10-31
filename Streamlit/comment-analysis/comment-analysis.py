@@ -143,7 +143,7 @@ def display_sunburst(df, column):
 
 st.header("アンケートコメントの分析")
 # ファイルアップロード
-st.file_uploader("集計結果（5件法）のcsvをアップロード",
+st.file_uploader("csvをアップロード（複数不可）",
                   type=["csv"],
                   key="upload_csvfile",
                   on_change=upload_csv
