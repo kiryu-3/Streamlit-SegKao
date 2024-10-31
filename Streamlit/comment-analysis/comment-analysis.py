@@ -162,7 +162,7 @@ try:
     st.write(df)
 
     # 文字列データ型の列のみを抽出
-    string_columns = [col for col in merged_df.columns if df[col].dtype == 'object']
+    string_columns = [col for col in df.columns if df[col].dtype == 'object']
 
     selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください',
                                           options=string_columns,
