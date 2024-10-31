@@ -215,7 +215,9 @@ try:
 
             
             # 半角スペースを区切り文字として結合
+            st.divider()
             st.write(q_sentence) 
+            st.divider()
             q_sentence_str = "　".join(q_sentence)
             merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
         
