@@ -188,6 +188,8 @@ try:
                                           options=merged_df.columns,
                                           default=merged_df.columns,
                                           placeholder="列を選択してください")
+        # 選択された列を merged_df の順番に揃える
+        selected_columns = [col for col in merged_df.columns if col in selected_columns]
 
         selected_df = merged_df[selected_columns]
         st.subheader("結合後のデータ")
