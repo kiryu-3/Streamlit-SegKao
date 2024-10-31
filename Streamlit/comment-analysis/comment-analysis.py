@@ -188,7 +188,7 @@ try:
         tabs[4].subheader("サンバーストチャート")
         
         # 各カラムに対してタブを表示
-        for column in string_columns:
+        for column in selected_columns:
             with tabs[0]:
                 display_unigram(df, column)
             with tabs[1]:
