@@ -7,6 +7,7 @@ import networkx as nx
 import MeCab
 import nlplot  # nlplotをインポート
 import io
+import chardet
 
 def upload_csv():
     # csvがアップロードされたとき
