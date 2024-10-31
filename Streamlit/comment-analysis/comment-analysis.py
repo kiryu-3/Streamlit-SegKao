@@ -200,4 +200,5 @@ try:
             display_sunburst(df, column)
 
 except Exception as e:
+    st.write(e)
     pass
