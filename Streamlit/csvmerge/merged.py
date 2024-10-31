@@ -188,7 +188,7 @@ try:
                                           options=merged_df.columns,
                                           default=merged_df.columns,
                                           placeholder="列を選択してください")
-        st.warning("※学籍番号や名前の列は初期状態では指定されていません。")
+        st.warning("※学籍番号や名前の列は初期状態では指定されていませんが、セレクトから選択/追加することができます。")
         st.warning("※学籍番号や氏名の列はこの2列を特別使う方以外は残さないで作業するよう注意してください。（石田先生より）")
         
         # 選択された列を merged_df の順番に揃える
