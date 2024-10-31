@@ -177,52 +177,9 @@ try:
                 merged_df = merged_df.loc[:, ~merged_df.columns.str.endswith('_y')]
              
         merged_df.rename(columns={'[学籍番号': '学籍番号'}, inplace=True)
-
-        for column in merged_df.columns[5:]:
-            q_index = st.session_state['question_dict'][column]
-            q_sentence = list()
-
-            # 欠損値や空の値を除いた一意の値リストを取得
-            unique_values = [str(value) for value in merged_df[column].unique() if pd.notna(value) and str(value).strip() != ""]
-
-            # リストを初期化
-            q_candidates = []
-            
-            # q_index+1からq_index+10までをループ
-            for i in range(q_index + 1, q_index + 11):
-                # st.session_state['df'].iloc[i, 1] が欠損値でない場合にリストにまとめる
-                if pd.notna(st.session_state['df'].iloc[i, 1]):
-                    # 条件に合った範囲の値をリストに追加
-                    q_candidates = list(st.session_state['df'].iloc[q_index + 1:i, 0])
-                    q_sentence.append(q_candidate)
-                    break  # 最初の条件を満たす範囲が見つかればループを終了
-
-            
-            if len(q_candidates) == 0:
-                # 欠損値や空の値を除いてリストに変換し、テキストを正規化
-                q_candidates = [
-                    q_candidate for q_candidate in st.session_state['df'].iloc[q_index+1:q_index+10, 0]
-                    if pd.notna(q_candidate) and str(q_candidate).strip() != ""
-                ]
-                
-
-                for q_candidate in q_candidates:
-                   
-                   # 各 unique_value を正規化し、比較対象も正規化
-                   if not any(q_candidate in value for value in unique_values):
-                        
-                        q_sentence.append(q_candidate)
-
-            
-            # 半角スペースを区切り文字として結合
-            st.divider()
-            st.write(q_sentence) 
-            st.divider()
-            q_sentence_str = "　".join(q_sentence)
-            merged_df.rename(columns={f'{column}': f'{column}：{q_sentence_str}'}, inplace=True)
         
         columns_to_sort = merged_df.columns[5:]  # 6列目以降の列を取得
-        sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('：')[0][1:]))  # 数字を基準にソート
+        sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('Q')[1][1:]))  # 数字を基準にソート
         new_order = list(merged_df.columns[:5]) + sorted_columns  # 新しい列の順番を作成（最初の5列 + ソートされた列）
         merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
