@@ -9,6 +9,20 @@ import nlplot  # nlplotをインポート
 import io
 import chardet
 
+# Streamlit ページの設定
+st.set_page_config(
+    page_title="EDAML-hub",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
