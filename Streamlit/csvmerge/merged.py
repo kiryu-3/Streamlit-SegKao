@@ -184,9 +184,12 @@ try:
         new_order = list(merged_df.columns[:5]) + sorted_columns  # 新しい列の順番を作成（最初の5列 + ソートされた列）
         merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
+        # デフォルト値を設定（除外した列を除く）
+        default_columns = [col for col in merged_df.columns if col not in ['学籍番号', '氏名', 'フリガナ']]
+
         selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください　',
                                           options=merged_df.columns,
-                                          default=merged_df.columns,
+                                          default=default_columns,
                                           placeholder="列を選択してください")
         st.warning("※学籍番号や名前の列は初期状態では指定されていませんが、セレクトから選択/追加することができます。")
         st.warning("※学籍番号や氏名の列はこの2列を特別使う方以外は残さないで作業するよう注意してください。（石田先生より）")
