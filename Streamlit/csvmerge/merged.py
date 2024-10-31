@@ -192,18 +192,19 @@ try:
         selected_columns = [col for col in merged_df.columns if col in selected_columns]
 
         selected_df = merged_df[selected_columns]
+        st.divider()
         st.subheader("結合後のデータ")
         st.write(selected_df)
         # st.write(merged_df.columns)
         
         selected_df.to_csv(buf := BytesIO(), index=False, encoding=st.session_state['encoding'])
-
+        st.divider()
         st.download_button(
                   label="Download CSV",
                   data=buf.getvalue(),
                   file_name=f'{st.session_state['anketo_name']}.csv'
                 )
-        st.divider()
+        
 except Exception as e:
     # st.write(e)
     pass
