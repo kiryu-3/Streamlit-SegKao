@@ -190,10 +190,111 @@ try:
         tabs = st.tabs(tab_list)
     
         tabs[0].subheader("頻出単語ランキング")
+        tabs[0].code("""
+        def display_unigram(df, column):
+            npt = nlplot.NLPlot(df, target_col=column)
+            stopwords = npt.get_stopword(top_n=0, min_freq=0)
+            
+            fig_unigram = npt.bar_ngram(
+                title='uni-gram',
+                xaxis_label='word_count',
+                yaxis_label='word',
+                ngram=1,
+                top_n=50,
+                stopwords=stopwords,
+            )
+            
+            with st.expander(column):
+                st.plotly_chart(fig_unigram)
+                """)
         tabs[1].subheader("ワードクラウド")
+        tabs[1].code("""
+        def display_wordcloud(df, column):
+            npt = nlplot.NLPlot(df, target_col=column)
+            stopwords = npt.get_stopword(top_n=0, min_freq=0)
+            
+            fig_wc = npt.wordcloud(
+                width=1000,
+                height=600,
+                max_words=100,
+                max_font_size=100,
+                colormap='tab20_r',
+                stopwords=stopwords,
+                mask_file=None,
+                save=False
+            )
+            
+            plt.figure(figsize=(10, 15))
+            plt.imshow(fig_wc, interpolation="bilinear")
+            plt.axis("off")
+        
+            with st.expander(column):
+                st.pyplot(plt)
+        """)
         tabs[2].subheader("ツリーマップ")
+        tabs[2].code("""
+        def display_treemap(df, column):
+            npt = nlplot.NLPlot(df, target_col=column)
+            stopwords = npt.get_stopword(top_n=0, min_freq=0)
+            
+            fig_treemap = npt.treemap(
+                title='Tree map',
+                ngram=1,
+                top_n=50,
+                width=1300,
+                height=600,
+                stopwords=stopwords,
+                verbose=False,
+                save=False
+            )
+            
+            with st.expander(column):
+                st.plotly_chart(fig_treemap)
+        """)
         tabs[3].subheader("共起ネットワーク")
+        tabs[3].code("""
+        def display_co_network(df, column):
+            npt = nlplot.NLPlot(df, target_col=column)
+            stopwords = npt.get_stopword(top_n=0, min_freq=0)
+            
+            npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
+            
+            fig_co_network = npt.co_network(
+                title='Co-occurrence network',
+                sizing=100,
+                node_size='adjacency_frequency',
+                color_palette='hls',
+                width=1100,
+                height=700,
+                save=False
+            )
+            
+            with st.expander(column):
+                st.plotly_chart(fig_co_network)
+        """)
         tabs[4].subheader("サンバーストチャート")
+        tabs[4].code("""
+        def display_sunburst(df, column):
+
+            npt = nlplot.NLPlot(df, target_col=column)
+            stopwords = npt.get_stopword(top_n=0, min_freq=0)
+        
+            # ビルド（データ件数によっては処理に時間を要します）
+            npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
+        
+            
+            fig_sunburst = npt.sunburst(
+                title='Sunburst chart',
+                colorscale=True,
+                color_continuous_scale='Oryel',
+                width=1000,
+                height=800,
+                save=False
+            )
+        
+            with st.expander(column):
+                st.plotly_chart(fig_sunburst)
+        """)
         
         # 各カラムに対してタブを表示
         for column in selected_columns:
