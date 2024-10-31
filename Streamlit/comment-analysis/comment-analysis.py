@@ -169,35 +169,36 @@ try:
                                           placeholder="列を選択してください")
     
 
-    for column in string_columns:
-        # 欠損値がある行を取り除く
-        df = df.dropna(subset=[column])
-        
-        # 形態素結果をリスト化し、データフレームに結果を列追加する
-        df[column] = df[column].apply(mecab_text)
-
-    # タブを作成
-    tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
-    tabs = st.tabs(tab_list)
-
-    tabs[0].subheader("頻出単語ランキング")
-    tabs[1].subheader("ワードクラウド")
-    tabs[2].subheader("ツリーマップ")
-    tabs[3].subheader("共起ネットワーク")
-    tabs[4].subheader("サンバーストチャート")
+    if len(selected_columns) != 0:
+        for column in selected_columns:
+            # 欠損値がある行を取り除く
+            df = df.dropna(subset=[column])
+            
+            # 形態素結果をリスト化し、データフレームに結果を列追加する
+            df[column] = df[column].apply(mecab_text)
     
-    # 各カラムに対してタブを表示
-    for column in string_columns:
-        with tabs[0]:
-            display_unigram(df, column)
-        with tabs[1]:
-            display_wordcloud(df, column)
-        with tabs[2]:
-            display_treemap(df, column)
-        with tabs[3]:
-            display_co_network(df, column)
-        with tabs[4]:
-            display_sunburst(df, column)
+        # タブを作成
+        tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
+        tabs = st.tabs(tab_list)
+    
+        tabs[0].subheader("頻出単語ランキング")
+        tabs[1].subheader("ワードクラウド")
+        tabs[2].subheader("ツリーマップ")
+        tabs[3].subheader("共起ネットワーク")
+        tabs[4].subheader("サンバーストチャート")
+        
+        # 各カラムに対してタブを表示
+        for column in string_columns:
+            with tabs[0]:
+                display_unigram(df, column)
+            with tabs[1]:
+                display_wordcloud(df, column)
+            with tabs[2]:
+                display_treemap(df, column)
+            with tabs[3]:
+                display_co_network(df, column)
+            with tabs[4]:
+                display_sunburst(df, column)
 
 except Exception as e:
     st.write(e)
