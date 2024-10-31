@@ -184,11 +184,17 @@ try:
         new_order = list(merged_df.columns[:5]) + sorted_columns  # 新しい列の順番を作成（最初の5列 + ソートされた列）
         merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
+        selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください',
+                                          options=merged_df.columns,
+                                          default=merged_df.columns,
+                                          placeholder="列を選択してください")
+
+        selected_df = merged_df[selected_columns]
         st.subheader("結合後のデータ")
-        st.write(merged_df)
+        st.write(selected_df)
         # st.write(merged_df.columns)
         
-        merged_df.to_csv(buf := BytesIO(), index=False, encoding=st.session_state['encoding'])
+        selected_df.to_csv(buf := BytesIO(), index=False, encoding=st.session_state['encoding'])
 
         st.download_button(
                   label="Download CSV",
