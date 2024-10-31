@@ -42,7 +42,7 @@ def mecab_text(text):
     return word_list
 
 def display_unigram(df, column):
-    npt = nlplot.NLPlot(df, target_col='words')
+    npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
     fig_unigram = npt.bar_ngram(
@@ -59,7 +59,7 @@ def display_unigram(df, column):
     
 
 def display_wordcloud(df, column):
-    npt = nlplot.NLPlot(df, target_col='words')
+    npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
     fig_wc = npt.wordcloud(
@@ -82,7 +82,7 @@ def display_wordcloud(df, column):
     
 
 def display_treemap(df, column):
-    npt = nlplot.NLPlot(df, target_col='words')
+    npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
     fig_treemap = npt.treemap(
@@ -101,7 +101,7 @@ def display_treemap(df, column):
     
 
 def display_co_network(df, column):
-    npt = nlplot.NLPlot(df, target_col='words')
+    npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
     npt.build_graph(stopwords=stopwords, min_edge_frequency=3)
@@ -122,7 +122,7 @@ def display_co_network(df, column):
 
 def display_sunburst(df, column):
 
-    npt = nlplot.NLPlot(df, target_col='words')
+    npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
 
     # ビルド（データ件数によっては処理に時間を要します）
