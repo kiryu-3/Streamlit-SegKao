@@ -170,13 +170,7 @@ try:
     
 
     if len(selected_columns) != 0:
-        for column in selected_columns:
-            # 欠損値がある行を取り除く
-            df = df.dropna(subset=[column])
-            
-            # 形態素結果をリスト化し、データフレームに結果を列追加する
-            df[column] = df[column].apply(mecab_text)
-    
+          
         # タブを作成
         tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
         tabs = st.tabs(tab_list)
@@ -190,14 +184,44 @@ try:
         # 各カラムに対してタブを表示
         for column in selected_columns:
             with tabs[0]:
+                # 欠損値がある行を取り除く
+                df = df.dropna(subset=[column])
+                
+                # 形態素結果をリスト化し、データフレームに結果を列追加する
+                df[column] = df[column].apply(mecab_text)
+                
                 display_unigram(df, column)
             with tabs[1]:
+                # 欠損値がある行を取り除く
+                df = df.dropna(subset=[column])
+                
+                # 形態素結果をリスト化し、データフレームに結果を列追加する
+                df[column] = df[column].apply(mecab_text)
+                
                 display_wordcloud(df, column)
             with tabs[2]:
+                # 欠損値がある行を取り除く
+                df = df.dropna(subset=[column])
+                
+                # 形態素結果をリスト化し、データフレームに結果を列追加する
+                df[column] = df[column].apply(mecab_text)
+                
                 display_treemap(df, column)
             with tabs[3]:
+                # 欠損値がある行を取り除く
+                df = df.dropna(subset=[column])
+                
+                # 形態素結果をリスト化し、データフレームに結果を列追加する
+                df[column] = df[column].apply(mecab_text)
+                
                 display_co_network(df, column)
             with tabs[4]:
+                # 欠損値がある行を取り除く
+                df = df.dropna(subset=[column])
+                
+                # 形態素結果をリスト化し、データフレームに結果を列追加する
+                df[column] = df[column].apply(mecab_text)
+                
                 display_sunburst(df, column)
 
 except Exception as e:
