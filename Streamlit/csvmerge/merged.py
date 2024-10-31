@@ -180,7 +180,7 @@ try:
         
         columns_to_sort = merged_df.columns[5:]  # 6列目以降の列を取得
 
-        sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('Q')[1][0]))  # 数字を基準にソート
+        sorted_columns = sorted(columns_to_sort, key=lambda x: int(x.split('Q')[1][0:]))  # 数字を基準にソート
         new_order = list(merged_df.columns[:5]) + sorted_columns  # 新しい列の順番を作成（最初の5列 + ソートされた列）
         merged_df = merged_df[new_order]  # 新しい順番でデータフレームを再構築
 
