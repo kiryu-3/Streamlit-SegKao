@@ -85,7 +85,7 @@ def upload_csv2():
             file_data = upload_data.read()
 
             # ファイルをStringIOに変換
-            file = StringIO(upload_data.getvalue().decode("shift-jis"))
+            file = StringIO(upload_data.getvalue().decode(st.session_state['encoding']))
             
             reader = csv.reader(file)
         
