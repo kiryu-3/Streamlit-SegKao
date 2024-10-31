@@ -185,44 +185,44 @@ try:
         for column in selected_columns:
             with tabs[0]:
                 # 欠損値がある行を取り除く
-                df = df.dropna(subset=[column])
+                temp_df = df.dropna(subset=[column])
                 
                 # 形態素結果をリスト化し、データフレームに結果を列追加する
-                df[column] = df[column].apply(mecab_text)
+                temp_df[column] = temp_df[column].apply(mecab_text)
                 
-                display_unigram(df, column)
+                display_unigram(temp_df, column)
             with tabs[1]:
                 # 欠損値がある行を取り除く
-                df = df.dropna(subset=[column])
+                temp_df = df.dropna(subset=[column])
                 
                 # 形態素結果をリスト化し、データフレームに結果を列追加する
-                df[column] = df[column].apply(mecab_text)
+                temp_df[column] = temp_df[column].apply(mecab_text)
                 
-                display_wordcloud(df, column)
+                display_wordcloud(temp_df, column)
             with tabs[2]:
                 # 欠損値がある行を取り除く
-                df = df.dropna(subset=[column])
+                temp_df = df.dropna(subset=[column])
                 
                 # 形態素結果をリスト化し、データフレームに結果を列追加する
-                df[column] = df[column].apply(mecab_text)
+                temp_df[column] = temp_df[column].apply(mecab_text)
                 
-                display_treemap(df, column)
+                display_treemap(temp_df, column)
             with tabs[3]:
                 # 欠損値がある行を取り除く
-                df = df.dropna(subset=[column])
+                temp_df = df.dropna(subset=[column])
                 
                 # 形態素結果をリスト化し、データフレームに結果を列追加する
-                df[column] = df[column].apply(mecab_text)
+                temp_df[column] = temp_df[column].apply(mecab_text)
                 
-                display_co_network(df, column)
+                display_co_network(temp_df, column)
             with tabs[4]:
                 # 欠損値がある行を取り除く
-                df = df.dropna(subset=[column])
+                temp_df = df.dropna(subset=[column])
                 
                 # 形態素結果をリスト化し、データフレームに結果を列追加する
-                df[column] = df[column].apply(mecab_text)
+                temp_df[column] = temp_df[column].apply(mecab_text)
                 
-                display_sunburst(df, column)
+                display_sunburst(temp_df, column)
 
 except Exception as e:
     st.write(e)
