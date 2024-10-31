@@ -40,7 +40,7 @@ def mecab_text(text):
         
     return word_list
 
-def display_unigram(df):
+def display_unigram(df, column):
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
@@ -53,10 +53,11 @@ def display_unigram(df):
         stopwords=stopwords,
     )
     
-    st.subheader("頻出単語ランキング")
-    st.plotly_chart(fig_unigram)
+    with st.expander(column):
+        st.plotly_chart(fig_unigram)
+    
 
-def display_wordcloud(df):
+def display_wordcloud(df, column):
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
@@ -71,13 +72,15 @@ def display_wordcloud(df):
         save=False
     )
     
-    st.subheader("ワードクラウド")
     plt.figure(figsize=(10, 15))
     plt.imshow(fig_wc, interpolation="bilinear")
     plt.axis("off")
-    st.pyplot(plt)
 
-def display_treemap(df):
+    with st.expander(column):
+        st.pyplot(plt)
+    
+
+def display_treemap(df, column):
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
@@ -91,10 +94,12 @@ def display_treemap(df):
         verbose=False,
         save=False
     )
-    st.subheader("ツリーマップ")
-    st.plotly_chart(fig_treemap)
+    
+    with st.expander(column):
+        st.plotly_chart(fig_treemap)
+    
 
-def display_co_network(df):
+def display_co_network(df, column):
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
     
@@ -109,10 +114,12 @@ def display_co_network(df):
         height=700,
         save=False
     )
-    st.subheader("共起ネットワーク")
-    st.plotly_chart(fig_co_network)
+    
+    with st.expander(column):
+        st.plotly_chart(fig_co_network)
+    
 
-def display_sunburst(df):
+def display_sunburst(df, column):
 
     npt = nlplot.NLPlot(df, target_col='words')
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
@@ -129,8 +136,10 @@ def display_sunburst(df):
         height=800,
         save=False
     )
-    st.subheader("サンバーストチャート")
-    st.plotly_chart(fig_sunburst)
+
+    with st.expander(column):
+        st.plotly_chart(fig_sunburst)
+    
 
 st.header("アンケートコメントの分析")
 # ファイルアップロード
@@ -151,41 +160,43 @@ try:
     df = st.session_state['df']
     st.write(df)
 
-    selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください',
-                                          options=df.columns,
-                                          placeholder="列を選択してください")
     # 文字列データ型の列のみを抽出
-    string_columns = [col for col in merged_df.columns if merged_df[col].dtype == 'object']
+    string_columns = [col for col in merged_df.columns if df[col].dtype == 'object']
+
+    selected_columns = st.multiselect(label='表示/ダウンロードしたい列を選択してください',
+                                          options=string_columns,
+                                          placeholder="列を選択してください")
+    
 
     for column in string_columns:
+        # 欠損値がある行を取り除く
+        df = df.dropna(subset=[column])
         
-  
-    # 欠損値がある行を取り除く
-    df = df.dropna(subset=['comment'])
-    
-    # 形態素結果をリスト化し、データフレームに結果を列追加する
-    df['words'] = df['comment'].apply(mecab_text)
-
-    # アンケート内容と名詞のリスト（words列）のみを取り出して、新たにデータフレーム作成
-    df = df[['comment','words']]
-
-    st.dataframe(df['comment'], width=1000)
+        # 形態素結果をリスト化し、データフレームに結果を列追加する
+        df[column] = df[column].apply(mecab_text)
 
     # タブを作成
     tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
     tabs = st.tabs(tab_list)
+
+    tabs[0].subheader("頻出単語ランキング")
+    tabs[1].subheader("ワードクラウド")
+    tabs[2].subheader("ツリーマップ")
+    tabs[3].subheader("共起ネットワーク")
+    tabs[4].subheader("サンバーストチャート")
     
-    # 各表示関数を呼び出す
-    with tabs[0]:
-        display_unigram(df)
-    with tabs[1]:
-        display_wordcloud(df)
-    with tabs[2]:
-        display_treemap(df)
-    with tabs[3]:
-        display_co_network(df)
-    with tabs[4]:
-        display_sunburst(df)
+    # 各カラムに対してタブを表示
+    for column in string_columns:
+        with tabs[0]:
+            display_unigram(df, column)
+        with tabs[1]:
+            display_wordcloud(df, column)
+        with tabs[2]:
+            display_treemap(df, column)
+        with tabs[3]:
+            display_co_network(df, column)
+        with tabs[4]:
+            display_sunburst(df, column)
 
 except Exception as e:
     pass
