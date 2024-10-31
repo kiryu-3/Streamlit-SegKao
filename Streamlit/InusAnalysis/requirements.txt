@@ -12,4 +12,3 @@ factor_analyzer
 mecab-python3
 unidic-lite
 nlplot
-chardet==5.2.0
