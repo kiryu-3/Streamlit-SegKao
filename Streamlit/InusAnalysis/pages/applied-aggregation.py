@@ -95,27 +95,34 @@ def upload_csv2():
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
 def find_significantly_high_skill(df, selected_grade, selected_mode):
-    if selected_mode == 'スコアが高い設問':
-        count_score = [4, 5]
-    elif selected_mode == 'スコアが低い設問':
-        count_score = [1, 2]
-    elif selected_mode == '"どちらともいえない"が多く選択された設問':
-        count_score = [3]
-
     # 選択された学年にデータをフィルタリング
     df = df[df['grade']==selected_grade]
   
     # 'skill' を含む列を選択
     df = df[[col for col in df.columns if 'skill' in col]]
-    
+
     # データの総要素数
     total_elements = df.size
-    
-    # 各列の count_score の数をカウント
-    column_counts = df.isin(count_score).sum(axis=0)
-    
-    # 全体の count_score の数をカウント
-    total_count = df.isin(count_score).sum().sum()
+
+    if selected_mode == 'スコアが高い設問':
+        # 各列の '4, 5' の数をカウント
+        column_counts = ((df == 4) | (df == 5)).sum(axis=0)
+        
+        # 全体の '4, 5' の数をカウント
+        total_count = ((df == 4) | (df == 5)).sum().sum()
+        
+    elif selected_mode == 'スコアが低い設問':
+        # 各列の '1, 2' の数をカウント
+        column_counts = ((df == 1) | (df == 2)).sum(axis=0)
+        
+        # 全体の '1, 2' の数をカウント
+        total_count = ((df == 1) | (df == 2)).sum().sum()
+    elif selected_mode == '"どちらともいえない"が多く選択された設問':
+        # 各列の '3' の数をカウント
+        column_counts = (df == 3).sum(axis=0)
+        
+        # 全体の '3' の数をカウント
+        total_count = (df == 3).sum().sum()
     
     # 各列と全体の count_score の割合を計算
     column_proportions = column_counts / df.shape[0]
