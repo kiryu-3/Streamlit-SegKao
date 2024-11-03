@@ -96,8 +96,9 @@ def upload_csv2():
 
 def find_significantly_high_skill(df, selected_grade, selected_mode):
     # 選択された学年にデータをフィルタリング
-    df = df[df['grade']==selected_grade]
-  
+    if selected_grade != "全学年":
+        df = df[df['grade']==selected_grade]
+    
     # 'skill' を含む列を選択
     df = df[[col for col in df.columns if 'skill' in col]]
 
