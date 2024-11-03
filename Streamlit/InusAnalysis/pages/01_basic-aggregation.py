@@ -250,6 +250,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             )
 
             if selected_category == '"どちらでもない"が多く選択された設問':
+                st.write("Kaoru")
                 st.plotly_chart(fig, key=f"sub_plots_{qnumber}")
             else:
                 st.plotly_chart(fig)
