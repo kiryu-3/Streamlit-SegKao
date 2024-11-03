@@ -1,5 +1,6 @@
 import io
 from io import BytesIO
+import re
 import itertools
 
 import numpy as np
