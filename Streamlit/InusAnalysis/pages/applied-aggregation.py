@@ -350,7 +350,7 @@ try:
                       index=initial_index,
                       placeholder="都市を選択してください")
     if selected_grade != '全学年':
-        selected_df = st.session_state['df'][st.session_state['df']['grade'].isin(selected_grade)]
+        selected_df = st.session_state['df'][st.session_state['df']['grade']==selected_grade]
     else:
         selected_df = st.session_state['df']
   
