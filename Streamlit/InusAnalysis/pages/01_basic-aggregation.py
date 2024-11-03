@@ -133,7 +133,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         significant_skills_number = find_significantly_high_skill3s(df)
         significant_skills_number = list(map(int, significant_skills_number))
         question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
-        st.write(question_df)
     else:
         question_df = question_df[question_df["カテゴリ"] == selected_category]
 
@@ -251,7 +250,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
             )
 
-            if selected_category == '"どちらでもない"が多く選択された設問':
+            if selected_category == '"どちらともいえない"が多く選択された設問':
                 st.plotly_chart(fig, key=f"sub_plots_{qnumber}")
             else:
                 st.plotly_chart(fig)
