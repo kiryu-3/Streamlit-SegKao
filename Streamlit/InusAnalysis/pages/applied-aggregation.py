@@ -101,9 +101,9 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
     else:
         selected_df = df
     
-    # 'skill' を含む列を選択
-    df = df[[col for col in df.columns if 'skill' in col]]
-    selected_df = selected_df[[col for col in selected_df.columns if 'skill' in col]]
+    # 'skill' と数字の列を選択
+    df = df[[col for col in df.columns if re.match(r'skill\d+', col)]]
+    selected_df = selected_df[[col for col in selected_df.columns if re.match(r'skill\d+', col)]]
 
     # データの総要素数
     total_elements = df.size
