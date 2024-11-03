@@ -128,7 +128,7 @@ def find_significantly_high_skill3s(df):
     return significant_skills
 
 def analyze_selected_category(selected_category, grades, df, question_df):
-    if selected_category == '"どちらでもない"が多く選択された設問':
+    if selected_category == '"どちらともいえない"が多く選択された設問':
         significant_skills_number = find_significantly_high_skill3s(df)
         significant_skills_number = list(map(int, significant_skills_number))
         question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
@@ -250,7 +250,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             )
 
             if selected_category == '"どちらでもない"が多く選択された設問':
-                st.write("Kaoru")
                 st.plotly_chart(fig, key=f"sub_plots_{qnumber}")
             else:
                 st.plotly_chart(fig)
@@ -344,5 +343,5 @@ try:
                 analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
-    st.write(e)
+    # st.write(e)
     pass
