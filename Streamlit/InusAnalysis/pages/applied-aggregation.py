@@ -381,5 +381,5 @@ try:
                 analyze_selected_grade(tab_list[i], grades, selected_grade, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
-    st.write(e)
+    # st.write(e)
     pass
