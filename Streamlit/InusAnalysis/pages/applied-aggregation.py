@@ -149,7 +149,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
         p_value = binom_test.pvalue
         
         # p値が0.05以下かつ割合が全体より高い場合
-        if p_value < 0.05 and proportion > overall_proportion:
+        if p_value < 0.01 and proportion > overall_proportion:
             # 'skill' の後ろの番号を抽出してリストに追加
             skill_number = col_name.replace('skill', '')
             significant_skills.append(skill_number)
