@@ -101,12 +101,12 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
         count_score = [1, 2]
     elif selected_mode == '"どちらともいえない"が多く選択された設問':
         count_score = [3]
-  
-    # 'skill' を含む列を選択
-    df = df[[col for col in df.columns if 'skill' in col]]
 
     # 選択された学年にデータをフィルタリング
     df = df[df['grade']==selected_grade]
+  
+    # 'skill' を含む列を選択
+    df = df[[col for col in df.columns if 'skill' in col]]
     
     # データの総要素数
     total_elements = df.size
