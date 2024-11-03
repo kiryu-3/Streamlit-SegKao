@@ -131,9 +131,9 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
     # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
     significant_skills = []
 
-    # st.write(df.columns)
-    # st.write(column_counts)
-    # st.write(column_proportions)
+    st.write(df.columns)
+    st.write(column_counts)
+    st.write(column_proportions)
     
     # 各列に対して二項検定を実施
     for col_name, count, proportion in zip(df.columns, column_counts, column_proportions):
@@ -381,5 +381,5 @@ try:
                 analyze_selected_grade(tab_list[i], grades, selected_grade, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
-    # st.write(e)
+    st.write(e)
     pass
