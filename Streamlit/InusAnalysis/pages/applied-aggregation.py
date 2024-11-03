@@ -129,7 +129,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
         total_count = (df == 3).sum().sum()
     
     # 各列と全体の count_score の割合を計算
-    column_proportions = column_counts / df.shape[0]
+    column_proportions = column_counts / selected_df.shape[0]
     overall_proportion = total_count / total_elements
     
     # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
