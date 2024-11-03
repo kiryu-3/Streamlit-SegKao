@@ -191,7 +191,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
         )
 
-        if selected_category == '"どちらでもない"が多く選択された設問':
+        if selected_category == '"どちらともいえない"が多く選択された設問':
             st.plotly_chart(fig, key=f"sub_plot_{qnumber}")
         else:
             st.plotly_chart(fig)
