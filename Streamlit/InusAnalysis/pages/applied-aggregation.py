@@ -140,7 +140,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
     # st.write(selected_df.shape[0])
     # st.write(df.shape[0])
     # st.write(overall_proportion)
-    st.write(column_counts)
+    # st.write(column_counts)
     # st.write(column_proportions)
     
     # 各列に対して二項検定を実施
