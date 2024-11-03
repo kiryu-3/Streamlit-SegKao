@@ -340,6 +340,7 @@ try:
         # タブとカテゴリのループ
         for i, tab in enumerate(tabs):
             with tab:
+                st.write(tab_list[i])
                 analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
