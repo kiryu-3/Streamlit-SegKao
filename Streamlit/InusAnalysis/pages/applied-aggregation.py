@@ -138,6 +138,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
 
     st.write(total_elements)
     st.write(selected_df.shape[0])
+    st.write(df.shape[0])
     st.write(overall_proportion)
     st.write(column_counts)
     st.write(column_proportions)
