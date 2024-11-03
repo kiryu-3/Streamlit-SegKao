@@ -152,6 +152,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
 def analyze_selected_grade(selected_mode, grades, selected_grade, df, question_df):
     significant_skills_number = find_significantly_high_skill(df, selected_grade, selected_mode)
     significant_skills_number = list(map(int, significant_skills_number))
+    st.write(significant_skills_number)
     question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
 
     # "B"から始まるものだけを残す
