@@ -94,7 +94,7 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def find_significantly_high_skill(df, selected_mode):
+def find_significantly_high_skill(df, selected_grade, selected_mode):
     if selected_mode == 'スコアが高い設問':
         count_score = [4, 5]
     elif selected_mode == 'スコアが低い設問':
@@ -104,6 +104,9 @@ def find_significantly_high_skill(df, selected_mode):
   
     # 'skill' を含む列を選択
     df = df[[col for col in df.columns if 'skill' in col]]
+
+    # 選択された学年にデータをフィルタリング
+    df = df[df['grade']==selected_grade]
     
     # データの総要素数
     total_elements = df.size
@@ -134,8 +137,8 @@ def find_significantly_high_skill(df, selected_mode):
     
     return significant_skills
 
-def analyze_selected_grade(selected_mode, grades, df, question_df):
-    significant_skills_number = find_significantly_high_skill(df, selected_mode)
+def analyze_selected_grade(selected_mode, grades, selected_grade, df, question_df):
+    significant_skills_number = find_significantly_high_skill(df, selected_grade, selected_mode)
     significant_skills_number = list(map(int, significant_skills_number))
     question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
 
@@ -349,10 +352,6 @@ try:
                       options=grades_list,
                       index=initial_index,
                       placeholder="都市を選択してください")
-    if selected_grade != '全学年':
-        selected_df = st.session_state['df'][st.session_state['df']['grade']==selected_grade]
-    else:
-        selected_df = st.session_state['df']
   
     tab_list = ['スコアが高い設問', 'スコアが低い設問', '"どちらともいえない"が多く選択された設問']
     tabs = st.tabs(tab_list)
@@ -368,7 +367,7 @@ try:
         # タブとカテゴリのループ
         for i, tab in enumerate(tabs):
             with tab:
-                analyze_selected_grade(tab_list[i], grades, selected_df, st.session_state['question_df'])
+                analyze_selected_grade(tab_list[i], grades, selected_grade, st.session_state['df'], st.session_state['question_df'])
     
 except Exception as e:
     st.write(e)
