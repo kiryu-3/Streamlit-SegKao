@@ -145,7 +145,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
     
     # 各列に対して二項検定を実施
     for col_name, count, proportion in zip(df.columns, column_counts, column_proportions):
-        binom_test = stats.binomtest(count, df.shape[0], overall_proportion)
+        binom_test = stats.binomtest(count, selected_df.shape[0], overall_proportion)
         p_value = binom_test.pvalue
         
         # p値が0.05以下かつ割合が全体より高い場合
