@@ -135,7 +135,7 @@ def find_significantly_high_skill(df, selected_grade, selected_mode):
     # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
     significant_skills = []
 
-    st.write(df.columns)
+    st.write(overall_proportion)
     st.write(column_counts)
     st.write(column_proportions)
     
