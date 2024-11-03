@@ -109,10 +109,10 @@ def find_significantly_high_skill(df, selected_mode):
     total_elements = df.size
     
     # 各列の count_score の数をカウント
-    column_counts = (df == count_score).sum(axis=0)
+    column_counts = df.isin(count_score).sum(axis=0)
     
     # 全体の count_score の数をカウント
-    total_count = (df == count_score).sum().sum()
+    total_count = df.isin(count_score).sum().sum()
     
     # 各列と全体の count_score の割合を計算
     column_proportions = column_counts / df.shape[0]
