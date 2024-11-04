@@ -110,13 +110,14 @@ def process_csv(df):
     groups = [[] for _ in range(num_full_groups)]
     group_sums = [0] * len(groups)  # 各グループの合計要求数を保持
     group_ids = [set() for _ in range(num_full_groups)]  # 各グループの全グループIDを保持
-    st.write(group_ids)
+    
 
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
         min_index = group_sums.index(min(group_sums))
         
         # 同じ「前グループ」IDの人がすでにいるか確認
+        st.write(group_ids)
         if row['前グループ'] not in group_ids[min_index]:
             groups[min_index].append(row)
             group_sums[min_index] += row['要求数']
