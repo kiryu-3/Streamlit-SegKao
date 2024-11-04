@@ -39,14 +39,62 @@ def upload_csv():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['before_df'] = pd.DataFrame()  # 空のデータフレーム
 
+# def process_csv(df):
+#     # # "クラス"カラムの値が"2C"ではないものの"出席番号"を90にする
+#     # df.loc[df['クラス'] != '2C', '出席番号'] = 90
+
+#     # # "回答内容"列の「たい」で要求数を数え、新しい"要求数"カラムを作成
+#     # df['要求数'] = df['回答内容'].str.count('たい').astype(int)  # 整数型に変換
+
+#     # "要求数"カラムが無い場合の条件
+#     if "要求数" not in df.columns:
+#         return None, None  # 列がない場合はNoneを返す
+    
+#     # 要求数でソート
+#     df_sorted = df.sort_values(by='要求数', ascending=False).reset_index(drop=True)
+
+#     # バランスを取ったグループ作成
+#     group_size = 4  # 基本4人組
+#     total_members = len(df_sorted)
+#     num_full_groups = total_members // group_size  # 完全な4人組の数
+#     st.write(total_members)
+
+#     # グループを準備
+#     groups = [[] for _ in range(num_full_groups)]
+#     group_sums = [0] * len(groups)  # 各グループの合計要求数を保持
+
+#     # 貪欲法でグループ分け
+#     for index, row in df_sorted.iterrows():
+#         # 4人組を作成
+#         min_index = group_sums.index(min(group_sums))
+#         if len(groups[min_index]) < group_size:
+#             groups[min_index].append(row)
+#             group_sums[min_index] += row['要求数']
+#         else:
+#             for i in range(num_full_groups):
+#                 if len(groups[i]) < group_size:
+#                     groups[i].append(row)
+#                     group_sums[i] += row['要求数']
+#                     break
+#             else:
+#                 # 全てのグループが4人の場合、最後のグループに追加
+#                 groups[-1].append(row)
+#                 group_sums[-1] += row['要求数']
+            
+#     # グループ番号を追加
+#     for group_number, group in enumerate(groups, start=1):
+#         for member in group:
+#             df.loc[member.name, 'グループ番号'] = group_number
+
+#     # dfをグループ番号でソート
+#     df.sort_values(by='グループ番号', ascending=True, inplace=True)
+    
+#     # グループ番号ごとの要求数の合計を計算
+#     group_totals = df.groupby('グループ番号')['要求数'].sum().reset_index()
+#     group_totals.rename(columns={'要求数': '要求数の合計'}, inplace=True)  # カラム名を変更
+    
+#     return df, group_totals
 def process_csv(df):
-    # # "クラス"カラムの値が"2C"ではないものの"出席番号"を90にする
-    # df.loc[df['クラス'] != '2C', '出席番号'] = 90
-
-    # # "回答内容"列の「たい」で要求数を数え、新しい"要求数"カラムを作成
-    # df['要求数'] = df['回答内容'].str.count('たい').astype(int)  # 整数型に変換
-
-    # "要求数"カラムが無い場合の条件
     if "要求数" not in df.columns:
         return None, None  # 列がない場合はNoneを返す
     
@@ -57,29 +105,34 @@ def process_csv(df):
     group_size = 4  # 基本4人組
     total_members = len(df_sorted)
     num_full_groups = total_members // group_size  # 完全な4人組の数
-    st.write(total_members)
 
     # グループを準備
     groups = [[] for _ in range(num_full_groups)]
     group_sums = [0] * len(groups)  # 各グループの合計要求数を保持
+    group_ids = [set() for _ in range(num_full_groups)]  # 各グループの全グループIDを保持
 
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
-        # 4人組を作成
         min_index = group_sums.index(min(group_sums))
-        if len(groups[min_index]) < group_size:
+        
+        # 同じ「前グループ」IDの人がすでにいるか確認
+        if row['前グループ'] not in group_ids[min_index]:
             groups[min_index].append(row)
             group_sums[min_index] += row['要求数']
+            group_ids[min_index].add(row['全グループ'])
         else:
+            # 他のグループを探す
             for i in range(num_full_groups):
-                if len(groups[i]) < group_size:
+                if row['前グループ'] not in group_ids[i] and len(groups[i]) < group_size:
                     groups[i].append(row)
                     group_sums[i] += row['要求数']
+                    group_ids[i].add(row['前グループ'])
                     break
             else:
-                # 全てのグループが4人の場合、最後のグループに追加
+                # 全てのグループに同じ「前グループ」IDの人がいる場合、最後のグループに追加
                 groups[-1].append(row)
                 group_sums[-1] += row['要求数']
+                group_ids[-1].add(row['前グループ'])
             
     # グループ番号を追加
     for group_number, group in enumerate(groups, start=1):
@@ -94,6 +147,7 @@ def process_csv(df):
     group_totals.rename(columns={'要求数': '要求数の合計'}, inplace=True)  # カラム名を変更
     
     return df, group_totals
+
 
 st.title("要求数に基づくグルーピング")
 
