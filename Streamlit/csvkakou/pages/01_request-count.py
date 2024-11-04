@@ -85,7 +85,7 @@ try:
         # CSVをバイナリデータに変換
         csv_file = df.to_csv(index=False, encoding="shift-jis").encode('shift-jis')
     
-        st.subheader("グルーピング後のデータダウンロード")
+        st.subheader("カウント後のデータダウンロード")
         st.download_button(
             label="Download CSV",
             data=csv_file,
