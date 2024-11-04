@@ -110,6 +110,7 @@ def process_csv(df):
     groups = [[] for _ in range(num_full_groups)]
     group_sums = [0] * len(groups)  # 各グループの合計要求数を保持
     group_ids = [set() for _ in range(num_full_groups)]  # 各グループの全グループIDを保持
+    st.write(group_ids)
 
     # 貪欲法でグループ分け
     for index, row in df_sorted.iterrows():
