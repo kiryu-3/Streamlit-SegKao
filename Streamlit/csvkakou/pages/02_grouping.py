@@ -119,7 +119,7 @@ def process_csv(df):
         if row['前グループ'] not in group_ids[min_index]:
             groups[min_index].append(row)
             group_sums[min_index] += row['要求数']
-            group_ids[min_index].add(row['全グループ'])
+            group_ids[min_index].add(row['前グループ'])
         else:
             # 他のグループを探す
             for i in range(num_full_groups):
@@ -198,4 +198,5 @@ try:
                 file_name=f'{download_name}_grouped.csv'
             )
 except Exception as e:
+    st.write(e)
     pass
