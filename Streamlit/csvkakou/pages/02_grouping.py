@@ -117,12 +117,13 @@ def process_csv(df):
         min_index = group_sums.index(min(group_sums))
         
         # 同じ「前グループ」IDの人がすでにいるか確認
-        st.write(group_ids)
+        
         if row['前グループ'] not in group_ids[min_index]:
             groups[min_index].append(row)
             group_sums[min_index] += row['要求数']
             group_ids[min_index].add(row['前グループ'])
         else:
+            st.write(group_ids)
             # 他のグループを探す
             for i in range(num_full_groups):
                 if row['前グループ'] not in group_ids[i] and len(groups[i]) < group_size:
