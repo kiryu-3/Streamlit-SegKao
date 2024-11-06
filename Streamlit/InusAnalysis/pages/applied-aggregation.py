@@ -97,7 +97,7 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def cluster_skills(df):
+def cluster_skills(df, grades):
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
     df = df[df['grade'].isin(grades)]
@@ -354,7 +354,7 @@ try:
         # タブとカテゴリのループ
         for i, tab in enumerate(tabs):
             with tab:
-                cluster_results = cluster_skills(st.session_state['df'])
+                cluster_results = cluster_skills(st.session_state['df'], grades)
                 skills_in_cluster = cluster_results[cluster_results['cluster'] == i+1]['skill'].tolist()
                 numeric_skills = [int(skill.replace("skill", "")) for skill in skills_in_cluster]
                 question_df = question_df[question_df["通し番号"].isin(numeric_skills)]
