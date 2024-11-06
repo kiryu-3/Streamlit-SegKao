@@ -352,7 +352,7 @@ try:
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
   
-    tab_list = ['B2・B3・B4低', 'B2低⇒B3・B4やや高', 'B2低⇒B3やや高⇒B4中', 'B2中⇒B3やや高⇒B4中', 'B2・B3・B4中', 'B2中⇒B3・B4やや高', 'B2・B3・B4やや高' 'B2・B3・B4高']
+    tab_list = ['B2・B3・B4低', 'B2低⇒B3・B4やや高', 'B2低⇒B3やや高⇒B4中', 'B2中⇒B3やや高⇒B4中', 'B2・B3・B4中', 'B2中⇒B3・B4やや高', 'B2・B3・B4やや高', 'B2・B3・B4高']
     tabs = st.tabs(tab_list)
 
     # question_dfが未定義または空の場合のチェック
