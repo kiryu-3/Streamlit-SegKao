@@ -2,6 +2,7 @@ import io
 from io import BytesIO
 import re
 import itertools
+import joblib
 
 import numpy as np
 import pandas as pd
@@ -95,77 +96,32 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def find_significantly_high_skill(df, selected_grade, selected_mode):
-    # 選択された学年にデータをフィルタリング
-    if selected_grade != "全学年":
-        selected_df = df[df['grade']==selected_grade]
-    else:
-        selected_df = df
-    
-    # 'skill' と数字の列を選択
-    df = df[[col for col in df.columns if re.match(r'skill\d+', col)]]
-    selected_df = selected_df[[col for col in selected_df.columns if re.match(r'skill\d+', col)]]
+def cluster_skills(df, model_path='kmeans_model.pkl'):
+    # スキルのカラムを抽出
+    skills = [col for col in df.columns if col.startswith('skill')]
+    skill_data = df[skills]
 
-    # データの総要素数
-    total_elements = df.size
+    # 各学年ごとのスキルスコアの平均を計算
+    grade_means = df.groupby('grade')[skills].mean().T
 
-    if selected_mode == 'スコアが高い設問':
-        # 各列の '4, 5' の数をカウント
-        column_counts = ((selected_df == 4) | (selected_df == 5)).sum(axis=0)
-        
-        # 全体の '4, 5' の数をカウント
-        total_count = ((df == 4) | (df == 5)).sum().sum()
-        
-    elif selected_mode == 'スコアが低い設問':
-        # 各列の '1, 2' の数をカウント
-        column_counts = ((selected_df == 1) | (selected_df == 2)).sum(axis=0)
-        
-        # 全体の '1, 2' の数をカウント
-        total_count = ((df == 1) | (df == 2)).sum().sum()
-    elif selected_mode == '"どちらともいえない"が多く選択された設問':
-        # 各列の '3' の数をカウント
-        column_counts = (selected_df == 3).sum(axis=0)
-        
-        # 全体の '3' の数をカウント
-        total_count = (df == 3).sum().sum()
-    
-    # 各列と全体の count_score の割合を計算
-    column_proportions = column_counts / selected_df.shape[0]
-    overall_proportion = total_count / total_elements
-    
-    # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
-    significant_skills = []
+    # 保存したモデルを読み込む
+    kmeans_loaded = joblib.load(model_path)
 
-    # st.write(total_elements)
-    # st.write(selected_df.shape[0])
-    # st.write(df.shape[0])
-    # st.write(overall_proportion)
-    # st.write(column_counts)
-    # st.write(column_proportions)
-    
-    # 各列に対して二項検定を実施
-    for col_name, count, proportion in zip(df.columns, column_counts, column_proportions):
-        binom_test = stats.binomtest(count, selected_df.shape[0], overall_proportion)
-        p_value = binom_test.pvalue
-        
-        # p値が0.05以下かつ割合が全体より高い場合
-        if p_value < 0.05 and proportion > overall_proportion:
-            # 'skill' の後ろの番号を抽出してリストに追加
-            skill_number = col_name.replace('skill', '')
-            significant_skills.append(skill_number)
-    
-    return significant_skills
+    # 読み込んだモデルを使って予測を行う
+    clusters = kmeans_loaded.predict(grade_means)
 
-def analyze_selected_grade(selected_mode, grades, selected_grade, df, question_df):
-    significant_skills_number = find_significantly_high_skill(df, selected_grade, selected_mode)
-    significant_skills_number = list(map(int, significant_skills_number))
-    st.write(significant_skills_number)
-    question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
+    # クラスタリングの結果をDataFrameにまとめる
+    cluster_results = pd.DataFrame({
+        'skill': skills,
+        'cluster': clusters
+    })
 
-    # "B"から始まるものだけを残す
-    # grades = [grade for grade in grades if grade.startswith("B")]
-    # df = df[df['grade'].isin(grades)]
+    # cluster列を置き換え
+    cluster_results['cluster'] = cluster_results['cluster'].replace({0: 2, 1: 1, 2: 8, 3: 4, 4: 7, 5: 3, 6: 6, 7: 5})
 
+    return cluster_results
+
+def analyze_selected_grade(selected_mode, grades, df, question_df):
     for index, row in question_df.iterrows():
         # skill_{qnumber}列をndarrayに変換
         qnumber = row['通し番号'] 
@@ -181,6 +137,16 @@ def analyze_selected_grade(selected_mode, grades, selected_grade, df, question_d
             np.sum(skill_array == 5)   # 5：とてもあてはまる
         ])
         skill_point_percentages = (skill_point_counts / skill_point_total) * 100
+
+        # 全学年の平均スコアを計算
+        overall_average_score = np.mean(skill_array)
+        st.write(f"全学年の平均スコア (Q{qnumber}): {overall_average_score:.2f}")
+
+        # 各学年の平均スコアを計算して表示
+        for grade in grades:
+            grade_df = df[df["grade"] == grade]
+            grade_average_score = np.mean(grade_df[f"skill{qnumber}"].values)
+            st.write(f"{grade}の平均スコア (Q{qnumber}): {grade_average_score:.2f}")
 
         # 5件法の情報
         skill_point_labels = [
@@ -363,17 +329,8 @@ try:
     # タブを作成
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
-    grades_list = grades + ['全学年']
-    # '全学年'のインデックスを取得
-    initial_index = grades_list.index('全学年')
   
-    selected_grade = st.selectbox(
-                      label='学年を選択してください',
-                      options=grades_list,
-                      index=initial_index,
-                      placeholder="都市を選択してください")
-  
-    tab_list = ['スコアが高い設問', 'スコアが低い設問', '"どちらともいえない"が多く選択された設問']
+    tab_list = ['B2・B3・B4低', 'B2低⇒B3・B4やや高', 'B2低⇒B3やや高⇒B4中', 'B2中⇒B3やや高⇒B4中', 'B2・B3・B4中', 'B2中⇒B3・B4やや高', 'B2・B3・B4やや高' 'B2・B3・B4高']
     tabs = st.tabs(tab_list)
 
     # question_dfが未定義または空の場合のチェック
@@ -387,7 +344,10 @@ try:
         # タブとカテゴリのループ
         for i, tab in enumerate(tabs):
             with tab:
-                analyze_selected_grade(tab_list[i], grades, selected_grade, st.session_state['df'], st.session_state['question_df'])
+                skills_in_cluster = cluster_results[cluster_results['cluster'] == i+1]['skill'].tolist()
+                numeric_skills = [int(skill.replace("skill", "")) for skill in skills_in_cluster]
+                question_df = question_df[question_df["通し番号"].isin(numeric_skills)]
+                analyze_selected_grade(tab_list[i], grades, st.session_state['df'], question_df)
     
 except Exception as e:
     # st.write(e)
