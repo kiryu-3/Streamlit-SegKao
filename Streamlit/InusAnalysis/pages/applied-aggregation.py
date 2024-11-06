@@ -357,8 +357,8 @@ try:
                 cluster_results = cluster_skills(st.session_state['df'], grades)
                 skills_in_cluster = cluster_results[cluster_results['cluster'] == i+1]['skill'].tolist()
                 numeric_skills = [int(skill.replace("skill", "")) for skill in skills_in_cluster]
-                question_df = question_df[question_df["通し番号"].isin(numeric_skills)]
-                analyze_clustering(tab_list[i], grades, st.session_state['df'], question_df)
+                question_df_filtered = st.session_state['question_df'][st.session_state['question_df']["通し番号"].isin(numeric_skills)]
+                analyze_clustering(tab_list[i], grades, st.session_state['df'], question_df_filtered)
     
 except Exception as e:
     st.write(e)
