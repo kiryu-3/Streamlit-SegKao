@@ -148,15 +148,23 @@ def analyze_clustering(selected_mode, grades, df, question_df):
         ])
         skill_point_percentages = (skill_point_counts / skill_point_total) * 100
 
-        # 全学年の平均スコアを計算
+       # 全学年の平均スコアと標準偏差を計算
         overall_average_score = np.mean(skill_array)
-        st.write(f"全学年の平均スコア (Q{qnumber}): {overall_average_score:.2f}")
+        overall_std_score = np.std(skill_array)
 
-        # 各学年の平均スコアを計算して表示
+        # 各学年の平均スコアと標準偏差を計算して表示
+        grade_results = []
         for grade in grades:
             grade_df = df[df["grade"] == grade]
             grade_average_score = np.mean(grade_df[f"skill{qnumber}"].values)
-            st.write(f"{grade}の平均スコア (Q{qnumber}): {grade_average_score:.2f}")
+            grade_std_score = np.std(grade_df[f"skill{qnumber}"].values)
+            grade_results.append({"学年": grade, "平均スコア": grade_average_score, "標準偏差": grade_std_score})
+
+        # "全学年"の結果を追加
+        grade_results.append({"学年": "全学年", "平均スコア": overall_average_score, "標準偏差": overall_std_score})
+
+        # データフレームに変換
+        results_df = pd.DataFrame(grade_results)
 
         # 5件法の情報
         skill_point_labels = [
@@ -270,6 +278,9 @@ def analyze_clustering(selected_mode, grades, df, question_df):
             
             # Kruskal-Wallis検定
             stat, p = kruskal(*groups)
+
+            # 統計量を表示
+            st.write(results_df)
             
             # 有意差がある場合、事後検定 (Dunn検定)
             if p < 0.05:
