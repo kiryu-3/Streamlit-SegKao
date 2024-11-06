@@ -272,7 +272,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             else:
                 st.write("学年間のスコアの有意差はありません")
     
-st.header("設問別スコアの分析")    
+st.header("設問別スコアの分析-基本集計")    
 # ファイルアップロード
 st.file_uploader("集計結果（5件法）のcsvをアップロード",
                        type=["csv"],
