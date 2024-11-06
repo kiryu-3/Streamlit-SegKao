@@ -98,6 +98,10 @@ def upload_csv2():
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
 def cluster_skills(df):
+    # "B"から始まるものだけを残す
+    grades = [grade for grade in grades if grade.startswith("B")]
+    df = df[df['grade'].isin(grades)]
+    
     # スキルのカラムを抽出
     skills = [col for col in df.columns if col.startswith('skill')]
     skill_data = df[skills]
