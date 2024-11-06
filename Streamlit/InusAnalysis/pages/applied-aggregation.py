@@ -121,7 +121,11 @@ def cluster_skills(df, model_path='kmeans_model.pkl'):
 
     return cluster_results
 
-def analyze_selected_grade(selected_mode, grades, df, question_df):
+def analyze_clustering(selected_mode, grades, df, question_df):
+    # "B"から始まるものだけを残す
+    grades = [grade for grade in grades if grade.startswith("B")]
+    df = df[df['grade'].isin(grades)]
+    
     for index, row in question_df.iterrows():
         # skill_{qnumber}列をndarrayに変換
         qnumber = row['通し番号'] 
@@ -344,10 +348,11 @@ try:
         # タブとカテゴリのループ
         for i, tab in enumerate(tabs):
             with tab:
+                cluster_results = cluster_skills(st.session_state['df'])
                 skills_in_cluster = cluster_results[cluster_results['cluster'] == i+1]['skill'].tolist()
                 numeric_skills = [int(skill.replace("skill", "")) for skill in skills_in_cluster]
                 question_df = question_df[question_df["通し番号"].isin(numeric_skills)]
-                analyze_selected_grade(tab_list[i], grades, st.session_state['df'], question_df)
+                analyze_clustering(tab_list[i], grades, st.session_state['df'], question_df)
     
 except Exception as e:
     st.write(e)
