@@ -96,7 +96,7 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def cluster_skills(df, model_path='kmeans_model.pkl'):
+def cluster_skills(df, model_path='pages/kmeans_model.pkl'):
     # スキルのカラムを抽出
     skills = [col for col in df.columns if col.startswith('skill')]
     skill_data = df[skills]
