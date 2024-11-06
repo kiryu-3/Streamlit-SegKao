@@ -280,6 +280,7 @@ def analyze_clustering(selected_mode, grades, df, question_df):
             stat, p = kruskal(*groups)
 
             # 統計量を表示
+            st.write("各学年の平均スコア")
             st.write(results_df)
             
             # 有意差がある場合、事後検定 (Dunn検定)
