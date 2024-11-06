@@ -373,5 +373,5 @@ try:
                 analyze_clustering(tab_list[i], grades, st.session_state['df'], question_df_filtered)
     
 except Exception as e:
-    st.write(e)
+    # st.write(e)
     pass
