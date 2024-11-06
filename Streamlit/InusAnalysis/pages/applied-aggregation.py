@@ -1,6 +1,7 @@
 import io
 from io import BytesIO
 import re
+import os
 import itertools
 import joblib
 
@@ -96,7 +97,7 @@ def upload_csv2():
         # upload_csvfileがNoneの場合、空のデータフレームを作成
         st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
 
-def cluster_skills(df, model_path='pages/kmeans_model.pkl'):
+def cluster_skills(df):
     # スキルのカラムを抽出
     skills = [col for col in df.columns if col.startswith('skill')]
     skill_data = df[skills]
@@ -105,6 +106,7 @@ def cluster_skills(df, model_path='pages/kmeans_model.pkl'):
     grade_means = df.groupby('grade')[skills].mean().T
 
     # 保存したモデルを読み込む
+    model_path = os.path.join(os.path.dirname(__file__), 'kmeans_model.pkl')
     kmeans_loaded = joblib.load(model_path)
 
     # 読み込んだモデルを使って予測を行う
