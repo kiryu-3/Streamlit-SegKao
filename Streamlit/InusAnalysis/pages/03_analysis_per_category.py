@@ -201,6 +201,8 @@ def grade_test(df, categories, grades):
 
     # 結果を格納するためのリスト
     result_pairs = []
+    # 各カテゴリの初期y座標オフセット（ブラケットを上にずらすために使用）
+    y_offset = 0.5  
     flag = 0
 
     for category in categories:
