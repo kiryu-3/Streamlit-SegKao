@@ -230,19 +230,21 @@ def grade_test(df, categories, grades):
             # 重複を取り除くために、タプルをソートして集合に変換
             filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
 
-            for pair in filtered_pairs:
-                # ブラケットを描画
+            for i, pair in enumerate(filtered_pairs):
+                # ブラケットを描画（水平にしてずらし配置）
                 fig.add_shape(
                     type="line",
-                    x0=categories.index(category) - 0.2, y0=max(values[grades.index(pair[0])]) + 0.5,
-                    x1=categories.index(category) + 0.2, y1=max(values[grades.index(pair[1])]) + 0.5,
+                    x0=categories.index(category) - 0.2, 
+                    y0=max(values[grades.index(pair[0])]) + y_offset + i * 0.3,
+                    x1=categories.index(category) + 0.2, 
+                    y1=max(values[grades.index(pair[1])]) + y_offset + i * 0.3,
                     line=dict(color="black", width=1)
                 )
 
                 # 有意差のテキスト（*）を描画
                 fig.add_annotation(
                     x=categories.index(category),
-                    y=max(values[grades.index(pair[1])]) + 0.7,
+                    y=max(values[grades.index(pair[1])]) + y_offset + i * 0.3 + 0.1,
                     text="*",
                     showarrow=False,
                     yshift=10
