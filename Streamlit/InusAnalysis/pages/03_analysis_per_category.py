@@ -201,8 +201,8 @@ def grade_test(df, categories, grades):
 
     # 結果を格納するためのリスト
     result_pairs = []
-    # 各カテゴリの初期y座標オフセット（ブラケットを上にずらすために使用）
-    y_offset = 0.5  
+    y_offset = 0.5  # 最初のブラケットの高さオフセット
+    y_increment = 0.3  # 複数のブラケットが重なった場合の追加オフセット
     flag = 0
 
     for category in categories:
@@ -232,27 +232,28 @@ def grade_test(df, categories, grades):
             # 重複を取り除くために、タプルをソートして集合に変換
             filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
 
+            # 有意差のある組み合わせにブラケットを描画
             for i, pair in enumerate(filtered_pairs):
-                # ブラケットを描画（水平にしてずらし配置）
+                # ブラケットのx軸位置をカテゴリに基づいて設定
+                x0 = categories.index(category) - 0.25 + grades.index(pair[0]) * 0.1
+                x1 = categories.index(category) + 0.25 + grades.index(pair[1]) * 0.1
+                y_level = max(values[grades.index(pair[0])]) + y_offset + (i * y_increment)
+
+                # ブラケットを描画
                 fig.add_shape(
                     type="line",
-                    x0=categories.index(category) - 0.2, 
-                    y0=max(values[grades.index(pair[0])]) + y_offset + i * 0.3,
-                    x1=categories.index(category) + 0.2, 
-                    y1=max(values[grades.index(pair[1])]) + y_offset + i * 0.3,
+                    x0=x0, y0=y_level, x1=x1, y1=y_level,
                     line=dict(color="black", width=1)
                 )
 
                 # 有意差のテキスト（*）を描画
                 fig.add_annotation(
-                    x=categories.index(category),
-                    y=max(values[grades.index(pair[1])]) + y_offset + i * 0.3 + 0.1,
+                    x=(x0 + x1) / 2,
+                    y=y_level + 0.1,
                     text="*",
                     showarrow=False,
                     yshift=10
                 )
-
-
             result_pairs.append(filtered_pairs)
         else:
             # ポストホックテストの実行
