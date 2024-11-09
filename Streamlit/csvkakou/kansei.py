@@ -1,8 +1,11 @@
 import streamlit as st
 
+def page_2():
+    st.title("Page 2")
+
 pages = {
     "Your account": [
-        st.Page("kansei.py", title="aa"),
+        st.Page(page_2),
         st.Page("prokiso.py", title="gg"),
     ]
 }
