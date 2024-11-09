@@ -1,18 +1,18 @@
 import streamlit as st
 
-def page_2():
-    st.title("Page 2")
+# クエリパラメータを取得
+query_params = st.experimental_get_query_params()
+page = query_params.get("page", ["home"])[0]
 
-def page_3():
-    st.title("Page 3")
+# ページの内容を条件に応じて表示
+if page == "home":
+    st.title("Home Page")
+    st.write("これはホームページです。")
+elif page == "admin":
+    st.title("Admin Page")
+    st.write("管理者専用ページです。")
 
-pages = {
-    "Your account": [
-        st.Page(page_2),
-        st.Page(page_3),
-        st.Page("prokiso.py", title="gg"),
-    ]
-}
-
-pg = st.navigation(pages)
-pg.run()
+# サイドバーには「home」だけ表示する
+if page == "home":
+    st.experimental_set_query_params(page="home")
+    st.sidebar.selectbox("ページ選択", ["home"])
