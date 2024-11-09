@@ -2,7 +2,7 @@ import streamlit as st
 
 pages = {
     "Your account": [
-        st.Page("02_grouping.py", title="gg"),
+        st.Page("prokiso.py", title="gg"),
     ]
 }
 
