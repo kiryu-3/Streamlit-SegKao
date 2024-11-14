@@ -232,28 +232,6 @@ def grade_test(df, categories, grades):
             # 重複を取り除くために、タプルをソートして集合に変換
             filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
 
-            # 有意差のある組み合わせにブラケットを描画
-            for i, pair in enumerate(filtered_pairs):
-                # ブラケットのx軸位置をカテゴリに基づいて設定
-                x0 = categories.index(category) - 0.25 + grades.index(pair[0]) * 0.1
-                x1 = categories.index(category) + 0.25 + grades.index(pair[1]) * 0.1
-                y_level = max(values[grades.index(pair[0])]) + y_offset + (i * y_increment)
-
-                # ブラケットを描画
-                fig.add_shape(
-                    type="line",
-                    x0=x0, y0=y_level, x1=x1, y1=y_level,
-                    line=dict(color="black", width=1)
-                )
-
-                # 有意差のテキスト（*）を描画
-                fig.add_annotation(
-                    x=(x0 + x1) / 2,
-                    y=y_level + 0.1,
-                    text="*",
-                    showarrow=False,
-                    yshift=10
-                )
             result_pairs.append(filtered_pairs)
         else:
             # ポストホックテストの実行
@@ -413,5 +391,5 @@ try:
                     st.write(f"【{result_column}】")
 
 except Exception as e:
-    st.write(e)
+    # st.write(e)
     pass
