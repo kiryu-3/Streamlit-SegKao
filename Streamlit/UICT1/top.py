@@ -293,8 +293,8 @@ def analyze_selected_category(selected_category, grades, df, question_df):
     
 st.header("設問別スコアの分析-基本集計")    
 
-get_spreadsheet_data(st.secrets["QUESTIONS_ID"], st.secrets["QUESTIONS_NAME"], "questions_df")
-get_spreadsheet_data(st.secrets["ANSWERS_ID"], st.secrets["ANSWERS_NAME"], "answers_df")
+get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
+get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
 
 categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
 grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
