@@ -387,18 +387,19 @@ cols[1].dataframe(question_df)
 
 # st.write(st.session_state['questions_df'])
 st.write(st.session_state['answers_df'])
+tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
 
-tabs = st.tabs(categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"])
+tabs = st.tabs(tab_list)
 # タブとカテゴリのループ
 for i, tab in enumerate(tabs):
-    if categories[i] == "各分野のスコア分布":
+    if tab_list[i] == "各分野のスコア分布":
         with tab:
             categories_df, fig = categories_test(st.session_state['answers_df'], categories)
             with st.expander("各分野の平均・標準偏差"):
                 st.dataframe(categories_df)
             with st.expander("各分野のスコア分布"):
                 st.plotly_chart(fig)
-    elif categories[i] == "各分野の学年別のスコア分布":
+    elif tab_list[i] == "各分野の学年別のスコア分布":
         with tab:
             grade_df, fig, result_pairs = grade_test(st.session_state['answers_df'], categories, grades)
             with st.expander("各分野の学年別の平均・標準偏差"):
@@ -407,4 +408,4 @@ for i, tab in enumerate(tabs):
                 st.plotly_chart(fig)
     else:
         with tab:
-            analyze_selected_category(categories[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
+            analyze_selected_category(tab_list[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
