@@ -395,7 +395,7 @@ cols[1].write("#### 各分野の質問数")
 cols[1].dataframe(question_df)
 
 # st.write(st.session_state['questions_df'])
-st.write(st.session_state['answers_df'])
+# st.write(st.session_state['answers_df'])
 tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
 
 tabs = st.tabs(tab_list)
