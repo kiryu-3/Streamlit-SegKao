@@ -46,7 +46,7 @@ def get_spreadsheet_data(spreadsheet_id, sheet_name, name):
     # Q数字の列名を持つ列をフィルタリング
     q_columns = [col for col in df.columns if col.startswith('Q') and col[1:].isdigit()]
     # 対象の列にのみ処理を適用
-    df[q_columns] = df[q_columns].applymap(lambda x: x.split('.')[0] if isinstance(x, str) and '.' in x else x)
+    df[q_columns] = df[q_columns].applymap(lambda x: int(x.split('.')[0]) if isinstance(x, str) and '.' in x else x)
     st.session_state[name] = df
 
 def display_summary(df, categories, grades):
