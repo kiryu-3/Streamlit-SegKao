@@ -39,9 +39,10 @@ if 'answers_df' not in st.session_state:
     st.session_state['answers_df'] = pd.DataFrame()  # 空のデータフレーム
 
 # スプレッドシートのデータを取得
-def get_spreadsheet_data(spreadsheet_id, sheet_name):
+def get_spreadsheet_data(spreadsheet_id, sheet_name, name):
     url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
     data = pd.read_csv(url, header=0)  # header=0 で1行目を列名として扱う
+    st.session_state[name] = data
 
 def display_summary(df, categories, grades):
     
