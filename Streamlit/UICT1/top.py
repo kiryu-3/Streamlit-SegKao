@@ -47,6 +47,13 @@ def get_spreadsheet_data(spreadsheet_id, sheet_name, name):
     q_columns = [col for col in df.columns if col.startswith('Q') and col[1:].isdigit()]
     # 対象の列にのみ処理を適用
     df[q_columns] = df[q_columns].applymap(lambda x: int(x.split('.')[0]) if isinstance(x, str) and '.' in x else x)
+
+    # 各カテゴリごとに平均を算出
+    df['オンライン・コラボレーション力'] = df.loc[:, 'Q1':'Q15'].mean(axis=1)
+    df['データ利活用力'] = df.loc[:, 'Q16':'Q30'].mean(axis=1)
+    df['情報システム開発力'] = df.loc[:, 'Q31':'Q44'].mean(axis=1)
+    df['情報倫理力'] = df.loc[:, 'Q45':'Q66'].mean(axis=1)
+    
     st.session_state[name] = df
 
 def display_summary(df, categories, grades):
@@ -236,7 +243,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
 
 # 分野間の差の検定をする関数
 def categories_test(df, categories):
-    st.write(df['grade'])
+
     # データフレームの整形
     melted_df = df.melt(id_vars='grade', value_vars=categories,
                         var_name='category', value_name='value')
