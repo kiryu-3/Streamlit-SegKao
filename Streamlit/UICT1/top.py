@@ -89,7 +89,13 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         with st.expander("選択肢"):
             st.radio(
                 label="rubric",
-                options=[f" {row['level1']}", f"(2) {row['level2']}", f"(3) {row['level3']}", f"(4) {row['level4']}", f"(5) {row['level5']}"],
+                options=[
+                    f"(1) {row['level1'].split('.')[1].strip()}", 
+                    f"(2) {row['level2'].split('.')[1].strip()}", 
+                    f"(3) {row['level3'].split('.')[1].strip()}", 
+                    f"(4) {row['level4'].split('.')[1].strip()}", 
+                    f"(5) {row['level5'].split('.')[1].strip()}"
+                ],
                 index=None,
                 key=f"radio_{row['qnumber']}",
                 label_visibility="collapsed",
