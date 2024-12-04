@@ -162,7 +162,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             
             for grade in grades:
                 grade_df = df[df["grade"]==grade]
-                skill_array = grade_df[f"skill{qnumber}"].values
+                skill_array = grade_df[f"Q{qnumber}"].values
 
                 # 5件法の割合を計算
                 skill_point_total = len(skill_array)
