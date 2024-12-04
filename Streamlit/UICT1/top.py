@@ -48,11 +48,12 @@ def get_spreadsheet_data(spreadsheet_id, sheet_name, name):
     # 対象の列にのみ処理を適用
     df[q_columns] = df[q_columns].applymap(lambda x: int(x.split('.')[0]) if isinstance(x, str) and '.' in x else x)
 
-    # 各カテゴリごとに平均を算出
-    df['オンライン・コラボレーション力'] = df.loc[:, 'Q1':'Q15'].mean(axis=1)
-    df['データ利活用力'] = df.loc[:, 'Q16':'Q30'].mean(axis=1)
-    df['情報システム開発力'] = df.loc[:, 'Q31':'Q44'].mean(axis=1)
-    df['情報倫理力'] = df.loc[:, 'Q45':'Q66'].mean(axis=1)
+    if name=="answers_df":
+        # 各カテゴリごとに平均を算出
+        df['オンライン・コラボレーション力'] = df.loc[:, 'Q1':'Q15'].mean(axis=1)
+        df['データ利活用力'] = df.loc[:, 'Q16':'Q30'].mean(axis=1)
+        df['情報システム開発力'] = df.loc[:, 'Q31':'Q44'].mean(axis=1)
+        df['情報倫理力'] = df.loc[:, 'Q45':'Q66'].mean(axis=1)
     
     st.session_state[name] = df
 
