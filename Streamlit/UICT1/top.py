@@ -236,6 +236,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
 
 # 分野間の差の検定をする関数
 def categories_test(df, categories):
+    st.write(df)
     # データフレームの整形
     melted_df = df.melt(id_vars='grade', value_vars=categories,
                         var_name='category', value_name='value')
