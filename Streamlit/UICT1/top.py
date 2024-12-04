@@ -98,7 +98,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         # skill_{qnumber}列をndarrayに変換
         qnumber = row['qnumber'] 
         skill_array = df[f"Q{qnumber}"].values
-        st.write(skill_array)
 
         # 5件法の割合を計算
         skill_point_total = len(skill_array)
@@ -154,7 +153,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
         )
 
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, key=f"plot_{qnumber}")
 
         with st.expander("学年ごとの分布"):
             # 積み上げ棒グラフの作成
@@ -201,7 +200,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
             )
 
-            st.plotly_chart(fig)
+            st.plotly_chart(fig, key=f"plots_{qnumber}")
 
             # 統計量を表示
             st.write("各学年の平均スコア")
