@@ -41,8 +41,13 @@ if 'answers_df' not in st.session_state:
 # スプレッドシートのデータを取得
 def get_spreadsheet_data(spreadsheet_id, sheet_name, name):
     url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
-    data = pd.read_csv(url, header=0)  # header=0 で1行目を列名として扱う
-    st.session_state[name] = data
+    df = pd.read_csv(url, header=0)  # header=0 で1行目を列名として扱う
+
+    # Q数字の列名を持つ列をフィルタリング
+    q_columns = [col for col in df.columns if col.startswith('Q') and col[1:].isdigit()]
+    # 対象の列にのみ処理を適用
+    df[q_columns] = df[q_columns].applymap(lambda x: x.split('.')[0] if isinstance(x, str) and '.' in x else x)
+    st.session_state[name] = df
 
 def display_summary(df, categories, grades):
     
@@ -84,6 +89,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             st.radio(
                 label="rubric",
                 options=[row['level1'], row['level2'], row['level3'], row['level4'], row['level5']],
+                index=None,
                 label_visibility="collapsed",
                 disabled=True,
                 horizontal=False,
@@ -236,6 +242,8 @@ cols[0].write("#### 各学年の人数")
 cols[0].dataframe(summary_df)
 cols[1].write("#### 各分野の質問数")
 cols[1].dataframe(question_df)
+
+st.write(st.session_state['answers_df'])
 
 tabs = st.tabs(categories)
 # タブとカテゴリのループ
