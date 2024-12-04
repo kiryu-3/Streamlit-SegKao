@@ -233,7 +233,142 @@ def analyze_selected_category(selected_category, grades, df, question_df):
     
             # else:
             #     st.write("学年間のスコアの有意差はありません")
-    
+
+# 分野間の差の検定をする関数
+def categories_test(df, categories):
+    # データフレームの整形
+    melted_df = df.melt(id_vars='grade', value_vars=categories,
+                        var_name='category', value_name='value')
+
+
+    # 全学年の平均と標準偏差を追加
+    summary_stats = melted_df.groupby('category').agg(
+        mean=('value', 'mean'),
+        std=('value', 'std')
+    ).reset_index()
+    summary_stats['grade'] = 'ALL'
+
+    # categoriesの順序を設定
+    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
+    # categoriesの順にソート
+    summary_stats = summary_stats.sort_values("category", ascending=True)
+
+    # ボックスプロットの描画
+    fig = px.box(melted_df, x='category', y='value', title='各分野のスコア分布') 
+
+    # # カテゴリごとのデータを取得
+    # values = [melted_df[melted_df['category'] == category]['value'].values for category in categories]
+
+    # # クラスカル・ウォリス検定を実行
+    # stat, p = kruskal(*values) 
+
+    # # 有意差が見られる場合、ポストホックテストを実行
+    # if p < 0.05:
+    #     # ポストホックテストの実行
+    #     posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+    #     # 結果のDataFrameのカラム名とインデックスを設定
+    #     posthoc.columns = categories
+    #     posthoc.index = categories
+
+    #     # st.write(posthoc)
+        
+    #     # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
+    #     significant_pairs = [
+    #         (idx, col)
+    #         for col in posthoc.columns
+    #         for idx in posthoc.index
+    #         if posthoc.loc[idx, col] < 0.05
+    #     ]
+
+    #     # 重複を取り除くために、タプルをソートして集合に変換
+    #     filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
+
+    # else :
+    #     filtered_pairs = set()
+
+    return summary_stats, fig
+    # return summary_stats, fig, filtered_pairs
+
+# 分野-学年間の差の検定をする関数
+def grade_test(df, categories, grades):
+
+    # "B"から始まるものだけを残す
+    grades = [grade for grade in grades if grade.startswith("B")]
+
+    # データフレームの整形
+    melted_df = df.melt(id_vars='grade', value_vars=categories,
+                        var_name='category', value_name='value')
+    melted_df = melted_df[melted_df['grade'].isin(grades)]
+
+    # 学年ごとの平均と標準偏差を取得
+    summary_stats = melted_df.groupby(['category', 'grade']).agg(
+        mean=('value', 'mean'),
+        std=('value', 'std')
+    ).reset_index()
+
+    # categoriesの順序を設定
+    summary_stats['category'] = pd.Categorical(summary_stats['category'], categories=categories, ordered=True)
+    # categoriesの順にソート
+    summary_stats = summary_stats.sort_values("category", ascending=True)
+
+    # 'grade'列をgradesの順番に並べ替え
+    melted_df['grade'] = pd.Categorical(melted_df['grade'], categories=grades, ordered=True)
+    # 'category'列をcategoriesの順番に並べ替え
+    melted_df['category'] = pd.Categorical(melted_df['category'], categories=categories, ordered=True)
+
+    melted_df = melted_df.sort_values(['grade', 'category'])
+
+    # ボックスプロットの描画
+    fig = px.box(melted_df, x='category', y='value', color='grade', title='各分野の学年ごとのスコア分布') 
+
+    # # 結果を格納するためのリスト
+    # result_pairs = []
+    # y_offset = 0.5  # 最初のブラケットの高さオフセット
+    # y_increment = 0.3  # 複数のブラケットが重なった場合の追加オフセット
+    # flag = 0
+
+    # for category in categories:
+    #     # 学年ごとのデータを取得
+    #     values = [melted_df[melted_df['category']==category][melted_df['grade'] == grade]['value'].values for grade in grades]
+        
+    #     # クラスカル・ウォリス検定を実行
+    #     stat, p = kruskal(*values) 
+
+    #     # 有意差が見られる場合、ポストホックテストを実行
+    #     if p < 0.05:
+    #         # ポストホックテストの実行
+    #         posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+    #         # 結果のDataFrameのカラム名とインデックスを設定
+    #         posthoc.columns = grades
+    #         posthoc.index = grades
+
+    #         # st.write(posthoc)
+            
+    #         # 有意差が見られるカテゴリ間の組み合わせをリスト内包表記で取得
+    #         significant_pairs = [
+    #             (category, idx, col)
+    #             for col in posthoc.columns
+    #             for idx in posthoc.index
+    #             if posthoc.loc[idx, col] < 0.05
+    #         ]
+
+    #         # 重複を取り除くために、タプルをソートして集合に変換
+    #         filtered_pairs = {tuple(sorted(pair)) for pair in significant_pairs}
+
+    #         result_pairs.append(filtered_pairs)
+    #     else:
+    #         # ポストホックテストの実行
+    #         posthoc = sp.posthoc_dunn(values,  p_adjust='bonferroni')
+
+    #         # 結果のDataFrameのカラム名とインデックスを設定
+    #         posthoc.columns = grades
+    #         posthoc.index = grades
+
+    return summary_stats, fig
+    # return summary_stats, fig, result_pairs
+
 st.header("設問別スコアの分析-基本集計")    
 
 get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
@@ -250,11 +385,26 @@ cols[0].dataframe(summary_df)
 cols[1].write("#### 各分野の質問数")
 cols[1].dataframe(question_df)
 
-st.write(st.session_state['questions_df'])
+# st.write(st.session_state['questions_df'])
 st.write(st.session_state['answers_df'])
 
-tabs = st.tabs(categories)
+tabs = st.tabs(categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"])
 # タブとカテゴリのループ
 for i, tab in enumerate(tabs):
-    with tab:
-        analyze_selected_category(categories[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
+    if categories[i] == "各分野のスコア分布":
+        with tab:
+            categories_df, fig = categories_test(st.session_state['answers_df'], categories)
+            with st.expander("各分野の平均・標準偏差"):
+                st.dataframe(categories_df)
+            with st.expander("各分野のスコア分布"):
+                st.plotly_chart(fig)
+    elif categories[i] == "各分野の学年別のスコア分布":
+        with tab:
+            grade_df, fig, result_pairs = grade_test(st.session_state['answers_df'], categories, grades)
+            with st.expander("各分野の学年別の平均・標準偏差"):
+                st.dataframe(grade_df)
+            with st.expander("各分野の学年別のスコア分布"):
+                st.plotly_chart(fig)
+    else:
+        with tab:
+            analyze_selected_category(categories[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
