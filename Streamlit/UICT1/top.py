@@ -84,7 +84,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
 
     for index, row in question_df.iterrows():
         st.write(f'Q{row['qnumber']}. {row["qsentence"]}')
-        st.write(row['level1'])
 
         with st.expander("選択肢"):
             st.radio(
