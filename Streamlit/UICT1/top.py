@@ -98,6 +98,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         # skill_{qnumber}列をndarrayに変換
         qnumber = row['qnumber'] 
         skill_array = df[f"Q{qnumber}"].values
+        st.write(skill_array)
 
         # 5件法の割合を計算
         skill_point_total = len(skill_array)
