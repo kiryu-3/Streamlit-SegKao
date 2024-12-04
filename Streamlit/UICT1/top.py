@@ -90,6 +90,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 label="rubric",
                 options=[row['level1'], row['level2'], row['level3'], row['level4'], row['level5']],
                 index=None,
+                key=f"radio_{row['qnumber']}",
                 label_visibility="collapsed",
                 disabled=True,
                 horizontal=False,
