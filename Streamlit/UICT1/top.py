@@ -70,80 +70,6 @@ def display_summary(df, categories, grades):
 
     return summary_df, question_df
 
-def upload_csv():
-    # csvがアップロードされたとき
-    if st.session_state['upload_csvfile'] is not None:
-        # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile'].read()
-        try:
-            # Shift-JISで読み込みを試みる
-            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
-        except UnicodeDecodeError:
-            # Shift-JISで失敗したらUTF-8で再試行
-            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python") 
-                
-
-        # 各カテゴリごとに平均を算出
-        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
-        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
-        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
-        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
-
-        st.session_state['df'] = df
-    else:
-        # upload_csvfileがNoneの場合、空のデータフレームを作成
-        st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
-
-def upload_csv2():
-    # csvがアップロードされたとき
-    if st.session_state['upload_csvfile2'] is not None:
-        # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile2'].read()
-        try:
-            # Shift-JISで読み込みを試みる
-            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
-        except UnicodeDecodeError:
-            # Shift-JISで失敗したらUTF-8で再試行
-            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python") 
-
-        st.session_state['question_df'] = df
-    else:
-        # upload_csvfileがNoneの場合、空のデータフレームを作成
-        st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
-
-def find_significantly_high_skill3s(df):
-    # 'skill' を含む列を選択
-    df = df[[col for col in df.columns if 'skill' in col]]
-    
-    # データの総要素数
-    total_elements = df.size
-    
-    # 各列の '3' の数をカウント
-    column_3_counts = (df == 3).sum(axis=0)
-    
-    # 全体の '3' の数をカウント
-    total_3_count = (df == 3).sum().sum()
-    
-    # 各列と全体の '3' の割合を計算
-    column_3_proportions = column_3_counts / df.shape[0]
-    overall_3_proportion = total_3_count / total_elements
-    
-    # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
-    significant_skills = []
-    
-    # 各列に対して二項検定を実施
-    for col_name, count, proportion in zip(df.columns, column_3_counts, column_3_proportions):
-        binom_test = stats.binomtest(count, df.shape[0], overall_3_proportion)
-        p_value = binom_test.pvalue
-        
-        # p値が0.05以下かつ割合が全体より高い場合
-        if p_value < 0.05 and proportion > overall_3_proportion:
-            # 'skill' の後ろの番号を抽出してリストに追加
-            skill_number = col_name.replace('skill', '')
-            significant_skills.append(skill_number)
-    
-    return significant_skills
-
 def analyze_selected_category(selected_category, grades, df, question_df):
     question_df = question_df[question_df["category"] == selected_category]
 
@@ -156,7 +82,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
 
         with st.expander("選択肢"):
             st.radio(
-                options=[row['lebel1'], row['lebel2'], row['lebel3'], row['lebel4'], row['lebel5']],
+                options=[row['level1'], row['level2'], row['level3'], row['level4'], row['level5']],
                 label_visibility="collapsed",
                 disabled=True,
                 horizontal=False,
