@@ -244,6 +244,7 @@ cols[0].dataframe(summary_df)
 cols[1].write("#### 各分野の質問数")
 cols[1].dataframe(question_df)
 
+st.write(st.session_state['questions_df'])
 st.write(st.session_state['answers_df'])
 
 tabs = st.tabs(categories)
