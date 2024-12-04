@@ -410,7 +410,7 @@ for i, tab in enumerate(tabs):
                 st.plotly_chart(fig)
     elif tab_list[i] == "各分野の学年別のスコア分布":
         with tab:
-            grade_df, fig, result_pairs = grade_test(st.session_state['answers_df'], categories, grades)
+            grade_df, fig = grade_test(st.session_state['answers_df'], categories, grades)
             with st.expander("各分野の学年別の平均・標準偏差"):
                 st.dataframe(grade_df)
             with st.expander("各分野の学年別のスコア分布"):
