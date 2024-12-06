@@ -378,7 +378,7 @@ def grade_test(df, categories, grades):
     return summary_stats, fig
     # return summary_stats, fig, result_pairs
 
-st.header("設問別スコアの分析-基本集計")    
+st.header("情報活用力チェック 集計結果")    
 
 get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
 get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
