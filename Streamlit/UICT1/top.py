@@ -378,10 +378,50 @@ def grade_test(df, categories, grades):
     return summary_stats, fig
     # return summary_stats, fig, result_pairs
 
+# ハッシュを計算してデータの変更を検知
+def get_sheet_hash(spreadsheet_id, sheet_name):
+    url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+    response = pd.read_csv(url, header=0)
+    # データフレームの内容をハッシュ化
+    sheet_hash = hashlib.md5(response.to_csv(index=False).encode()).hexdigest()
+    return sheet_hash
+
+# スプレッドシートデータを効率的に取得
+def fetch_and_process_data():
+    spreadsheet_id = st.secrets["SHEET_ID"]
+
+    # スプレッドシートのハッシュを取得
+    questions_hash = get_sheet_hash(spreadsheet_id, "questions")
+    answers_hash = get_sheet_hash(spreadsheet_id, "answers")
+
+    # データ取得と処理
+    questions_df = get_spreadsheet_data(spreadsheet_id, "questions")
+    answers_df = get_spreadsheet_data(spreadsheet_id, "answers")
+
+    # 必要に応じて前処理
+    q_columns = [col for col in answers_df.columns if col.startswith('Q') and col[1:].isdigit()]
+    answers_df[q_columns] = answers_df[q_columns].applymap(lambda x: int(x.split('.')[0]) if isinstance(x, str) and '.' in x else x)
+
+    # 各カテゴリごとの平均を計算
+    answers_df['オンライン・コラボレーション力'] = answers_df.loc[:, 'Q1':'Q15'].mean(axis=1)
+    answers_df['データ利活用力'] = answers_df.loc[:, 'Q16':'Q30'].mean(axis=1)
+    answers_df['情報システム開発力'] = answers_df.loc[:, 'Q31':'Q44'].mean(axis=1)
+    answers_df['情報倫理力'] = answers_df.loc[:, 'Q45':'Q66'].mean(axis=1)
+
+    # セッション状態に保存
+    st.session_state['questions_hash'] = questions_hash
+    st.session_state['answers_hash'] = answers_hash
+    st.session_state['questions_df'] = questions_df
+    st.session_state['answers_df'] = answers_df
+
+# 初回ロード時またはキャッシュクリア時にデータを取得
+if 'answers_hash' not in st.session_state:
+    fetch_and_process_data()
+
 st.header("情報活用力チェック 集計結果")    
 
-get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
-get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
+# get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
+# get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
 
 categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
 grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
