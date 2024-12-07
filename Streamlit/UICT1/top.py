@@ -2,6 +2,7 @@ import itertools
 
 import io
 from io import BytesIO
+import hashlib
 
 import gspread
 import matplotlib.pyplot as plt
