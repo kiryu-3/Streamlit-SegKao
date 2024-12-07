@@ -58,6 +58,13 @@ if 'answers_df' not in st.session_state:
     
 #     st.session_state[name] = df
 
+# スプレッドシートのデータを取得
+@st.cache_data(show_spinner=False, ttl=60)
+def get_spreadsheet_data(spreadsheet_id, sheet_name):
+    url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+    df = pd.read_csv(url, header=0)  # header=0 で1行目を列名として扱う
+    return df
+
 # ハッシュを計算してデータの変更を検知
 def get_sheet_hash(spreadsheet_id, sheet_name):
     url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
