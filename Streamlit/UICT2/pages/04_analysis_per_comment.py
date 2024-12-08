@@ -17,7 +17,7 @@ import nlplot  # nlplotをインポート
 import seaborn as sns
 import statsmodels.api as sm
 from scipy import stats
-from scipy.stats import kruskal, shapiro
+from scipy.stats import kruskal, shapiro, mannwhitneyu
 import streamlit as st
 
 
@@ -506,7 +506,6 @@ try:
                 display_func(sorted_df)
           
     else:
-        
         # 取り出すカラムのインデックスを計算
         start_col_index = 74 + select_list.index(option) * 3
         
@@ -539,8 +538,21 @@ try:
         questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
+
+        with st.expander("回答方式間の比較"):
+            # 1列目と2列目のデータを取得
+            data1 = sorted_df.iloc[:, 1]  # 1列目
+            data2 = sorted_df.iloc[:, 2]  # 2列目
+            
+            # マンホイットニーのU検定
+            stat, p = mannwhitneyu(data1, data2)
+        
+            if p < 0.05:
+                st.write("回答方式間で有意差があります")
+            else:
+                st.write("回答方式間で有意差がありません")
     
-        st.write(questionnaires_df.at[3, "qsentence"])
+        st.write(questionnaires_df.at[2, "qsentence"])
         tabs = st.tabs(tab_list)
     
         
