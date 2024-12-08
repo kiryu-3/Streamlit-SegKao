@@ -130,6 +130,13 @@ def display_summary(df, categories, grades):
 # 正規性の検定
 def normality_test(df, categories):
 
+    # start_timeとend_timeをdatetime型に変換
+    df['start_time'] = pd.to_datetime(df['start_time'], format='%Y/%m/%d %H:%M:%S')
+    df['end_time'] = pd.to_datetime(df['end_time'], format='%Y/%m/%d %H:%M:%S')
+    
+    # 所要時間を計算して新しい列に追加 (秒単位)
+    df['required-seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
+
     # 正規性の検証
     results = {}
     stat, p = stats.shapiro(df["required-seconds"])
@@ -171,6 +178,13 @@ def normality_test(df, categories):
 
 # 分野間の差の検定をする関数
 def categories_test(df, categories):
+    # start_timeとend_timeをdatetime型に変換
+    df['start_time'] = pd.to_datetime(df['start_time'], format='%Y/%m/%d %H:%M:%S')
+    df['end_time'] = pd.to_datetime(df['end_time'], format='%Y/%m/%d %H:%M:%S')
+    
+    # 所要時間を計算して新しい列に追加 (秒単位)
+    df['required-seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
+    
     # データフレームの整形
     summary_stats = df.agg(
         mean=('required_time_seconds', 'mean'),
@@ -187,7 +201,13 @@ def categories_test(df, categories):
 
 # 分野-学年間の差の検定をする関数
 def grade_test(df, categories, grades):
-
+    # start_timeとend_timeをdatetime型に変換
+    df['start_time'] = pd.to_datetime(df['start_time'], format='%Y/%m/%d %H:%M:%S')
+    df['end_time'] = pd.to_datetime(df['end_time'], format='%Y/%m/%d %H:%M:%S')
+    
+    # 所要時間を計算して新しい列に追加 (秒単位)
+    df['required-seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
+    
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
 
@@ -245,12 +265,7 @@ def grade_test(df, categories, grades):
 # 初回ロード時またはキャッシュクリア時にデータを取得
 if 'answers_hash' not in st.session_state:
     fetch_and_process_data()
-    # start_timeとend_timeをdatetime型に変換
-    st.session_state['answers_df']['start_time'] = pd.to_datetime(st.session_state['answers_df']['start_time'], format='%Y/%m/%d %H:%M:%S')
-    st.session_state['answers_df']['end_time'] = pd.to_datetime(st.session_state['answers_df']['end_time'], format='%Y/%m/%d %H:%M:%S')
     
-    # 所要時間を計算して新しい列に追加 (秒単位)
-    st.session_state['answers_df']['required-seconds'] = (st.session_state['answers_df']['end_time'] - st.session_state['answers_df']['start_time']).dt.total_seconds()
 
 st.header("情報活用力チェック 集計結果")    
 
