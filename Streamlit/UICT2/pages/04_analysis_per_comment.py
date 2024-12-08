@@ -511,7 +511,8 @@ try:
             st.session_state['answers_df']['grade'],
             st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
         ], axis=1)
-    
+
+        st.write(sorted_df)
         # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
         sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
       
@@ -535,7 +536,7 @@ try:
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
     
-        st.write(questionnaires_df.at[2, "qsentence"])
+        st.write(questionnaires_df.at[3, "qsentence"])
         tabs = st.tabs(tab_list)
     
         
