@@ -462,9 +462,7 @@ if option == "回答形式":
     sorted_df.iloc[:, 1] = sorted_df.iloc[:, 1].replace(replace_dict)
 
     # qcategory が option に等しい行を取り出す
-    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option]
-    st.write(questionnaires_df)
-    st.write(questionnaires_df.loc[0, "qsentence"])
+    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
     analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
 
     st.write(questionnaires_df.at[1, "qsentence"])
@@ -493,7 +491,7 @@ elif option in ["ルーブリックの全体評価", "全体コメント"]:
     sorted_df['words'] = sorted_df.iloc[:, 1].apply(mecab_text)
 
     # qcategory が option に等しい行を取り出す
-    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option]
+    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
     
     tabs = st.tabs(tab_list)
     
@@ -531,7 +529,7 @@ else:
     sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
 
     # qcategory が option に等しい行を取り出す
-    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option]
+    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
     analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
     analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
 
