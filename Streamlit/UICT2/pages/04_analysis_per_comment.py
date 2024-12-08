@@ -416,7 +416,7 @@ cols[0].dataframe(summary_df)
 cols[1].write("#### 各分野の質問数")
 cols[1].dataframe(question_df)
 
-st.session_state['questionnaires_df'] = get_spreadsheet_data(st.secrets["SHEET_ID"], "questionnaires"):
+st.session_state['questionnaires_df'] = get_spreadsheet_data(st.secrets["SHEET_ID"], "questionnaires")
 
 # st.write(st.session_state['questions_df'])
 # st.write(st.session_state['answers_df'])
