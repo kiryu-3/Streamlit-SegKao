@@ -436,111 +436,112 @@ option = st.selectbox(
     index=4
 )
 
-if option == "回答形式": 
-    # 取り出すカラムのインデックスを計算
-    start_col_index = 74 + select_list.index(option) * 3
-    
-    # カラムを取り出す
-    sorted_df = pd.concat([
-        st.session_state['answers_df']['grade'],
-        st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 2]
-    ], axis=1)
-
-    # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
-    sorted_df['words'] = sorted_df.iloc[:, 2].apply(mecab_text)
-
-    # options の定義
-    options = [
-        "5件法", 
-        "どちらともいえない", 
-        "ルーブリック"
-    ]
-    
-    # 置き換え用の辞書を作成
-    replace_dict = {option: i - 1 for i, option in enumerate(options)}
-    
-    # 一列目に対して置き換えを適用
-    sorted_df.iloc[:, 1] = sorted_df.iloc[:, 1].replace(replace_dict)
-
-    # qcategory が option に等しい行を取り出す
-    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
-    analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
-
-    st.write(questionnaires_df.at[1, "qsentence"])
-    tabs = st.tabs(tab_list)
-    
-    # 各表示関数を呼び出す
-    for tab, display_func in zip(tabs, display_functions):
-        with tab:
-            display_func(sorted_df)
-
-elif option in ["ルーブリックの全体評価", "全体コメント"]:
-    if option == "ルーブリックの全体評価":
+try:
+    if option == "回答形式": 
+        # 取り出すカラムのインデックスを計算
+        start_col_index = 74 + select_list.index(option) * 3
+        
         # カラムを取り出す
         sorted_df = pd.concat([
             st.session_state['answers_df']['grade'],
-            st.session_state['answers_df']['rubric']
+            st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 2]
         ], axis=1)
-    elif option == "全体コメント":
-        # カラムを取り出す
-        sorted_df = pd.concat([
-            st.session_state['answers_df']['grade'],
-            st.session_state['answers_df']['all']
-        ], axis=1)
-
-    # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
-    sorted_df['words'] = sorted_df.iloc[:, 1].apply(mecab_text)
-
-    # qcategory が option に等しい行を取り出す
-    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
     
-    tabs = st.tabs(tab_list)
+        # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
+        sorted_df['words'] = sorted_df.iloc[:, 2].apply(mecab_text)
     
-    # 各表示関数を呼び出す
-    for tab, display_func in zip(tabs, display_functions):
-        with tab:
-            display_func(sorted_df)
-      
-else:
-    # 取り出すカラムのインデックスを計算
-    start_col_index = 74 + select_list.index(option) * 3
+        # options の定義
+        options = [
+            "5件法", 
+            "どちらともいえない", 
+            "ルーブリック"
+        ]
+        
+        # 置き換え用の辞書を作成
+        replace_dict = {option: i - 1 for i, option in enumerate(options)}
+        
+        # 一列目に対して置き換えを適用
+        sorted_df.iloc[:, 1] = sorted_df.iloc[:, 1].replace(replace_dict)
     
-    # カラムを取り出す
-    sorted_df = pd.concat([
-        st.session_state['answers_df']['grade'],
-        st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
-    ], axis=1)
-
-    # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
-    sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
-  
-    # options の定義
-    options = [
-        "全くそう思わない", 
-        "あまりそう思わない", 
-        "どちらともいえない", 
-        "ややそう思う", 
-        "とてもそう思う"
-    ]
+        # qcategory が option に等しい行を取り出す
+        questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
+        analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
     
-    # 置き換え用の辞書を作成
-    replace_dict = {option: i + 1 for i, option in enumerate(options)}
-    
-    # 一列目と二列目に対して置き換えを適用
-    sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
-
-    # qcategory が option に等しい行を取り出す
-    questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
-    analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
-    analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
-
-    st.write(questionnaires_df.at[2, "qsentence"])
-    tabs = st.tabs(tab_list)
-
-    try:
+        st.write(questionnaires_df.at[1, "qsentence"])
+        tabs = st.tabs(tab_list)
+        
         # 各表示関数を呼び出す
         for tab, display_func in zip(tabs, display_functions):
             with tab:
                 display_func(sorted_df)
-    except:
-        pass
+    
+    elif option in ["ルーブリックの全体評価", "全体コメント"]:
+        if option == "ルーブリックの全体評価":
+            # カラムを取り出す
+            sorted_df = pd.concat([
+                st.session_state['answers_df']['grade'],
+                st.session_state['answers_df']['rubric']
+            ], axis=1)
+        elif option == "全体コメント":
+            # カラムを取り出す
+            sorted_df = pd.concat([
+                st.session_state['answers_df']['grade'],
+                st.session_state['answers_df']['all']
+            ], axis=1)
+    
+        # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
+        sorted_df['words'] = sorted_df.iloc[:, 1].apply(mecab_text)
+    
+        # qcategory が option に等しい行を取り出す
+        questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
+        
+        tabs = st.tabs(tab_list)
+        
+        # 各表示関数を呼び出す
+        for tab, display_func in zip(tabs, display_functions):
+            with tab:
+                display_func(sorted_df)
+          
+    else:
+        # 取り出すカラムのインデックスを計算
+        start_col_index = 74 + select_list.index(option) * 3
+        
+        # カラムを取り出す
+        sorted_df = pd.concat([
+            st.session_state['answers_df']['grade'],
+            st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
+        ], axis=1)
+    
+        # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
+        sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
+      
+        # options の定義
+        options = [
+            "全くそう思わない", 
+            "あまりそう思わない", 
+            "どちらともいえない", 
+            "ややそう思う", 
+            "とてもそう思う"
+        ]
+        
+        # 置き換え用の辞書を作成
+        replace_dict = {option: i + 1 for i, option in enumerate(options)}
+        
+        # 一列目と二列目に対して置き換えを適用
+        sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
+    
+        # qcategory が option に等しい行を取り出す
+        questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
+        analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
+        analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
+    
+        st.write(questionnaires_df.at[2, "qsentence"])
+        tabs = st.tabs(tab_list)
+    
+        
+            # 各表示関数を呼び出す
+            for tab, display_func in zip(tabs, display_functions):
+                with tab:
+                    display_func(sorted_df)
+except:
+    pass
