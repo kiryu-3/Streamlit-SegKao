@@ -135,7 +135,7 @@ def normality_test(df, categories):
     df['end_time'] = pd.to_datetime(df['end_time'], format='%Y/%m/%d %H:%M:%S')
     
     # 所要時間を計算して新しい列に追加 (秒単位)
-    df['required-seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
+    df['required_time_seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
 
     # 正規性の検証
     results = {}
@@ -183,7 +183,7 @@ def categories_test(df, categories):
     df['end_time'] = pd.to_datetime(df['end_time'], format='%Y/%m/%d %H:%M:%S')
     
     # 所要時間を計算して新しい列に追加 (秒単位)
-    df['required-seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
+    df['required_time_seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
     
     # データフレームの整形
     summary_stats = df.agg(
@@ -206,7 +206,7 @@ def grade_test(df, categories, grades):
     df['end_time'] = pd.to_datetime(df['end_time'], format='%Y/%m/%d %H:%M:%S')
     
     # 所要時間を計算して新しい列に追加 (秒単位)
-    df['required-seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
+    df['required_time_seconds'] = (df['end_time'] - df['start_time']).dt.total_seconds()
     
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
