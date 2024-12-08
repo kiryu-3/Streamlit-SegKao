@@ -538,6 +538,8 @@ try:
         
         # 一列目と二列目に対して置き換えを適用
         sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
+
+        st.write(sorted_df)
     
         # qcategory が option に等しい行を取り出す
         questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
