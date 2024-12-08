@@ -1,0 +1,15 @@
+streamlit
+numpy
+pandas
+matplotlib
+matplotlib_fontja
+seaborn
+plotly
+statsmodels
+scipy
+scikit-posthocs
+factor_analyzer
+mecab-python3
+unidic-lite
+nlplot
+gspread
