@@ -248,7 +248,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             st.write(results_df)
 
             # 各グループのスコアをリストに分ける
-            groups = [df[df['grade'] == grade][f"skill{qnumber}"] for grade in df['grade'].unique()]
+            groups = [df[df['grade'] == grade][f"Q{qnumber}"] for grade in df['grade'].unique()]
             
             # Kruskal-Wallis検定
             stat, p = kruskal(*groups)
@@ -258,7 +258,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 st.write("学年間のスコアの有意（以下のp値が0.05以下の学年間は有意差あり）")
                 
                 # Dunn検定の実施
-                posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qnumber}", group_col='grade', p_adjust='bonferroni')
+                posthoc_results = sp.posthoc_dunn(df, val_col=f"Q{qnumber}", group_col='grade', p_adjust='bonferroni')
                 st.write(posthoc_results)
     
             else:
