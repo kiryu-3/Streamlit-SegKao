@@ -544,8 +544,8 @@ try:
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
 
         if option != "ルーブリックの分かりやすさ":
-            st.write("回答方式間のスコアの比較")
-            with st.expander("回答方式間の比較"):     
+            st.write("回答形式間のスコアの比較")
+            with st.expander("回答形式間の比較"):     
                 # 1列目と2列目のデータを取得し、数値型に変換
                 data1 = pd.to_numeric(sorted_df.iloc[:, 1], errors='coerce').dropna()  # 1列目
                 data2 = pd.to_numeric(sorted_df.iloc[:, 2], errors='coerce').dropna()  # 2列目
@@ -557,7 +557,7 @@ try:
                 # 新しいデータフレームの作成
                 methods = ["5件法", "ルーブリック"]
                 result_df = pd.DataFrame({
-                    "回答方式": methods,
+                    "回答形式": methods,
                     "平均スコア": mean_scores,
                     "標準偏差": std_devs
                 })
@@ -567,9 +567,9 @@ try:
                 stat, p = wilcoxon(data1, data2)
             
                 if p < 0.05:
-                    st.write("回答方式間で有意差があります")
+                    st.write("回答形式間で有意差があります")
                 else:
-                    st.write("回答方式間で有意差がありません")
+                    st.write("回答形式間で有意差がありません")
     
         st.write(questionnaires_df.at[2, "qsentence"])
         tabs = st.tabs(tab_list)
