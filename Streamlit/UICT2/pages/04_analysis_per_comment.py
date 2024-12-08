@@ -543,5 +543,5 @@ try:
         for tab, display_func in zip(tabs, display_functions):
             with tab:
                 display_func(sorted_df)
-except:
-    pass
+except Exception as e:
+    st.error(e)
