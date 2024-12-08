@@ -172,8 +172,8 @@ def analyze_selected_category(selected_category, grades, df, qsentence):
     grade_results = []
     for grade in grades:
         grade_df = df[df["grade"] == grade]
-        grade_average_score = np.mean(grade_df.iloc[:, 0].values)
-        grade_std_score = np.std(grade_df.iloc[:, 0].values)
+        grade_average_score = np.mean(grade_df.iloc[:, 1].values)
+        grade_std_score = np.std(grade_df.iloc[:, 1].values)
         grade_results.append({"学年": grade, "平均スコア": grade_average_score, "標準偏差": grade_std_score})
 
     # "全学年"の結果を追加
