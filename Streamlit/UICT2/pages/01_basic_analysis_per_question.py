@@ -1,6 +1,7 @@
 import io
 from io import BytesIO
 import itertools
+import hashlib
 
 import numpy as np
 import pandas as pd
@@ -23,9 +24,62 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 # 初期化
-if 'df' not in st.session_state:
-    st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
+if 'questions_df' not in st.session_state:
+    st.session_state['questions_df'] = pd.DataFrame()  # 空のデータフレーム
+if 'answers_df' not in st.session_state:
+    st.session_state['answers_df'] = pd.DataFrame()  # 空のデータフレーム
+
+# スプレッドシートのデータを取得
+@st.cache_data(show_spinner=False, ttl=60)
+def get_spreadsheet_data(spreadsheet_id, sheet_name):
+    url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+    df = pd.read_csv(url, header=0)  # header=0 で1行目を列名として扱う
+    return df
+
+# ハッシュを計算してデータの変更を検知
+def get_sheet_hash(spreadsheet_id, sheet_name):
+    url = f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+    response = pd.read_csv(url, header=0)
+    # データフレームの内容をハッシュ化
+    sheet_hash = hashlib.md5(response.to_csv(index=False).encode()).hexdigest()
+    return sheet_hash
+
+# スプレッドシートデータを効率的に取得
+def fetch_and_process_data():
+    spreadsheet_id = st.secrets["SHEET_ID"]
+
+    # スプレッドシートのハッシュを取得
+    questions_hash = get_sheet_hash(spreadsheet_id, "questions")
+    answers_hash = get_sheet_hash(spreadsheet_id, "answers")
+
+    # データ取得と処理
+    questions_df = get_spreadsheet_data(spreadsheet_id, "questions")
+    answers_df = get_spreadsheet_data(spreadsheet_id, "answers")
+
+    # 必要に応じて前処理
+    q_columns = [col for col in answers_df.columns if col.startswith('Q') and col[1:].isdigit()]
+    answers_df[q_columns] = answers_df[q_columns].applymap(lambda x: int(x.split('.')[0]) if isinstance(x, str) and '.' in x else x)
+
+    # 各カテゴリごとの平均を計算
+    answers_df['オンライン・コラボレーション力'] = answers_df.loc[:, 'Q1':'Q15'].mean(axis=1)
+    answers_df['データ利活用力'] = answers_df.loc[:, 'Q16':'Q30'].mean(axis=1)
+    answers_df['情報システム開発力'] = answers_df.loc[:, 'Q31':'Q44'].mean(axis=1)
+    answers_df['情報倫理力'] = answers_df.loc[:, 'Q45':'Q66'].mean(axis=1)
+
+    # セッション状態に保存
+    st.session_state['questions_hash'] = questions_hash
+    st.session_state['answers_hash'] = answers_hash
+    st.session_state['questions_df'] = questions_df
+    st.session_state['answers_df'] = answers_df
+
 
 def display_summary(df, categories, grades):
     
@@ -53,106 +107,45 @@ def display_summary(df, categories, grades):
 
     return summary_df, question_df
 
-def upload_csv():
-    # csvがアップロードされたとき
-    if st.session_state['upload_csvfile'] is not None:
-        # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile'].read()
-        try:
-            # Shift-JISで読み込みを試みる
-            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
-        except UnicodeDecodeError:
-            # Shift-JISで失敗したらUTF-8で再試行
-            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python") 
-                
-
-        # 各カテゴリごとに平均を算出
-        df['オンライン・コラボレーション力'] = df[df.columns[6:21]].mean(axis=1)  # オンライン・コラボレーション力
-        df['データ利活用力'] = df[df.columns[21:36]].mean(axis=1)  # データ利活用力
-        df['情報システム開発力'] = df[df.columns[36:50]].mean(axis=1)  # 情報システム開発力
-        df['情報倫理力'] = df[df.columns[50:72]].mean(axis=1)  # 情報倫理力
-
-        st.session_state['df'] = df
-    else:
-        # upload_csvfileがNoneの場合、空のデータフレームを作成
-        st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
-
-def upload_csv2():
-    # csvがアップロードされたとき
-    if st.session_state['upload_csvfile2'] is not None:
-        # アップロードされたファイルデータを読み込む
-        file_data = st.session_state['upload_csvfile2'].read()
-        try:
-            # Shift-JISで読み込みを試みる
-            df = pd.read_csv(io.BytesIO(file_data), encoding="shift-jis", engine="python")
-        except UnicodeDecodeError:
-            # Shift-JISで失敗したらUTF-8で再試行
-            df = pd.read_csv(io.BytesIO(file_data), encoding="utf-8", engine="python") 
-
-        st.session_state['question_df'] = df
-    else:
-        # upload_csvfileがNoneの場合、空のデータフレームを作成
-        st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレーム
-
-def find_significantly_high_skill3s(df):
-    # 'skill' を含む列を選択
-    df = df[[col for col in df.columns if 'skill' in col]]
-    
-    # データの総要素数
-    total_elements = df.size
-    
-    # 各列の '3' の数をカウント
-    column_3_counts = (df == 3).sum(axis=0)
-    
-    # 全体の '3' の数をカウント
-    total_3_count = (df == 3).sum().sum()
-    
-    # 各列と全体の '3' の割合を計算
-    column_3_proportions = column_3_counts / df.shape[0]
-    overall_3_proportion = total_3_count / total_elements
-    
-    # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
-    significant_skills = []
-    
-    # 各列に対して二項検定を実施
-    for col_name, count, proportion in zip(df.columns, column_3_counts, column_3_proportions):
-        binom_test = stats.binomtest(count, df.shape[0], overall_3_proportion)
-        p_value = binom_test.pvalue
-        
-        # p値が0.05以下かつ割合が全体より高い場合
-        if p_value < 0.05 and proportion > overall_3_proportion:
-            # 'skill' の後ろの番号を抽出してリストに追加
-            skill_number = col_name.replace('skill', '')
-            significant_skills.append(skill_number)
-    
-    return significant_skills
-
 def analyze_selected_category(selected_category, grades, df, question_df):
-    if selected_category == '"どちらともいえない"が多く選択された設問':
-        
-        significant_skills_number = find_significantly_high_skill3s(df)
-        significant_skills_number = list(map(int, significant_skills_number))
-        question_df = question_df[question_df["通し番号"].isin(significant_skills_number)]
-    else:
-        question_df = question_df[question_df["カテゴリ"] == selected_category]
+    question_df = question_df[question_df["category"] == selected_category]
 
     # "B"から始まるものだけを残す
     grades = [grade for grade in grades if grade.startswith("B")]
     df = df[df['grade'].isin(grades)]
 
     for index, row in question_df.iterrows():
+        st.write(f'Q{row['qnumber']}. {row["qsentence"]}')
+
+        with st.expander("選択肢"):
+            st.radio(
+                label="rubric",
+                options=[
+                    f"(1) {row['level1'].split('.')[1].strip()}", 
+                    f"(2) {row['level2'].split('.')[1].strip()}", 
+                    f"(3) {row['level3'].split('.')[1].strip()}", 
+                    f"(4) {row['level4'].split('.')[1].strip()}", 
+                    f"(5) {row['level5'].split('.')[1].strip()}"
+                ],
+                index=None,
+                key=f"radio_{row['qnumber']}",
+                label_visibility="collapsed",
+                disabled=True,
+                horizontal=False,
+            )
+      
         # skill_{qnumber}列をndarrayに変換
-        qnumber = row['通し番号'] 
-        skill_array = df[f"skill{qnumber}"].values
+        qnumber = row['qnumber'] 
+        skill_array = df[f"Q{qnumber}"].values
 
         # 5件法の割合を計算
         skill_point_total = len(skill_array)
         skill_point_counts = np.array([
-            np.sum(skill_array == 1),  # 1：まったくあてはまらない
-            np.sum(skill_array == 2),  # 2：あまりあてはまらない
-            np.sum(skill_array == 3),  # 3：どちらともいえない
-            np.sum(skill_array == 4),  # 4：ややあてはまる
-            np.sum(skill_array == 5)   # 5：とてもあてはまる
+            np.sum(skill_array == 1),
+            np.sum(skill_array == 2),
+            np.sum(skill_array == 3),
+            np.sum(skill_array == 4),
+            np.sum(skill_array == 5)
         ])
         skill_point_percentages = (skill_point_counts / skill_point_total) * 100
 
@@ -164,8 +157,8 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         grade_results = []
         for grade in grades:
             grade_df = df[df["grade"] == grade]
-            grade_average_score = np.mean(grade_df[f"skill{qnumber}"].values)
-            grade_std_score = np.std(grade_df[f"skill{qnumber}"].values)
+            grade_average_score = np.mean(grade_df[f"Q{qnumber}"].values)
+            grade_std_score = np.std(grade_df[f"Q{qnumber}"].values)
             grade_results.append({"学年": grade, "平均スコア": grade_average_score, "標準偏差": grade_std_score})
 
         # "全学年"の結果を追加
@@ -174,15 +167,6 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         # データフレームに変換
         results_df = pd.DataFrame(grade_results)
 
-        # 5件法の情報
-        skill_point_labels = [
-            "まったくあてはまらない (1)", 
-            "あまりあてはまらない (2)", 
-            "どちらともいえない (3)", 
-            "ややあてはまる (4)", 
-            "とてもあてはまる (5)"
-        ]
-
         # 指定された色
         colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
         
@@ -190,7 +174,7 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         fig = go.Figure()
 
         # 積み上げ棒グラフ
-        for i, label in enumerate(skill_point_labels):
+        for i in range(5):
             fig.add_trace(go.Bar(
                 x=[skill_point_percentages[i]],
                 name=f"{i+1}：{skill_point_percentages[i]:.1f}%",  # 凡例に割合を表示
@@ -202,17 +186,13 @@ def analyze_selected_category(selected_category, grades, df, question_df):
         # グラフのレイアウト
         fig.update_layout(
             barmode='stack',
-            title=f'Q{row['通し番号']}：{row["質問文"]}',
             xaxis_title='割合 (%)',
             yaxis=dict(showticklabels=False),  # y軸の座標（数字）を非表示にする
             height=400,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
         )
 
-        if selected_category == '"どちらともいえない"が多く選択された設問':
-            st.plotly_chart(fig, key=f"sub_plot_{qnumber}")
-        else:
-            st.plotly_chart(fig)
+        st.plotly_chart(fig, key=f"plot_{qnumber}")
 
         with st.expander("学年ごとの分布"):
             # 積み上げ棒グラフの作成
@@ -220,34 +200,25 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             
             for grade in grades:
                 grade_df = df[df["grade"]==grade]
-                skill_array = grade_df[f"skill{qnumber}"].values
+                skill_array = grade_df[f"Q{qnumber}"].values
 
                 # 5件法の割合を計算
                 skill_point_total = len(skill_array)
                 skill_point_counts = np.array([
-                    np.sum(skill_array == 1),  # 1：まったくあてはまらない
-                    np.sum(skill_array == 2),  # 2：あまりあてはまらない
-                    np.sum(skill_array == 3),  # 3：どちらともいえない
-                    np.sum(skill_array == 4),  # 4：ややあてはまる
-                    np.sum(skill_array == 5)   # 5：とてもあてはまる
+                    np.sum(skill_array == 1), 
+                    np.sum(skill_array == 2),
+                    np.sum(skill_array == 3),
+                    np.sum(skill_array == 4),
+                    np.sum(skill_array == 5)
                 ])
                 skill_point_percentages = (skill_point_counts / skill_point_total) * 100
-    
-                # 5件法の情報
-                skill_point_labels = [
-                    "まったくあてはまらない (1)", 
-                    "あまりあてはまらない (2)", 
-                    "どちらともいえない (3)", 
-                    "ややあてはまる (4)", 
-                    "とてもあてはまる (5)"
-                ]
     
                 # 指定された色
                 colors = ['#2B4C7E', '#AED6F1', '#95A5A6', '#E6B0AA', '#943126']
                 
     
                 # 積み上げ棒グラフ
-                for i, label in enumerate(skill_point_labels):
+                for i in range(5):
                     show_legend = True if grade == grades[0] else False  # 最初のグレードのみ凡例を表示
                     fig.add_trace(go.Bar(
                         y=[f"{grade}"],
@@ -268,20 +239,17 @@ def analyze_selected_category(selected_category, grades, df, question_df):
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5, traceorder="normal")  # 凡例をグラフの上に配置
             )
 
-            if selected_category == '"どちらともいえない"が多く選択された設問':
-                st.plotly_chart(fig, key=f"sub_plots_{qnumber}")
-            else:
-                st.plotly_chart(fig)
+            st.plotly_chart(fig, key=f"plots_{qnumber}")
+
+            # 統計量を表示
+            st.write("各学年の平均スコア")
+            st.write(results_df)
 
             # 各グループのスコアをリストに分ける
             groups = [df[df['grade'] == grade][f"skill{qnumber}"] for grade in df['grade'].unique()]
             
             # Kruskal-Wallis検定
             stat, p = kruskal(*groups)
-
-            # 統計量を表示
-            st.write("各学年の平均スコア")
-            st.write(results_df)
             
             # 有意差がある場合、事後検定 (Dunn検定)
             if p < 0.05:
@@ -294,77 +262,33 @@ def analyze_selected_category(selected_category, grades, df, question_df):
             else:
                 st.write("学年間のスコアの有意差はありません")
     
-st.header("設問別スコアの分析-基本集計")    
-# ファイルアップロード
-st.file_uploader("集計結果（5件法）のcsvをアップロード",
-                       type=["csv"],
-                       key="upload_csvfile",
-                       on_change=upload_csv
-                       )
+# 初回ロード時またはキャッシュクリア時にデータを取得
+if 'answers_hash' not in st.session_state:
+    fetch_and_process_data()
 
-# 設問文のファイルアップロード
-st.file_uploader("設問文のcsvをアップロード",
-                       type=["csv"],
-                       key="upload_csvfile2",
-                       on_change=upload_csv2
-                       )
+st.header("情報活用力チェック 設問別分析")    
 
-# データフレームを空にするボタン
-# csvがアップロードされたとき
-if len(st.session_state['df']) != 0:
-    if st.button("アップロードしたCSVファイルを消去"):
-        st.session_state['df'] = pd.DataFrame()  # 空のデータフレームを設定
-        st.session_state['question_df'] = pd.DataFrame()  # 空のデータフレームを設定
-        st.switch_page("top.py")
-        st.rerun()  # アプリを再実行して状態を更新
-        st.success("CSVファイルが消去されました。")
+# get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
+# get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
 
-try:
-    categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
-    grades = sorted(list(st.session_state['df']['grade'].unique()))
+categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
+grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
 
-    # user_idが22のものを除去する
-    st.session_state['df'] = st.session_state['df'][st.session_state['df']["user_id"] != 22]
+summary_df, question_df = display_summary(st.session_state['answers_df'], categories, grades)
+# 表形式で表示
+cols = st.columns([3, 7])
+cols[0].write("#### 各学年の人数")
+cols[0].dataframe(summary_df)
+cols[1].write("#### 各分野の質問数")
+cols[1].dataframe(question_df)
 
-    selected_columns = st.session_state['df'].iloc[:, :5]
-    categories_columns = st.session_state['df'][categories]
-    final_df = pd.concat([selected_columns, categories_columns], axis=1)
-    st.dataframe(final_df, width=None, height=500)
+# st.write(st.session_state['questions_df'])
+# st.write(st.session_state['answers_df'])
+tab_list = categories
+# tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
 
-    summary_df, question_df = display_summary(st.session_state['df'], categories, grades)
-
-    # 表形式で表示
-    cols = st.columns([3, 7])
-    cols[0].write("#### 各学年の人数")
-    cols[0].dataframe(summary_df)
-    cols[1].write("#### 各分野の質問数")
-    cols[1].dataframe(question_df)
-
-    if len(st.session_state['question_df']) != 0:
-        st.markdown(
-            """
-            #### 1：まったくあてはまらない　2：あまりあてはまらない<br>3：どちらともいえない<br>4：ややあてはまる　5：とてもあてはまる
-            """,
-            unsafe_allow_html=True
-        )
-    
-    # タブを作成
-    tab_list = categories + ['"どちらともいえない"が多く選択された設問']
-    tabs = st.tabs(tab_list)
-
-    # question_dfが未定義または空の場合のチェック
-    if 'question_df' not in st.session_state or len(st.session_state['question_df']) == 0:
-        # 各タブに同じエラーメッセージを表示
-        for tab in tabs:
-            with tab:
-                st.error("設問文のcsvをアップロードしてください")
-        
-    else:
-        # タブとカテゴリのループ
-        for i, tab in enumerate(tabs):
-            with tab:
-                analyze_selected_category(tab_list[i], grades, st.session_state['df'], st.session_state['question_df'])
-    
-except Exception as e:
-    # st.write(e)
-    pass
+tabs = st.tabs(tab_list)
+# タブとカテゴリのループ
+for i, tab in enumerate(tabs):
+   with tab:
+      analyze_selected_category(tab_list[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
