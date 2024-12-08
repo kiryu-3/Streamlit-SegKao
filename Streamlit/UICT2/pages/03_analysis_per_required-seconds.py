@@ -174,11 +174,17 @@ def normality_test(df, categories):
 
     plt.tight_layout()
 
-    fig_qq, axes_qq = plt.subplots(2, 2, figsize=(12, 10))
-    for ax, column in zip(axes_qq.flatten(), categories):
-        stats.probplot(df[column], dist="norm", plot=ax)
-        ax.set_title(f"Q-QPlot: {column}列")
+    # Q-Qプロットを描画
+    fig_qq, ax_qq = plt.subplots(2, 2, figsize=(12, 10))
+    stats.probplot(df["required_time_seconds"], dist="norm", plot=ax_qq[0, 0])
+    ax_qq[0, 0].set_title("Q-QPlot: required-seconds列")
 
+    # 他のサブプロットを非表示にする
+    for i in range(2):
+        for j in range(2):
+            if (i, j) != (0, 0):
+                ax_qq[i, j].set_axis_off()
+    
     plt.tight_layout()
 
     return result_df, fig_hist, fig_qq
