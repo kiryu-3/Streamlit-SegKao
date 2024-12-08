@@ -346,15 +346,19 @@ for i, tab in enumerate(tabs):
   
     elif tab_list[i] == "各分野のスコア分布":
         with tab:
-            categories_df, fig = categories_test(st.session_state['answers_df'], categories)
-            with st.expander("各分野の平均・標準偏差"):
-                st.dataframe(categories_df)
+            categories_df, fig, filtered_pairs = categories_test(st.session_state['answers_df'], categories)
+            st.dataframe(categories_df)
             with st.expander("各分野のスコア分布"):
                 st.plotly_chart(fig)
-    elif tab_list[i] == "各分野の学年別のスコア分布":
+                st.write("有意差が見られる分野間の組み合わせ：")
+                for category1, category2 in filtered_pairs:
+                    st.write(f"【{category1}】-【{category2}】")
         with tab:
-            grade_df, fig = grade_test(st.session_state['answers_df'], categories, grades)
-            with st.expander("各分野の学年別の平均・標準偏差"):
-                st.dataframe(grade_df)
+            grade_df, fig, result_pairs = grade_test(st.session_state['answers_df'], categories, grades)
+            st.dataframe(grade_df)
             with st.expander("各分野の学年別のスコア分布"):
                 st.plotly_chart(fig)
+                st.write("有意差が見られる各分野の学年間の組み合わせ：")
+                for result_set in result_pairs:
+                    for category, grade1, grade2 in result_set:
+                        st.write(f"【{category}】：【{grade1}】-【{grade2}】")
