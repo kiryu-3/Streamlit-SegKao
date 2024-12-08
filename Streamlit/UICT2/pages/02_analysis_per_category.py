@@ -353,6 +353,8 @@ for i, tab in enumerate(tabs):
                 st.write("有意差が見られる分野間の組み合わせ：")
                 for category1, category2 in filtered_pairs:
                     st.write(f"【{category1}】-【{category2}】")
+                    
+    elif tab_list[i] == "各分野の学年別のスコア分布":
         with tab:
             grade_df, fig, result_pairs = grade_test(st.session_state['answers_df'], categories, grades)
             st.dataframe(grade_df)
