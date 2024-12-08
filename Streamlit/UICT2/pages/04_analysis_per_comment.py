@@ -548,6 +548,19 @@ try:
             # 1列目と2列目のデータを取得し、数値型に変換
             data1 = pd.to_numeric(sorted_df.iloc[:, 1], errors='coerce').dropna()  # 1列目
             data2 = pd.to_numeric(sorted_df.iloc[:, 2], errors='coerce').dropna()  # 2列目
+
+            # 平均スコアと標準偏差の計算
+            mean_scores = [data1.mean(), data2.mean()]
+            std_devs = [data1.std(), data2.std()]
+            
+            # 新しいデータフレームの作成
+            methods = ["5件法", "ルーブリック"]
+            result_df = pd.DataFrame({
+                "回答方式": methods,
+                "平均スコア": mean_scores,
+                "標準偏差": std_devs
+            })
+            st.write(result_df)
             
             # マンホイットニーのU検定
             stat, p = wilcoxon(data1, data2)
