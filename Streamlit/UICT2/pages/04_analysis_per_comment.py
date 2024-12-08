@@ -539,9 +539,9 @@ try:
         tabs = st.tabs(tab_list)
     
         
-            # 各表示関数を呼び出す
-            for tab, display_func in zip(tabs, display_functions):
-                with tab:
-                    display_func(sorted_df)
+        # 各表示関数を呼び出す
+        for tab, display_func in zip(tabs, display_functions):
+            with tab:
+                display_func(sorted_df)
 except:
     pass
