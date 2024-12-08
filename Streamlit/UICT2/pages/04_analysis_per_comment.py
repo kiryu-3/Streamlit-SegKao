@@ -544,9 +544,9 @@ try:
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
 
-        st.write(sorted_df)
-
         with st.expander("回答方式間の比較"):
+            st.write("kaoru")
+            
             # 1列目と2列目のデータを取得
             data1 = sorted_df.iloc[:, 1]  # 1列目
             data2 = sorted_df.iloc[:, 2]  # 2列目
