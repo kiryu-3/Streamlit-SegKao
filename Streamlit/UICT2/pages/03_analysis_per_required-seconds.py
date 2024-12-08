@@ -157,13 +157,17 @@ def normality_test(df, categories):
     #     else:
     #         st.write(f"{column}列は正規分布に従っているとはいえません。")
 
-    # ヒストグラムとQ-Qプロットを描画
-    fig_hist, axes_hist = plt.subplots(2, 2, figsize=(12, 10))
-    for ax, column in zip(axes_hist.flatten(), categories):
-        sns.histplot(df[column], kde=True, ax=ax, stat="density", linewidth=0)
-        ax.set_title(f'{column}_distribution')
-        ax.set_xlabel(column)
-        ax.set_ylabel('密度')
+    # ヒストグラムを描画
+    sns.histplot(df["required_time_seconds"], kde=True, ax=ax_hist[0, 0], stat="density", linewidth=0)
+    ax_hist[0, 0].set_title('required-seconds_distribution')
+    ax_hist[0, 0].set_xlabel('required-seconds')
+    ax_hist[0, 0].set_ylabel('密度')
+
+    # 他のサブプロットを非表示にする
+    for i in range(2):
+        for j in range(2):
+            if (i, j) != (0, 0):
+                ax_hist[i, j].set_axis_off()
 
     plt.tight_layout()
 
