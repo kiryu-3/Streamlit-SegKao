@@ -157,6 +157,9 @@ def normality_test(df, categories):
     #     else:
     #         st.write(f"{column}列は正規分布に従っているとはいえません。")
 
+    # ヒストグラムとQ-Qプロットを描画
+    fig_hist, ax_hist = plt.subplots(2, 2, figsize=(12, 10))
+
     # ヒストグラムを描画
     sns.histplot(df["required_time_seconds"], kde=True, ax=ax_hist[0, 0], stat="density", linewidth=0)
     ax_hist[0, 0].set_title('required-seconds_distribution')
