@@ -12,6 +12,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import scikit_posthocs as sp
+import MeCab
+import nlplot  # nlplotをインポート
 import seaborn as sns
 import statsmodels.api as sm
 from scipy import stats
