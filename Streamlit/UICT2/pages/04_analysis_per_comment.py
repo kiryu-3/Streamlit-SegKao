@@ -17,7 +17,7 @@ import nlplot  # nlplotをインポート
 import seaborn as sns
 import statsmodels.api as sm
 from scipy import stats
-from scipy.stats import kruskal, shapiro, mannwhitneyu
+from scipy.stats import kruskal, shapiro, wilcoxon
 import streamlit as st
 
 
@@ -544,15 +544,13 @@ try:
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
 
-        with st.expander("回答方式間の比較"):
-            st.write("kaoru")
-            
+        with st.expander("回答方式間の比較"):     
             # 1列目と2列目のデータを取得
             data1 = sorted_df.iloc[:, 1]  # 1列目
             data2 = sorted_df.iloc[:, 2]  # 2列目
             
             # マンホイットニーのU検定
-            stat, p = mannwhitneyu(data1, data2)
+            stat, p = wilcoxon(data1, data2)
         
             if p < 0.05:
                 st.write("回答方式間で有意差があります")
