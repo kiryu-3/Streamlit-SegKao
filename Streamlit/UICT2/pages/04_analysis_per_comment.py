@@ -247,7 +247,7 @@ def analyze_selected_category(selected_category, grades, df, qsentence):
             
 
             # 積み上げ棒グラフ
-            for i in range(5):
+            for i in range(len(colors)):
                 show_legend = True if grade == grades[0] else False  # 最初のグレードのみ凡例を表示
                 fig.add_trace(go.Bar(
                     y=[f"{grade}"],
