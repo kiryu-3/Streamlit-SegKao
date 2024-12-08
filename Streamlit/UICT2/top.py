@@ -23,6 +23,13 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_menu_style, unsafe_allow_html=True)
+
 # サイドバーにメッセージを表示
 st.header("情報活用力チェック結果分析ツール")
 st.write("情報活用力チェックの結果を分析するためのツールです。")
