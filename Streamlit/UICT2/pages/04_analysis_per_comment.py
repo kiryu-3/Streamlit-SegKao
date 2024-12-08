@@ -163,7 +163,7 @@ def analyze_selected_category(selected_category, grades, df, qsentence):
             np.sum(skill_array == 5)
         ])
     skill_point_percentages = (skill_point_counts / skill_point_total) * 100
-    st.write(skill_point_percentages)
+
 
     # 全学年の平均スコアと標準偏差を計算
     overall_average_score = np.mean(skill_array)
@@ -193,7 +193,7 @@ def analyze_selected_category(selected_category, grades, df, qsentence):
     fig = go.Figure()
 
     # 積み上げ棒グラフ
-    for i in range(5):
+    for i in range(len(colors)):
         fig.add_trace(go.Bar(
             x=[skill_point_percentages[i]],
             name=f"{i+1}：{skill_point_percentages[i]:.1f}%",  # 凡例に割合を表示
