@@ -464,7 +464,7 @@ if option == "回答形式":
     # qcategory が option に等しい行を取り出す
     questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option]
     st.write(questionnaires_df)
-    st.write(questionnaires_df.at[0, 0])
+    st.write(questionnaires_df.at[0, "qsentence"])
     analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
 
     st.write(questionnaires_df.at[1, "qsentence"])
