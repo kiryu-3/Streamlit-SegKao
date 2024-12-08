@@ -536,8 +536,11 @@ else:
 
     st.write(questionnaires_df.at[2, "qsentence"])
     tabs = st.tabs(tab_list)
-    
-    # 各表示関数を呼び出す
-    for tab, display_func in zip(tabs, display_functions):
-        with tab:
-            display_func(sorted_df)
+
+    try:
+        # 各表示関数を呼び出す
+        for tab, display_func in zip(tabs, display_functions):
+            with tab:
+                display_func(sorted_df)
+    except:
+        pass
