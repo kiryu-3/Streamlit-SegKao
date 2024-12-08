@@ -446,6 +446,8 @@ try:
             st.session_state['answers_df']['grade'],
             st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 2]
         ], axis=1)
+
+        st.write(sorted_df)
     
         # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
         sorted_df['words'] = sorted_df.iloc[:, 2].apply(mecab_text)
@@ -489,6 +491,8 @@ try:
                 st.session_state['answers_df']['all']
             ], axis=1)
 
+        st.write(sorted_df)
+        
         # 1行目に欠損がある行を除外
         sorted_df = sorted_df.dropna(subset=sorted_df.iloc[0].index)
 
@@ -515,6 +519,7 @@ try:
             st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
         ], axis=1)
 
+        st.write(sorted_df)
         
         # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
         sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
@@ -538,6 +543,8 @@ try:
         questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
+
+        st.write(sorted_df)
 
         with st.expander("回答方式間の比較"):
             # 1列目と2列目のデータを取得
