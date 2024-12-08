@@ -139,7 +139,7 @@ def normality_test(df, categories):
 
     # 正規性の検証
     results = {}
-    stat, p = stats.shapiro(df["required-seconds"])
+    stat, p = stats.shapiro(df["required_time_seconds"])
     results["required-seconds"] = {
         'W統計量': stat,
         'p値': p,
