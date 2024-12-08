@@ -428,8 +428,8 @@ tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリー�
 display_functions = [display_unigram, display_wordcloud, display_treemap, display_co_network, display_sunburst]
 
 option = st.selectbox(
-    label="表示したい内容を選択してください",
-    opitons=select_list,
+    "表示したい内容を選択してください",
+    select_list,
     index=4
 )
 
