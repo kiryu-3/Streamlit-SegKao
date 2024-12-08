@@ -285,7 +285,7 @@ def analyze_selected_category(selected_category, grades, df, qsentence):
             st.write("学年間のスコアの有意（以下のp値が0.05以下の学年間は有意差あり）")
             
             # Dunn検定の実施
-            posthoc_results = sp.posthoc_dunn(df, val_col=f"skill{qsentence}", group_col='grade', p_adjust='bonferroni')
+            posthoc_results = sp.posthoc_dunn(df, val_col=df.columns[1], group_col='grade', p_adjust='bonferroni')
             st.write(posthoc_results)
 
         else:
@@ -546,9 +546,9 @@ try:
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
 
         with st.expander("回答方式間の比較"):     
-            # 1列目と2列目のデータを取得
-            data1 = sorted_df.iloc[:, 1]  # 1列目
-            data2 = sorted_df.iloc[:, 2]  # 2列目
+            # 1列目と2列目のデータを取得し、数値型に変換
+            data1 = pd.to_numeric(sorted_df.iloc[:, 1], errors='coerce').dropna()  # 1列目
+            data2 = pd.to_numeric(sorted_df.iloc[:, 2], errors='coerce').dropna()  # 2列目
             
             # マンホイットニーのU検定
             stat, p = wilcoxon(data1, data2)
