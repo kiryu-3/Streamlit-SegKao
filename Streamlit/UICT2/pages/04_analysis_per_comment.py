@@ -489,7 +489,9 @@ try:
                 st.session_state['answers_df']['all']
             ], axis=1)
 
-        st.write(sorted_df)
+        # 1行目に欠損がある行を除外
+        sorted_df = sorted_df.dropna(subset=sorted_df.iloc[0].index)
+
         # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
         sorted_df['words'] = sorted_df.iloc[:, 1].apply(mecab_text)
     
