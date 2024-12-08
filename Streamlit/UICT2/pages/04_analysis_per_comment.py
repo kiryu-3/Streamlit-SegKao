@@ -537,14 +537,13 @@ try:
         
         # 一列目と二列目に対して置き換えを適用
         sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
-
-        st.write(sorted_df.iloc[:, 1:3].dtypes)
     
         # qcategory が option に等しい行を取り出す
         questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
         analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
 
+        st.write("回答方式間のスコアの比較")
         with st.expander("回答方式間の比較"):     
             # 1列目と2列目のデータを取得し、数値型に変換
             data1 = pd.to_numeric(sorted_df.iloc[:, 1], errors='coerce').dropna()  # 1列目
