@@ -519,7 +519,6 @@ try:
             st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
         ], axis=1)
 
-        st.write(sorted_df)
         
         # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
         sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
@@ -539,7 +538,7 @@ try:
         # 一列目と二列目に対して置き換えを適用
         sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
 
-        st.write(sorted_df)
+        st.write(sorted_df.iloc[:, 1:3].dtypes)
     
         # qcategory が option に等しい行を取り出す
         questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
