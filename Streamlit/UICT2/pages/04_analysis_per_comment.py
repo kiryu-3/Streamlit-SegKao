@@ -163,6 +163,7 @@ def analyze_selected_category(selected_category, grades, df, qsentence):
             np.sum(skill_array == 5)
         ])
     skill_point_percentages = (skill_point_counts / skill_point_total) * 100
+    st.write(skill_point_percentages)
 
     # 全学年の平均スコアと標準偏差を計算
     overall_average_score = np.mean(skill_array)
