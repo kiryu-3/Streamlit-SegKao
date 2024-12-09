@@ -317,6 +317,7 @@ for i, tab in enumerate(tabs):
     elif tab_list[i] == "所要時間分布":
         with tab:
             categories_df, fig = categories_test(st.session_state['answers_df'], categories)
+            st.dataframe(categories_df)
             with st.expander("所要時間分布"):
                 st.plotly_chart(fig)
               
