@@ -280,7 +280,7 @@ if 'answers_hash' not in st.session_state:
     fetch_and_process_data()
     
 
-st.header("情報活用力チェック 集計結果")    
+st.header("情報活用力チェック 集計結果 所要時間")   
 
 # get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
 # get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
