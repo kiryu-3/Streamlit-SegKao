@@ -46,7 +46,11 @@ if not st.session_state['submitted']:
         submitted = st.form_submit_button("ログイン")
         if submitted and username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             st.session_state['submitted'] = True
-else:
+            with st.empty():
+                st.success("ログイン成功！")
+                time.sleep(3)  # 3秒間表示
+
+if st.session_state['submitted']:
     # サイドバーにメッセージを表示
     st.header("情報活用力チェック結果分析ツール")
     st.write("情報活用力チェックの結果を分析するためのツールです。")
