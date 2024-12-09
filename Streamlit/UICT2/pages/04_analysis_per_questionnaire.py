@@ -403,7 +403,7 @@ def display_sunburst(df):
 if 'answers_hash' not in st.session_state:
     fetch_and_process_data()
 
-st.header("情報活用力チェック 設問別分析")    
+st.header("情報活用力チェック 設問別分析 調査後アンケート")    
 
 # get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
 # get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
