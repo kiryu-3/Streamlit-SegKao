@@ -1,4 +1,5 @@
 import itertools
+import time
 
 import io
 from io import BytesIO
@@ -399,185 +400,202 @@ def display_sunburst(df):
     st.subheader("サンバーストチャート")
     st.plotly_chart(fig_sunburst)
 
-# 初回ロード時またはキャッシュクリア時にデータを取得
-if 'answers_hash' not in st.session_state:
-    fetch_and_process_data()
-
-st.header("情報活用力チェック 設問別分析 調査後アンケート")    
-
-# get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
-# get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
-
-categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
-grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
-
-summary_df, question_df = display_summary(st.session_state['answers_df'], categories, grades)
-# 表形式で表示
-cols = st.columns([3, 7])
-cols[0].write("#### 各学年の人数")
-cols[0].dataframe(summary_df)
-cols[1].write("#### 各分野の質問数")
-cols[1].dataframe(question_df)
-
-st.session_state['questionnaires_df'] = get_spreadsheet_data(st.secrets["SHEET_ID"], "questionnaires")
-
-# st.write(st.session_state['questions_df'])
-# st.write(st.session_state['answers_df'])
-select_list = ["回答のしやすさ", "評価の妥当性", "回答の負担", "ルーブリックの分かりやすさ", "回答形式", "ルーブリックの全体評価", "全体コメント"]
-# tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
-
-# タブを作成
-tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
-display_functions = [display_unigram, display_wordcloud, display_treemap, display_co_network, display_sunburst]
-
-option = st.selectbox(
-    "表示したい内容を選択してください",
-    select_list,
-    index=4
-)
-
-try:
-    if option == "回答形式": 
-        # 取り出すカラムのインデックスを計算
-        start_col_index = 74 + select_list.index(option) * 3
-        
-        # カラムを取り出す
-        sorted_df = pd.concat([
-            st.session_state['answers_df']['grade'],
-            st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 2]
-        ], axis=1)
-
-        st.write(sorted_df)
+if not st.session_state['submitted']:
+    # 管理者用のユーザー名とパスワードをst.secretsから取得
+    ADMIN_USERNAME = st.secrets["admin_username"]
+    ADMIN_PASSWORD = st.secrets["admin_password"]
     
-        # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
-        sorted_df['words'] = sorted_df.iloc[:, 2].apply(mecab_text)
-    
-        # options の定義
-        options = [
-            "5件法", 
-            "どちらともいえない", 
-            "ルーブリック"
-        ]
-        
-        # 置き換え用の辞書を作成
-        replace_dict = {option: i - 1 for i, option in enumerate(options)}
-        
-        # 一列目に対して置き換えを適用
-        sorted_df.iloc[:, 1] = sorted_df.iloc[:, 1].replace(replace_dict)
-    
-        # qcategory が option に等しい行を取り出す
-        questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
-        analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
-    
-        st.write(questionnaires_df.at[1, "qsentence"])
-        tabs = st.tabs(tab_list)
-        
-        # 各表示関数を呼び出す
-        for tab, display_func in zip(tabs, display_functions):
-            with tab:
-                display_func(sorted_df)
-    
-    elif option in ["ルーブリックの全体評価", "全体コメント"]:
-        if option == "ルーブリックの全体評価":
-            # カラムを取り出す
-            sorted_df = pd.concat([
-                st.session_state['answers_df']['grade'],
-                st.session_state['answers_df']['rubric']
-            ], axis=1)
-        elif option == "全体コメント":
-            # カラムを取り出す
-            sorted_df = pd.concat([
-                st.session_state['answers_df']['grade'],
-                st.session_state['answers_df']['all']
-            ], axis=1)
+    # ユーザー名とパスワードの入力フォーム
+    with st.form("login_form"):
+        username = st.text_input("ユーザー名")
+        password = st.text_input("パスワード", type="password")
+        submitted = st.form_submit_button("ログイン")
+        if submitted and username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            st.session_state['submitted'] = True
+            with st.empty():
+                st.success("ログイン成功！")
+                time.sleep(3)  # 3秒間表示
 
-        st.write(sorted_df)
-        
-        # 1行目に欠損がある行を除外
-        sorted_df = sorted_df.dropna(subset=sorted_df.iloc[0].index)
-
-        # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
-        sorted_df['words'] = sorted_df.iloc[:, 1].apply(mecab_text)
+if st.session_state['submitted']:
+    # 初回ロード時またはキャッシュクリア時にデータを取得
+    if 'answers_hash' not in st.session_state:
+        fetch_and_process_data()
     
-        # qcategory が option に等しい行を取り出す
-        questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
-        
-        tabs = st.tabs(tab_list)
-        
-        # 各表示関数を呼び出す
-        for tab, display_func in zip(tabs, display_functions):
-            with tab:
-                display_func(sorted_df)
-          
-    else:
-        # 取り出すカラムのインデックスを計算
-        start_col_index = 74 + select_list.index(option) * 3
-        
-        # カラムを取り出す
-        sorted_df = pd.concat([
-            st.session_state['answers_df']['grade'],
-            st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
-        ], axis=1)
-
-        
-        # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
-        sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
-      
-        # options の定義
-        options = [
-            "全くそう思わない", 
-            "あまりそう思わない", 
-            "どちらともいえない", 
-            "ややそう思う", 
-            "とてもそう思う"
-        ]
-        
-        # 置き換え用の辞書を作成
-        replace_dict = {option: i + 1 for i, option in enumerate(options)}
-        
-        # 一列目と二列目に対して置き換えを適用
-        sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
+    st.header("情報活用力チェック 設問別分析 調査後アンケート")    
     
-        # qcategory が option に等しい行を取り出す
-        questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
-        analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
-        analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
-
-        if option != "ルーブリックの分かりやすさ":
-            st.write("回答形式間のスコアの比較")
-            with st.expander("回答形式間の比較"):     
-                # 1列目と2列目のデータを取得し、数値型に変換
-                data1 = pd.to_numeric(sorted_df.iloc[:, 1], errors='coerce').dropna()  # 1列目
-                data2 = pd.to_numeric(sorted_df.iloc[:, 2], errors='coerce').dropna()  # 2列目
+    # get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
+    # get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
     
-                # 平均スコアと標準偏差の計算
-                mean_scores = [data1.mean(), data2.mean()]
-                std_devs = [data1.std(), data2.std()]
-                
-                # 新しいデータフレームの作成
-                methods = ["5件法", "ルーブリック"]
-                result_df = pd.DataFrame({
-                    "回答形式": methods,
-                    "平均スコア": mean_scores,
-                    "標準偏差": std_devs
-                })
-                st.write(result_df)
-                
-                # マンホイットニーのU検定
-                stat, p = wilcoxon(data1, data2)
+    categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
+    grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
+    
+    summary_df, question_df = display_summary(st.session_state['answers_df'], categories, grades)
+    # 表形式で表示
+    cols = st.columns([3, 7])
+    cols[0].write("#### 各学年の人数")
+    cols[0].dataframe(summary_df)
+    cols[1].write("#### 各分野の質問数")
+    cols[1].dataframe(question_df)
+    
+    st.session_state['questionnaires_df'] = get_spreadsheet_data(st.secrets["SHEET_ID"], "questionnaires")
+    
+    # st.write(st.session_state['questions_df'])
+    # st.write(st.session_state['answers_df'])
+    select_list = ["回答のしやすさ", "評価の妥当性", "回答の負担", "ルーブリックの分かりやすさ", "回答形式", "ルーブリックの全体評価", "全体コメント"]
+    # tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
+    
+    # タブを作成
+    tab_list = ["頻出単語ランキング", "ワードクラウド", "ツリーマップ", "共起ネットワーク", "サンバーストチャート"]
+    display_functions = [display_unigram, display_wordcloud, display_treemap, display_co_network, display_sunburst]
+    
+    option = st.selectbox(
+        "表示したい内容を選択してください",
+        select_list,
+        index=4
+    )
+    
+    try:
+        if option == "回答形式": 
+            # 取り出すカラムのインデックスを計算
+            start_col_index = 74 + select_list.index(option) * 3
             
-                if p < 0.05:
-                    st.write("回答形式間で有意差があります")
-                else:
-                    st.write("回答形式間で有意差がありません")
+            # カラムを取り出す
+            sorted_df = pd.concat([
+                st.session_state['answers_df']['grade'],
+                st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 2]
+            ], axis=1)
     
-        st.write(questionnaires_df.at[2, "qsentence"])
-        tabs = st.tabs(tab_list)
-    
+            st.write(sorted_df)
         
-        # 各表示関数を呼び出す
-        for tab, display_func in zip(tabs, display_functions):
-            with tab:
-                display_func(sorted_df)
-except Exception as e:
-    st.error(e)
+            # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
+            sorted_df['words'] = sorted_df.iloc[:, 2].apply(mecab_text)
+        
+            # options の定義
+            options = [
+                "5件法", 
+                "どちらともいえない", 
+                "ルーブリック"
+            ]
+            
+            # 置き換え用の辞書を作成
+            replace_dict = {option: i - 1 for i, option in enumerate(options)}
+            
+            # 一列目に対して置き換えを適用
+            sorted_df.iloc[:, 1] = sorted_df.iloc[:, 1].replace(replace_dict)
+        
+            # qcategory が option に等しい行を取り出す
+            questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
+            analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
+        
+            st.write(questionnaires_df.at[1, "qsentence"])
+            tabs = st.tabs(tab_list)
+            
+            # 各表示関数を呼び出す
+            for tab, display_func in zip(tabs, display_functions):
+                with tab:
+                    display_func(sorted_df)
+        
+        elif option in ["ルーブリックの全体評価", "全体コメント"]:
+            if option == "ルーブリックの全体評価":
+                # カラムを取り出す
+                sorted_df = pd.concat([
+                    st.session_state['answers_df']['grade'],
+                    st.session_state['answers_df']['rubric']
+                ], axis=1)
+            elif option == "全体コメント":
+                # カラムを取り出す
+                sorted_df = pd.concat([
+                    st.session_state['answers_df']['grade'],
+                    st.session_state['answers_df']['all']
+                ], axis=1)
+    
+            st.write(sorted_df)
+            
+            # 1行目に欠損がある行を除外
+            sorted_df = sorted_df.dropna(subset=sorted_df.iloc[0].index)
+    
+            # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
+            sorted_df['words'] = sorted_df.iloc[:, 1].apply(mecab_text)
+        
+            # qcategory が option に等しい行を取り出す
+            questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
+            
+            tabs = st.tabs(tab_list)
+            
+            # 各表示関数を呼び出す
+            for tab, display_func in zip(tabs, display_functions):
+                with tab:
+                    display_func(sorted_df)
+              
+        else:
+            # 取り出すカラムのインデックスを計算
+            start_col_index = 74 + select_list.index(option) * 3
+            
+            # カラムを取り出す
+            sorted_df = pd.concat([
+                st.session_state['answers_df']['grade'],
+                st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
+            ], axis=1)
+    
+            
+            # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
+            sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
+          
+            # options の定義
+            options = [
+                "全くそう思わない", 
+                "あまりそう思わない", 
+                "どちらともいえない", 
+                "ややそう思う", 
+                "とてもそう思う"
+            ]
+            
+            # 置き換え用の辞書を作成
+            replace_dict = {option: i + 1 for i, option in enumerate(options)}
+            
+            # 一列目と二列目に対して置き換えを適用
+            sorted_df.iloc[:, 1:3] = sorted_df.iloc[:, 1:3].replace(replace_dict)
+        
+            # qcategory が option に等しい行を取り出す
+            questionnaires_df = st.session_state['questionnaires_df'][st.session_state['questionnaires_df']['qcategory'] == option].reset_index(drop=True)
+            analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 1]], questionnaires_df.at[0, "qsentence"])
+            analyze_selected_category(option, grades, sorted_df.iloc[:, [0, 2]], questionnaires_df.at[1, "qsentence"])
+    
+            if option != "ルーブリックの分かりやすさ":
+                st.write("回答形式間のスコアの比較")
+                with st.expander("回答形式間の比較"):     
+                    # 1列目と2列目のデータを取得し、数値型に変換
+                    data1 = pd.to_numeric(sorted_df.iloc[:, 1], errors='coerce').dropna()  # 1列目
+                    data2 = pd.to_numeric(sorted_df.iloc[:, 2], errors='coerce').dropna()  # 2列目
+        
+                    # 平均スコアと標準偏差の計算
+                    mean_scores = [data1.mean(), data2.mean()]
+                    std_devs = [data1.std(), data2.std()]
+                    
+                    # 新しいデータフレームの作成
+                    methods = ["5件法", "ルーブリック"]
+                    result_df = pd.DataFrame({
+                        "回答形式": methods,
+                        "平均スコア": mean_scores,
+                        "標準偏差": std_devs
+                    })
+                    st.write(result_df)
+                    
+                    # マンホイットニーのU検定
+                    stat, p = wilcoxon(data1, data2)
+                
+                    if p < 0.05:
+                        st.write("回答形式間で有意差があります")
+                    else:
+                        st.write("回答形式間で有意差がありません")
+        
+            st.write(questionnaires_df.at[2, "qsentence"])
+            tabs = st.tabs(tab_list)
+        
+            
+            # 各表示関数を呼び出す
+            for tab, display_func in zip(tabs, display_functions):
+                with tab:
+                    display_func(sorted_df)
+    except Exception as e:
+        st.error(e)
