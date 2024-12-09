@@ -38,6 +38,10 @@ if 'questions_df' not in st.session_state:
     st.session_state['questions_df'] = pd.DataFrame()  # 空のデータフレーム
 if 'answers_df' not in st.session_state:
     st.session_state['answers_df'] = pd.DataFrame()  # 空のデータフレーム
+# 初期化
+if 'submitted' not in st.session_state:
+    st.session_state['submitted'] = False  # False
+
 
 # スプレッドシートのデータを取得
 @st.cache_data(show_spinner=False, ttl=60)
@@ -263,34 +267,51 @@ def analyze_selected_category(selected_category, grades, df, question_df):
     
             else:
                 st.write("学年間のスコアの有意差はありません")
+
+if not st.session_state['submitted']:
+    # 管理者用のユーザー名とパスワードをst.secretsから取得
+    ADMIN_USERNAME = st.secrets["admin_username"]
+    ADMIN_PASSWORD = st.secrets["admin_password"]
     
-# 初回ロード時またはキャッシュクリア時にデータを取得
-if 'answers_hash' not in st.session_state:
-    fetch_and_process_data()
+    # ユーザー名とパスワードの入力フォーム
+    with st.form("login_form"):
+        username = st.text_input("ユーザー名")
+        password = st.text_input("パスワード", type="password")
+        submitted = st.form_submit_button("ログイン")
+        if submitted and username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            st.session_state['submitted'] = True
+            with st.empty():
+                st.success("ログイン成功！")
+                time.sleep(3)  # 3秒間表示
 
-st.header("情報活用力チェック 集計結果 設問別")    
-
-# get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
-# get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
-
-categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
-grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
-
-summary_df, question_df = display_summary(st.session_state['answers_df'], categories, grades)
-# 表形式で表示
-cols = st.columns([3, 7])
-cols[0].write("#### 各学年の人数")
-cols[0].dataframe(summary_df)
-cols[1].write("#### 各分野の質問数")
-cols[1].dataframe(question_df)
-
-# st.write(st.session_state['questions_df'])
-# st.write(st.session_state['answers_df'])
-tab_list = categories
-# tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
-
-tabs = st.tabs(tab_list)
-# タブとカテゴリのループ
-for i, tab in enumerate(tabs):
-   with tab:
-      analyze_selected_category(tab_list[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
+if st.session_state['submitted']:
+    # 初回ロード時またはキャッシュクリア時にデータを取得
+    if 'answers_hash' not in st.session_state:
+        fetch_and_process_data()
+    
+    st.header("情報活用力チェック 集計結果 設問別")    
+    
+    # get_spreadsheet_data(st.secrets["SHEET_ID"], "questions", "questions_df")
+    # get_spreadsheet_data(st.secrets["SHEET_ID"], "answers", "answers_df")
+    
+    categories = ["オンライン・コラボレーション力", "データ利活用力", "情報システム開発力", "情報倫理力"]
+    grades = sorted(list(st.session_state['answers_df']['grade'].unique()))
+    
+    summary_df, question_df = display_summary(st.session_state['answers_df'], categories, grades)
+    # 表形式で表示
+    cols = st.columns([3, 7])
+    cols[0].write("#### 各学年の人数")
+    cols[0].dataframe(summary_df)
+    cols[1].write("#### 各分野の質問数")
+    cols[1].dataframe(question_df)
+    
+    # st.write(st.session_state['questions_df'])
+    # st.write(st.session_state['answers_df'])
+    tab_list = categories
+    # tab_list = categories + ["各分野のスコア分布", "各分野の学年別のスコア分布"]
+    
+    tabs = st.tabs(tab_list)
+    # タブとカテゴリのループ
+    for i, tab in enumerate(tabs):
+       with tab:
+          analyze_selected_category(tab_list[i], grades, st.session_state['answers_df'], st.session_state['questions_df'])
