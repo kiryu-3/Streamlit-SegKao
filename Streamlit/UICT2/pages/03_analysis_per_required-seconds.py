@@ -324,9 +324,9 @@ for i, tab in enumerate(tabs):
         with tab:
             grade_df, fig, result_pairs = grade_test(st.session_state['answers_df'], categories, grades)
             st.dataframe(grade_df)
-        with st.expander("学年間の所要時間分布"):
-            st.plotly_chart(fig)
-            st.write("有意差が見られる学年間の組み合わせ：")
-            for result_set in result_pairs:
-                for category, grade1, grade2 in result_set:
-                    st.write(f"【{category}】：【{grade1}】-【{grade2}】")
+            with st.expander("学年間の所要時間分布"):
+                st.plotly_chart(fig)
+                st.write("有意差が見られる学年間の組み合わせ：")
+                for result_set in result_pairs:
+                    for category, grade1, grade2 in result_set:
+                        st.write(f"【{category}】：【{grade1}】-【{grade2}】")
