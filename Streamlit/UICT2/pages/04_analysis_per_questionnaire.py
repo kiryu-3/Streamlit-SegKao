@@ -536,7 +536,8 @@ if st.session_state['submitted']:
                 st.session_state['answers_df']['grade'],
                 st.session_state['answers_df'].iloc[:, start_col_index:start_col_index + 3]
             ], axis=1)
-    
+
+            st.write(sorted_df)
             
             # 3列目に .apply(mecab_text) を適用して新しい列 words を作成
             sorted_df['words'] = sorted_df.iloc[:, 3].apply(mecab_text)
