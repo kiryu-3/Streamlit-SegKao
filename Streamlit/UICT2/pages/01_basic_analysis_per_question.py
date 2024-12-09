@@ -1,4 +1,5 @@
 import itertools
+import time
 
 import io
 from io import BytesIO
@@ -38,7 +39,6 @@ if 'questions_df' not in st.session_state:
     st.session_state['questions_df'] = pd.DataFrame()  # 空のデータフレーム
 if 'answers_df' not in st.session_state:
     st.session_state['answers_df'] = pd.DataFrame()  # 空のデータフレーム
-# 初期化
 if 'submitted' not in st.session_state:
     st.session_state['submitted'] = False  # False
 
