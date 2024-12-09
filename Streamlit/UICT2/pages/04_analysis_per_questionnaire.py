@@ -41,6 +41,8 @@ if 'questions_df' not in st.session_state:
     st.session_state['questions_df'] = pd.DataFrame()  # 空のデータフレーム
 if 'answers_df' not in st.session_state:
     st.session_state['answers_df'] = pd.DataFrame()  # 空のデータフレーム
+if 'submitted' not in st.session_state:
+    st.session_state['submitted'] = False  # False
 
 # スプレッドシートのデータを取得
 @st.cache_data(show_spinner=False, ttl=60)
