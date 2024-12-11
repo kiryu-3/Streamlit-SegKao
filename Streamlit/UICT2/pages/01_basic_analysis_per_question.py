@@ -278,15 +278,16 @@ if not st.session_state['submitted']:
         username = st.text_input("ユーザー名")
         password = st.text_input("パスワード", type="password")
         submitted = st.form_submit_button("ログイン")
-        if submitted and username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-            st.session_state['submitted'] = True
-            with st.empty():
-                st.success("ログイン成功！")
-                time.sleep(3)  # 3秒間表示
-        elif username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
-            with st.empty():
-                st.error("ログイン失敗！")
-                time.sleep(3)  # 3秒間表示                    
+        if submitted 
+            if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+                st.session_state['submitted'] = True
+                with st.empty():
+                    st.success("ログイン成功！")
+                    time.sleep(3)  # 3秒間表示
+            elif username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
+                with st.empty():
+                    st.error("ログイン失敗！")
+                    time.sleep(3)  # 3秒間表示                    
 
 if st.session_state['submitted']:
     # 初回ロード時またはキャッシュクリア時にデータを取得
