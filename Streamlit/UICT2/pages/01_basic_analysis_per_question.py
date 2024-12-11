@@ -283,6 +283,10 @@ if not st.session_state['submitted']:
             with st.empty():
                 st.success("ログイン成功！")
                 time.sleep(3)  # 3秒間表示
+        elif username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
+            with st.empty():
+                st.error("ログイン失敗！")
+                time.sleep(3)  # 3秒間表示                    
 
 if st.session_state['submitted']:
     # 初回ロード時またはキャッシュクリア時にデータを取得
