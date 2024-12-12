@@ -39,22 +39,26 @@ if not st.session_state['submitted']:
     # 管理者用のユーザー名とパスワードをst.secretsから取得
     ADMIN_USERNAME = st.secrets["admin_username"]
     ADMIN_PASSWORD = st.secrets["admin_password"]
-    
+
+    login_area = st.empty()
     # ユーザー名とパスワードの入力フォーム
-    with st.form("login_form"):
+    with login_area.form("login_form"):
         username = st.text_input("ユーザー名")
         password = st.text_input("パスワード", type="password")
         submitted = st.form_submit_button("ログイン")
+        login_flag_area = st.empty()
         if submitted: 
             if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
                 st.session_state['submitted'] = True
-                with st.empty():
+                with login_flag_area.empty():
                     st.success("ログイン成功！")
-                    time.sleep(3)  # 3秒間表示
+                    time.sleep(1)  # 3秒間表示
+                    login_area.empty()
             elif username != ADMIN_USERNAME or password != ADMIN_PASSWORD:
-                with st.empty():
+                with login_flag_area.empty():
                     st.error("ログイン失敗！")
-                    time.sleep(3)  # 3秒間表示   
+                    time.sleep(3)  # 3秒間表示
+                    login_flag_area.empty()
 
 if st.session_state['submitted']:
     # サイドバーにメッセージを表示
