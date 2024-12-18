@@ -595,7 +595,7 @@ if st.session_state['submitted']:
                     
                     # ウィルコクソンの符号順位検定
                     stat, p = wilcoxon(data1, data2)
-                    st.write(f"p値：{p}")
+                    st.write(f"p値：{p:.3f}")
                 
                     if p < 0.05:
                         st.write("回答形式間で有意差があります")
