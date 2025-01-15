@@ -110,6 +110,7 @@ def find_significantly_high_skill3s(df):
     # 各列と全体の '3' の割合を計算
     column_3_proportions = column_3_counts / df.shape[0]
     overall_3_proportion = total_3_count / total_elements
+    st.write(overall_3_proportion)
     
     # p値が0.05以下かつ割合が全体より優位に高いスキル番号を格納するリスト
     significant_skills = []
