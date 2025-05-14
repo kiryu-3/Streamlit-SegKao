@@ -67,10 +67,27 @@ def preprocess_text(text):
     text = re.sub(r'タイトル.未定', ' タイトル未定 ', text)  # 単独の場合もスペースを追加
     return text
 
+def combine_terms(word_list):
+    # 単語リストから"タイトル"と"未定"を結合
+    combined_list = []
+    for i in range(len(word_list)):
+        if i < len(word_list) - 1 and word_list[i] == "タイトル" and word_list[i + 1] == "未定":
+            combined_list.append("タイトル未定")
+            i += 1  # 次の要素をスキップ
+        else:
+            combined_list.append(word_list[i])
+    return combined_list
+
 def display_unigram(df, column):
     # テキストの前処理
     # df[column] = df[column].apply(preprocess_text)
-    st.write(df[column].iloc[0])
+    # st.write(df[column].iloc[0])
+
+    # テキストの前処理
+    processed_text = combine_terms(first_element)
+
+    # 処理結果を表示
+    st.write(processed_text)
 
     npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
