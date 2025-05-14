@@ -26,6 +26,7 @@ st.markdown(hide_menu_style, unsafe_allow_html=True)
 def upload_csv():
     # csvがアップロードされたとき
     if st.session_state['upload_csvfile'] is not None:
+        st.write("test")
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile'].read()
         # エンコーディングを検出
