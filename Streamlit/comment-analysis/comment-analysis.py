@@ -69,7 +69,8 @@ def preprocess_text(text):
 
 def display_unigram(df, column):
     # テキストの前処理
-    df[column] = df[column].apply(preprocess_text)
+    # df[column] = df[column].apply(preprocess_text)
+    st.write(df[column].unique()[0])
 
     npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
