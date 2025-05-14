@@ -58,6 +58,10 @@ def mecab_text(text):
     return word_list
 
 def preprocess_text(text):
+
+    # 入力がリストの場合、各要素を文字列に結合する
+    if isinstance(text, list):
+        text = ' '.join(text)
     # "ワンマン"を一語として扱う
     text = re.sub(r'タイトル未定', ' タイトル未定 ', text)  # 単独の場合もスペースを追加
     return text
