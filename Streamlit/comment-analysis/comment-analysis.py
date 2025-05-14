@@ -28,31 +28,15 @@ def upload_csv():
     if st.session_state['upload_csvfile'] is not None:
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile'].read()
-
         # エンコーディングを検出
-        result = chardet.detect(file_data)
-        detected_encoding = result['encoding']
-        st.write(detected_encoding)
+        raw_data = io.BytesIO(file_data).read()
+        result = chardet.detect(raw_data)
+        encoding = result['encoding']
+        st.session_state['encoding'] = result['encoding']
         
-        # 最初はShift-JISで読み込む
-        try:
-            df = pd.read_csv(io.BytesIO(file_data), encoding='shift_jis', on_bad_lines="skip", engine="python")
-            st.session_state['encoding'] = 'shift_jis'
-        except Exception as e:
-            # Shift-JISで失敗した場合はUTF-8で再試行
-            try:
-                df = pd.read_csv(io.BytesIO(file_data), encoding='utf-8', on_bad_lines="skip", engine="python")
-                st.session_state['encoding'] = 'utf-8'
-            except Exception as e:
-                try:
-                    df = pd.read_csv(io.BytesIO(file_data), encoding='cp932', on_bad_lines="skip", engine="python")
-                    st.session_state['encoding'] = 'cp932'
-                except Exception as e:
-                    st.error("CSVファイルの読み込みに失敗しました。")
-                    df = pd.DataFrame()  # 空のデータフレーム
-    
+        df = pd.read_csv(io.BytesIO(file_data), encoding=encoding, on_bad_lines="skip", engine="python")
+      
         st.session_state['df'] = df
-        st.write(st.session_state['encoding'])
     else:
         st.session_state['df'] = pd.DataFrame()  # 空のデータフレーム
 
