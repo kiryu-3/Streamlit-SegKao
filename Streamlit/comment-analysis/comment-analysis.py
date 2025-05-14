@@ -59,19 +59,16 @@ def mecab_text(text):
 def display_unigram(df, column):
     npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
-
-    # 必要に応じて「ワンマン」をストップワードに追加
-    stopwords.append('ワンマン')
-
+    
     fig_unigram = npt.bar_ngram(
         title='uni-gram',
         xaxis_label='word_count',
         yaxis_label='word',
-        ngram=1,
+        ngram=2,
         top_n=50,
         stopwords=stopwords,
     )
-
+    
     with st.expander(column):
         st.plotly_chart(fig_unigram)
     
