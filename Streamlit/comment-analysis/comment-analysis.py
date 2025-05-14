@@ -39,8 +39,12 @@ def upload_csv():
                 df = pd.read_csv(io.BytesIO(file_data), encoding='utf-8', on_bad_lines="skip", engine="python")
                 st.session_state['encoding'] = 'utf-8'
             except Exception as e:
-                st.error("CSVファイルの読み込みに失敗しました。")
-                df = pd.DataFrame()  # 空のデータフレーム
+                try:
+                    df = pd.read_csv(io.BytesIO(file_data), encoding='cp932', on_bad_lines="skip", engine="python")
+                    st.session_state['encoding'] = 'cp932'
+                except Exception as e:
+                    st.error("CSVファイルの読み込みに失敗しました。")
+                    df = pd.DataFrame()  # 空のデータフレーム
     
         st.session_state['df'] = df
         st.write(st.session_state['encoding'])
