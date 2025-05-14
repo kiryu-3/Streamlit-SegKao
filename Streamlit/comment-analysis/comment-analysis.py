@@ -83,6 +83,9 @@ def display_unigram(df, column):
     # df[column] = df[column].apply(preprocess_text)
     # st.write(df[column].iloc[0])
 
+    # 一番最初の要素を取得
+    first_element = df[column].iloc[0]
+
     # テキストの前処理
     processed_text = combine_terms(first_element)
 
