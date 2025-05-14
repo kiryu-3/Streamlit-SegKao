@@ -58,7 +58,7 @@ def mecab_text(text):
 
 def preprocess_text(text):
     # "ワンマン"を一語として扱う
-    text = re.sub(r'\bワンマン\b', 'ワンマン', text)
+    text = re.sub(r'タイトル未定', ' タイトル未定 ', text)  # 単独の場合もスペースを追加
     return text
 
 def display_unigram(df, column):
