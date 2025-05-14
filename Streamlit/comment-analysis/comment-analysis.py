@@ -64,7 +64,7 @@ def display_unigram(df, column):
         title='uni-gram',
         xaxis_label='word_count',
         yaxis_label='word',
-        ngram=2,
+        ngram=1,
         top_n=50,
         stopwords=stopwords,
     )
