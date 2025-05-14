@@ -7,6 +7,7 @@ import networkx as nx
 import MeCab
 import nlplot  # nlplotをインポート
 import io
+import re
 import chardet
 
 # Streamlit ページの設定
@@ -354,5 +355,5 @@ try:
                 display_sunburst(temp_df, column)
 
 except Exception as e:
-    st.write(e)
+    # st.write(e)
     pass
