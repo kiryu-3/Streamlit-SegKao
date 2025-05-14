@@ -57,9 +57,6 @@ def mecab_text(text):
     return word_list
 
 def display_unigram(df, column):
-    # 特定の単語を結合する
-    df[column] = df[column].str.replace('ワンマン', 'ワンマン', regex=False)
-
     npt = nlplot.NLPlot(df, target_col=column)
     stopwords = npt.get_stopword(top_n=0, min_freq=0)
 
