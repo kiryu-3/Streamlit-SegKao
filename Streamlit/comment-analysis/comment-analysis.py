@@ -28,6 +28,11 @@ def upload_csv():
     if st.session_state['upload_csvfile'] is not None:
         # アップロードされたファイルデータを読み込む
         file_data = st.session_state['upload_csvfile'].read()
+
+        # エンコーディングを検出
+        result = chardet.detect(file_data)
+        detected_encoding = result['encoding']
+        st.write(detected_encoding)
         
         # 最初はShift-JISで読み込む
         try:
